@@ -36,6 +36,12 @@
 
     /* ---------- Motion tokens (transitions.dev) ---------- */
     --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --duration-stagger: 40ms;
+    --stagger-dur: 500ms;
+    --stagger-distance: 12px;
+    --stagger-stagger: 40ms;
+    --stagger-blur: 3px;
+    --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --icon-swap-dur: 250ms;
     --icon-swap-ease: ease-in-out;
     --acc-expand: 250ms;
@@ -109,6 +115,28 @@ a { color: inherit; text-decoration: none; }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- Texts reveal (titolo hero, transitions-dev #18) ---------- */
+.t-stagger-line {
+    display: block;
+    opacity: 0;
+    transform: translateY(var(--stagger-distance));
+    filter: blur(var(--stagger-blur));
+    transition:
+        opacity   var(--stagger-dur) var(--stagger-ease),
+        transform var(--stagger-dur) var(--stagger-ease),
+        filter    var(--stagger-dur) var(--stagger-ease);
+    will-change: transform, opacity, filter;
+}
+.t-stagger-line--2 { transition-delay: var(--stagger-stagger); }
+.t-stagger.is-shown .t-stagger-line {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    .t-stagger-line { transition: none !important; opacity: 1; transform: none; filter: none; }
 }
 
 /* ---------- Pill badge (eyebrow) ---------- */
@@ -203,7 +231,7 @@ a { color: inherit; text-decoration: none; }
 .nav-links a::after {
     content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px;
     background: var(--accent); border-radius: 2px;
-    transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: right 0.25s var(--ease-smooth-out);
 }
 .nav-links a:hover::after { right: 0; }
 .nav-toggle { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 44px; min-height: 44px; background: none; border: none; cursor: pointer; }
@@ -383,7 +411,10 @@ a { color: inherit; text-decoration: none; }
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    /* Hover-in va diretto e rapido (--ease-smooth-out): il rimbalzo
+       overshoot va riservato ai momenti di uscita/celebrazione, non
+       a un semplice sollevamento al passaggio del mouse. */
+    transition: transform 0.3s var(--ease-smooth-out), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--accent-border); }
 .step-number { display: block; font-size: 2.2rem; font-weight: 800; color: var(--accent); opacity: 0.55; margin-bottom: 0.75rem; }
@@ -424,7 +455,7 @@ a { color: inherit; text-decoration: none; }
     color: var(--accent);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 1.25rem;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.4s var(--ease-smooth-out);
 }
 .feature-card:hover .feature-icon { transform: rotate(-8deg) scale(1.1); }
 .feature-icon svg { width: 1.5rem; height: 1.5rem; }
@@ -485,6 +516,29 @@ a { color: inherit; text-decoration: none; }
 }
 .origin-point svg { width: 1.2rem; height: 1.2rem; color: var(--accent); flex-shrink: 0; }
 
+/* ---------- FAQ ---------- */
+.faq { padding: 6rem 0; }
+.faq-list { max-width: 42rem; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; }
+.faq-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 1.1rem 1.4rem;
+}
+.faq-item summary {
+    cursor: pointer; list-style: none; font-weight: 700; font-size: 0.95rem; color: var(--ink);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+    content: "";
+    width: 0.6rem; height: 0.6rem; flex-shrink: 0;
+    border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+    transition: transform var(--icon-swap-dur) var(--icon-swap-ease);
+}
+.faq-item[open] summary::after { transform: rotate(-135deg); }
+.faq-item p { margin-top: 0.85rem; font-size: 0.88rem; color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) { .faq-item summary::after { transition: none; } }
+
 /* ---------- CTA finale ---------- */
 .cta-final { padding: 6rem 0; }
 .cta-final-block {
@@ -512,6 +566,17 @@ a { color: inherit; text-decoration: none; }
 .demo-form input::placeholder { color: rgba(6, 35, 26, 0.5); }
 .demo-form input:focus { outline: none; border-color: #06231a; box-shadow: 0 0 0 3px rgba(6, 35, 26, 0.25); }
 .demo-form input[name="email"] { grid-column: span 2; }
+.how-heard-select {
+    grid-column: span 2;
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid rgba(6, 35, 26, 0.15);
+    background: rgba(255, 255, 255, 0.7);
+    font: inherit;
+    font-size: 0.92rem;
+    color: rgba(6, 35, 26, 0.75);
+}
+.how-heard-select:focus { outline: none; border-color: #06231a; box-shadow: 0 0 0 3px rgba(6, 35, 26, 0.25); }
 .demo-form .btn { grid-column: span 2; margin-top: 0.4rem; }
 .form-feedback { margin-top: 1rem; font-weight: 700; font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.5rem; text-align: left; }
 .form-feedback .t-success-check { margin-top: 0.15rem; }
@@ -601,7 +666,7 @@ a { color: inherit; text-decoration: none; }
     .features-grid { grid-template-columns: 1fr; }
     .steps-grid { grid-template-columns: 1fr; }
     .demo-form { grid-template-columns: 1fr; }
-    .demo-form input[name="email"], .demo-form .btn { grid-column: span 1; }
+    .demo-form input[name="email"], .how-heard-select, .demo-form .btn { grid-column: span 1; }
     .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
     .mock-card-float, .mock-card-float-light { position: static; margin-top: 1rem; animation: none; }
     .cta-final-block { padding: 2.75rem 1.5rem; border-radius: 1.5rem; }

@@ -1,0 +1,17 @@
+# SalaFlow
+
+> Gestionale per la sala di un ristorante: piantina tavoli in tempo reale, prenotazioni online e sincronizzazione istantanea su tutti i dispositivi dello staff.
+
+SalaFlow è pensato per ristoranti con servizio al tavolo che oggi gestiscono prenotazioni e piantina a mano (quaderno, WhatsApp, fogli Excel). Funziona da browser, senza installazione, su qualsiasi tablet o telefono già in uso nel locale.
+
+Stadio attuale (onesto, aggiornato periodicamente): il prodotto è in fase di test chiuso sugli store per app mobile (Google Play, Apple App Store); è già in uso reale, ogni giorno, per la gestione di un ristorante in Italia.
+
+## Pagine
+
+- [Home](https://salaflow.com/): panoramica del prodotto, come funziona, confronto con i metodi manuali, FAQ.
+- [Privacy](https://salaflow.com/privacy.html): informativa privacy e istruzioni per l'eliminazione dell'account.
+
+## Contatti
+
+- Richiesta demo: modulo in home, sezione "Prenota una Visita".
+- Email: info@salaflow.com

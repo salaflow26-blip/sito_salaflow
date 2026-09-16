@@ -75,12 +75,37 @@ if (demoVideoFrame) {
 // elemento parte con un piccolo ritardo in più rispetto al
 // precedente, invece di comparire tutti insieme in blocco.
 // ---------------------------------------------------------
+// Passo di stagger allineato al token --duration-stagger (40ms) di
+// transitions-dev/transitions-polish, invece di un valore inventato:
+// con gruppi fino a 6 elementi resta sotto i ~300ms totali raccomandati
+// dalla skill, letto da CSS così resta l'unica fonte di verità.
+const staggerStepMs = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue('--duration-stagger')
+) || 40;
 const revealEls = document.querySelectorAll('.reveal');
 revealEls.forEach((el, i) => {
     const siblingReveals = el.parentElement ? [...el.parentElement.children].filter(c => c.classList.contains('reveal')) : [el];
     const indexInGroup = siblingReveals.indexOf(el);
-    el.style.transitionDelay = `${Math.min(indexInGroup, 5) * 90}ms`;
+    el.style.transitionDelay = `${Math.min(indexInGroup, 5) * staggerStepMs}ms`;
 });
+
+// ---------------------------------------------------------
+// Titolo hero: "texts reveal" di transitions-dev (stagger + blur),
+// al posto del fade generico usato dal resto della pagina — è
+// above-the-fold, quindi parte al caricamento e non allo scroll.
+// ---------------------------------------------------------
+const heroStagger = document.getElementById('heroStagger');
+if (heroStagger) {
+    const staggerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                heroStagger.classList.add('is-shown');
+                staggerObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    staggerObserver.observe(heroStagger);
+}
 
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
