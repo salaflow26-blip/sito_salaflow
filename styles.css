@@ -404,8 +404,8 @@ a { color: inherit; text-decoration: none; }
     border: 1px solid var(--border);
     background: var(--surface);
 }
-.compare-table { width: 100%; min-width: 560px; border-collapse: collapse; }
-.compare-table th, .compare-table td { padding: 1.1rem 1.5rem; text-align: left; font-size: 0.92rem; }
+.compare-table { width: 100%; min-width: 760px; border-collapse: collapse; }
+.compare-table th, .compare-table td { padding: 1.1rem 1.4rem; text-align: left; font-size: 0.88rem; }
 .compare-table thead th {
     font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
     color: var(--ink-faint); border-bottom: 1px solid var(--border);
@@ -415,8 +415,13 @@ a { color: inherit; text-decoration: none; }
 .compare-table tbody tr:not(:last-child) th,
 .compare-table tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
 .compare-table td.bad { color: var(--danger); }
+/* Colonna centrale (gestionale tradizionale): né la peggiore né la
+   migliore su ogni riga — colore neutro, mai rosso né verde, per non
+   dichiarare un giudizio che la riga stessa non sta facendo. */
+.compare-table td.mid { color: var(--ink-soft); }
 .compare-table td.good { color: var(--accent); font-weight: 700; background: var(--accent-soft); }
 .compare-table .count-num { font-weight: 800; }
+.compare-table-note { margin-top: 0.9rem; padding: 0 0.25rem; font-size: 0.74rem; color: var(--ink-faint); }
 
 /* ---------- Come funziona (3 passi) ---------- */
 .steps { padding: 6rem 0; }
@@ -670,6 +675,11 @@ a { color: inherit; text-decoration: none; }
     .booking-site-inner { grid-template-columns: 1fr; }
     .booking-site-visual { max-width: 26rem; margin: 0 auto; order: -1; }
     .footer-inner { grid-template-columns: 1fr 1fr; }
+    /* Tablet: la tabella a 4 colonne resta una tabella (non si impila
+       ancora), ma con meno respiro entra senza scroll orizzontale sulla
+       maggior parte dei tablet in verticale. */
+    .compare-table { min-width: 600px; }
+    .compare-table th, .compare-table td { padding: 0.85rem 0.9rem; font-size: 0.82rem; }
 }
 
 @media (max-width: 720px) {
@@ -685,6 +695,47 @@ a { color: inherit; text-decoration: none; }
     .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
     .mock-card-float, .mock-card-float-light { position: static; margin-top: 1rem; animation: none; }
     .cta-final-block { padding: 2.75rem 1.5rem; border-radius: 1.5rem; }
+
+    /* Tabella di confronto -> pile di card sotto i 720px: a 4 colonne
+       (etichetta + 3 opzioni) non c'è forma di tabella con scroll
+       orizzontale che non tagli il testo su un telefono stretto. Ogni riga
+       diventa una card, ogni valore mostra la sua colonna d'origine con
+       data-label (apple-design: niente contenuto tagliato o fuori dai
+       bordi su nessuna dimensione di schermo). */
+    .compare-table-wrap { overflow-x: visible; border: none; background: none; }
+    .compare-table { display: block; min-width: 0; width: 100%; }
+    .compare-table thead { display: none; }
+    .compare-table tbody { display: block; }
+    .compare-table tr {
+        display: block;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1.1rem 1.2rem;
+    }
+    .compare-table tr:not(:last-child) { margin-bottom: 0.85rem; }
+    .compare-table tr:not(:last-child) th,
+    .compare-table tr:not(:last-child) td { border-bottom: none; }
+    .compare-table th, .compare-table td { display: block; padding: 0; font-size: 0.88rem; }
+    .compare-table tbody th {
+        white-space: normal; font-size: 1rem;
+        padding-bottom: 0.7rem; margin-bottom: 0.7rem;
+        border-bottom: 1px solid var(--border) !important;
+    }
+    .compare-table td:not(:last-child) { margin-bottom: 0.75rem; }
+    .compare-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+        color: var(--ink-faint);
+        margin-bottom: 0.2rem;
+    }
+    .compare-table td.good {
+        background: var(--accent-soft);
+        border-radius: var(--radius-sm);
+        padding: 0.65rem 0.75rem;
+    }
+    .compare-table td.good::before { color: var(--accent-dark); }
 }
 
 /* ---------- Barra di progresso scroll ---------- */
