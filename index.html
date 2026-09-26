@@ -251,9 +251,15 @@
             #demoVideoSound la accende su richiesta (vedi script.js).
             Su schermi stretti lo stile ritaglia il riquadro sul telefono
             (vedi .demo-video-frame in styles.css).
+
+            Niente copertina (attributo "poster") né classe "reveal" su questo
+            riquadro, di proposito: su Safari per iPhone il poster può restare
+            fermo sopra il video anche quando sta girando, e un'animazione di
+            comparsa sul contenitore può impedirgli di disegnarsi. Finché il
+            video non parte si vede lo sfondo scuro del riquadro.
         -->
-        <div class="demo-video-frame reveal" id="demoVideoFrame">
-            <video muted loop playsinline preload="metadata" poster="demo-poster.jpg" aria-label="Video dimostrativo dell'app SalaFlow: mappa tavoli, ricerca rapida e gestione dei tavoli">
+        <div class="demo-video-frame" id="demoVideoFrame">
+            <video muted loop playsinline preload="metadata" aria-label="Video dimostrativo dell'app SalaFlow: mappa tavoli, ricerca rapida e gestione dei tavoli">
                 <source src="demo.mp4" type="video/mp4">
             </video>
             <button type="button" class="demo-video-sound" id="demoVideoSound" aria-pressed="false" aria-label="Attiva l'audio">

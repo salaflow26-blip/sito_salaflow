@@ -83,9 +83,11 @@ if (demoVideo) {
         // Chi chiede meno movimento non vuole un video che parte da solo.
         demoVideo.controls = true;
     } else {
+        let demoInView = false;   // il riquadro è nello schermo: il video deve girare
         const demoVideoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                demoInView = entry.isIntersecting;
+                if (demoInView) {
                     playDemo();
                 } else {
                     demoVideo.pause();
@@ -93,6 +95,34 @@ if (demoVideo) {
             });
         }, { threshold: 0.5 });
         demoVideoObserver.observe(demoVideoFrame);
+
+        // Rete di sicurezza: se il riquadro è in vista ma il video è fermo
+        // (il primo play() su Safari per iPhone può andare perso mentre la
+        // pagina scorre o i dati arrivano, e poi nessuno lo richiama) si
+        // riprova ogni 1,5 s. Su un video che gira già play() non fa nulla.
+        let lastTime = -1;
+        setInterval(() => {
+            if (!demoInView || document.hidden || demoVideo.controls) return;
+            const stuck = demoVideo.paused || demoVideo.currentTime === lastTime;
+            lastTime = demoVideo.currentTime;
+            if (stuck) playDemo();
+        }, 1500);
+
+        // Tornando alla pagina con "indietro" Safari la ripristina dalla
+        // cache così com'era: l'observer non riparte da solo, lo rifacciamo
+        // partire noi perché rivaluti subito se il video è in vista.
+        window.addEventListener('pageshow', (e) => {
+            if (!e.persisted) return;
+            demoVideoObserver.unobserve(demoVideoFrame);
+            demoVideoObserver.observe(demoVideoFrame);
+        });
+
+        // Cambiando app o bloccando lo schermo il browser mette in pausa il
+        // video; tornando, l'observer non scatta (il riquadro era già in
+        // vista) e resterebbe fermo: lo riavviamo noi.
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && demoInView) playDemo();
+        });
     }
 }
 
