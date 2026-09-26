@@ -236,7 +236,7 @@
 
 <!-- ============================================= -->
 <!-- DEMO VIDEO (inline, parte da sola in muto quando -->
-<!-- entra in vista scorrendo — niente pulsante play) -->
+<!-- entra in vista scorrendo; il pulsante in basso a destra accende la musica) -->
 <!-- ============================================= -->
 <section class="demo-video" id="video-demo">
     <div class="wrap">
@@ -246,23 +246,20 @@
         </div>
 
         <!--
-            Slot pronto per il video vero: quando c'è, sostituisci il
-            <div class="demo-video-placeholder">...</div> qui sotto con:
-
-            <video muted loop playsinline preload="metadata" poster="demo-poster.jpg">
-                <source src="demo.mp4" type="video/mp4">
-            </video>
-
-            Non serve aggiungere altro codice: l'observer già presente in
-            script.js lo fa partire da solo (in muto, in loop) appena entra
-            nello schermo scorrendo, e lo mette in pausa quando esce —
-            nessun tasto play da premere.
+            demo.mp4 ha la musica, ma i browser fanno partire da soli solo i
+            video in muto: per questo il <video> ha "muted" e il pulsante
+            #demoVideoSound la accende su richiesta (vedi script.js).
+            Su schermi stretti lo stile ritaglia il riquadro sul telefono
+            (vedi .demo-video-frame in styles.css).
         -->
         <div class="demo-video-frame reveal" id="demoVideoFrame">
-            <div class="demo-video-placeholder">
-                <svg viewBox="0 0 20 20" fill="currentColor" width="30" height="30"><path d="M6 4l11 6-11 6V4z"/></svg>
-                <p>Il video arriva a breve</p>
-            </div>
+            <video muted loop playsinline preload="metadata" poster="demo-poster.jpg" aria-label="Video dimostrativo dell'app SalaFlow: mappa tavoli, ricerca rapida e gestione dei tavoli">
+                <source src="demo.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="demo-video-sound" id="demoVideoSound" aria-pressed="false" aria-label="Attiva l'audio">
+                <svg class="icon-muted" viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.75h2.75L10.5 4.5v11l-4.25-3.25H3.5z"/><path d="M13.5 8l3.5 4M17 8l-3.5 4"/></svg>
+                <svg class="icon-sound" viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.75h2.75L10.5 4.5v11l-4.25-3.25H3.5z"/><path d="M13.25 7.5a3.5 3.5 0 010 5M15.5 5.5a6.5 6.5 0 010 9"/></svg>
+            </button>
         </div>
     </div>
 </section>

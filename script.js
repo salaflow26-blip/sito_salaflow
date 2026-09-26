@@ -48,25 +48,52 @@ document.addEventListener('keydown', (e) => {
 
 // ---------------------------------------------------------
 // Demo video inline: parte da sola (in muto) quando entra nello
-// schermo scorrendo, si ferma quando esce — nessun tasto play.
-// Finché non c'è ancora un <video> vero dentro #demoVideoFrame
-// (vedi commento nell'HTML), questo non fa nulla: appena verrà
-// aggiunto, funzionerà senza bisogno di toccare altro codice.
+// schermo scorrendo, si ferma quando esce. Ha la musica: il
+// pulsante #demoVideoSound la accende (i browser non fanno partire
+// da soli video con audio, quindi si parte sempre in muto).
 // ---------------------------------------------------------
 const demoVideoFrame = document.getElementById('demoVideoFrame');
-if (demoVideoFrame) {
-    const demoVideoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const video = demoVideoFrame.querySelector('video');
-            if (!video) return;
-            if (entry.isIntersecting) {
-                video.play().catch(() => {});
-            } else {
-                video.pause();
-            }
-        });
-    }, { threshold: 0.5 });
-    demoVideoObserver.observe(demoVideoFrame);
+const demoVideo = demoVideoFrame && demoVideoFrame.querySelector('video');
+if (demoVideo) {
+    const soundBtn = document.getElementById('demoVideoSound');
+    const setSound = (on) => {
+        demoVideo.muted = !on;
+        soundBtn.setAttribute('aria-pressed', String(on));
+        soundBtn.setAttribute('aria-label', on ? "Disattiva l'audio" : "Attiva l'audio");
+    };
+    const playDemo = () => demoVideo.play().catch((err) => {
+        // AbortError = scroll veloce, il play è stato annullato da un pause(): niente da fare.
+        if (!err || err.name !== 'NotAllowedError') return;
+        if (!demoVideo.muted) {
+            // Audio bloccato dal browser fuori da un tocco: riprova in muto.
+            setSound(false);
+            playDemo();
+        } else {
+            // Neanche il muto parte (es. risparmio energetico su iPhone):
+            // controlli nativi, così chi visita può premere play.
+            demoVideo.controls = true;
+        }
+    });
+    soundBtn.addEventListener('click', () => {
+        setSound(demoVideo.muted);
+        if (demoVideo.paused) playDemo();
+    });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Chi chiede meno movimento non vuole un video che parte da solo.
+        demoVideo.controls = true;
+    } else {
+        const demoVideoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    playDemo();
+                } else {
+                    demoVideo.pause();
+                }
+            });
+        }, { threshold: 0.5 });
+        demoVideoObserver.observe(demoVideoFrame);
+    }
 }
 
 // ---------------------------------------------------------
