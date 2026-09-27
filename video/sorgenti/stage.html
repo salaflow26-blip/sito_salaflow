@@ -176,7 +176,8 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
    Deterministic motion engine: window.render(t) draws frame at t
    ============================================================ */
 const Q = new URLSearchParams(location.search);
-const IG = Q.get('f') === 'ig';          // Instagram Reels: 9:16 with safe zones + teaser copy
+const SHORT = Q.get('f') === 'igs';      // Instagram short cut (~21s), same scenes re-edited on the beat
+const IG = Q.get('f') === 'ig' || SHORT;  // Instagram Reels: 9:16 with safe zones + teaser copy
 const V = Q.get('f') === 'v' || IG;
 const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
 document.body.classList.toggle('V', V);
@@ -927,6 +928,39 @@ window.render = function (t) {
   op(fade, Math.max(1 - P(t, 0, .5), P(t, END - .9, END - .05)));
 };
 window.DURATION = END;
+
+/* ============================================================
+   Short cut: re-edit slices of the long timeline on the beat.
+   SEG = [short start, long start, long end, short length]
+   ============================================================ */
+if (SHORT) {
+  const SEG = [
+    [0,       2.45,             4.45,            BAR],   // quaderno
+    [BAR,     bar(2) - .15,     bar(3) + .9,     BAR],   // logo (sped up)
+    [2 * BAR, bar(4) - .15,     bar(4) - .15 + BAR, BAR], // drop: phone in + piantina
+    [3 * BAR, bar(6) + .1,      bar(6) + .1 + BAR, BAR], // walk-in
+    [4 * BAR, bar(9),           bar(10),         BAR],   // stato del servizio
+    [5 * BAR, bar(11),          bar(12),         BAR],   // allergeni
+    [6 * BAR, bar(13) + .9,     bar(13) + .9 + BAR, BAR],// comanda -> cucina
+    [7 * BAR, bar(15) + .9,     bar(15) + .9 + BAR, BAR],// telefono + tablet
+    [8 * BAR, bar(19),          bar(19) + 2 * BAR + .03, 2 * BAR + .03], // chiusura
+  ];
+  const TOTAL = 10 * BAR + .03;
+  const longRender = window.render;
+  window.render = function (ts) {
+    let sg = SEG[0];
+    for (const g of SEG) if (ts >= g[0]) sg = g;
+    const tl = sg[1] + (sg[2] - sg[1]) * cl((ts - sg[0]) / sg[3]);
+    longRender(tl);
+    // flash + punch-in on every cut
+    let d = 1e9; for (let i = 1; i < SEG.length; i++) d = Math.min(d, Math.abs(ts - SEG[i][0]));
+    const after = SEG.slice(1).reduce((m, g) => ts >= g[0] ? Math.min(m, ts - g[0]) : m, 1e9);
+    op(flash, Math.max(+flash.style.opacity || 0, (1 - cl(d / .16)) * .55));
+    stage.style.transform = `scale(${1 + .035 * Math.exp(-after * 7)})`;
+    op(fade, Math.max(1 - P(ts, 0, .25), P(ts, TOTAL - .8, TOTAL - .02)));
+  };
+  window.DURATION = TOTAL;
+}
 window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r))));
 render(0);
 </script>

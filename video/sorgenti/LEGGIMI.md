@@ -7,6 +7,7 @@ L'interfaccia dell'app è ricostruita in HTML/CSS partendo dalle schermate vere 
 ```bash
 cd video/sorgenti
 ./build.sh          # 16:9 + teaser Instagram   ·   ./build.sh h   solo 16:9   ·   ./build.sh ig   solo Instagram (9:16, zone sicure Reels, testi "presto disponibile")
+./build.sh igs      # teaser Instagram corto (~21s)
 node render.js stills h 10,20.5,33   # anteprime singole in build/stills/ (utile mentre si modifica)
 ```
 
@@ -16,3 +17,5 @@ Servono Node + Playwright, ffmpeg con libx264 (`FFMPEG=/percorso` per indicarne 
 - Testi: `mkCap(...)` e l'oggetto `C` in `stage.html`; chiusura in fondo al file (`endBox`).
 - Audio: `mix.py` usa la musica di `demo.mp4` e aggiunge whoosh e tap sintetizzati.
 - Font: Plus Jakarta Sans, Caveat, DM Serif Text (SIL Open Font License), in `font/`.
+- Taglio corto (`igs`): stesse scene, montate a fette di una battuta (`SEG` in fondo a `stage.html`);
+  l'audio corrispondente è in `mix_short.py` (musica dal build-up, drop a 4,3s, chiusura sul finale del brano).
