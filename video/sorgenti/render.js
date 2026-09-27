@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 const path = require('path'), fs = require('fs');
 const FF = process.env.FFMPEG || 'ffmpeg';
 const [mode, f, arg, wk] = process.argv.slice(2);
-const W = f === 'v' ? 1080 : 1920, H = f === 'v' ? 1920 : 1080;
+const W = f === 'h' ? 1920 : 1080, H = f === 'h' ? 1080 : 1920;
 const url = 'file://' + path.join(__dirname, 'stage.html') + '?f=' + f;
 async function open(browser) {
   const page = await browser.newPage({ viewport: { width: W, height: H } });

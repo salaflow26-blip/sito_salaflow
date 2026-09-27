@@ -6,7 +6,7 @@ L'interfaccia dell'app è ricostruita in HTML/CSS partendo dalle schermate vere 
 
 ```bash
 cd video/sorgenti
-./build.sh          # entrambi i formati   ·   ./build.sh h   solo 16:9   ·   ./build.sh v   solo 9:16
+./build.sh          # 16:9 + teaser Instagram   ·   ./build.sh h   solo 16:9   ·   ./build.sh ig   solo Instagram (9:16, zone sicure Reels, testi "presto disponibile")
 node render.js stills h 10,20.5,33   # anteprime singole in build/stills/ (utile mentre si modifica)
 ```
 

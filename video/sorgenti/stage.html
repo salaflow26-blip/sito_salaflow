@@ -176,7 +176,8 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
    Deterministic motion engine: window.render(t) draws frame at t
    ============================================================ */
 const Q = new URLSearchParams(location.search);
-const V = Q.get('f') === 'v';
+const IG = Q.get('f') === 'ig';          // Instagram Reels: 9:16 with safe zones + teaser copy
+const V = Q.get('f') === 'v' || IG;
 const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
 document.body.classList.toggle('V', V);
 const stage = document.getElementById('stage');
@@ -239,6 +240,7 @@ const L = V ? {
   pop: 1.0, tabX: 700, tabY: 600, tabS: 1.0, phX: 1480, phY: 640, phS: .7,
   kitX: 1640, kitY: 170, recap: 150,
 };
+if (IG) Object.assign(L, { py: 1090, s: 1.2, capY: 250, tabY: 800, phY: 1260, kitX: 290, kitY: 1470 });
 
 /* ============================================================
    Background: drifting orbs + film grain
@@ -267,7 +269,8 @@ function drawBG(t, energy) {
    Captions (kinetic word reveal)
    ============================================================ */
 const UI = document.getElementById('ui');
-if (V) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:1300px;bottom:0;background:linear-gradient(180deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 30%,rgba(10,14,13,.96) 100%)"></div>`));
+if (IG) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:0;height:640px;background:linear-gradient(0deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 35%,rgba(10,14,13,.96) 100%)"></div>`));
+else if (V) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:1300px;bottom:0;background:linear-gradient(180deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 30%,rgba(10,14,13,.96) 100%)"></div>`));
 function mkCap(kick, lines, opt = {}) {
   const size = opt.size || L.headSize;
   const el = $(`<div class="cap"></div>`);
@@ -330,15 +333,15 @@ paper.appendChild(psvg);
 paperWrap.appendChild(paper);
 document.getElementById('world').appendChild(paperWrap);
 
-const capA1 = mkCap(null, ['Sabato sera.', '~Sala ~piena.'], V ? { y: 1330, size: 96 } : { size: 100 });
-const capA2 = mkCap(null, ['E il quaderno', 'non basta più.'], V ? { y: 1330, size: 96 } : { size: 100 });
+const capA1 = mkCap(null, ['Sabato sera.', '~Sala ~piena.'], V ? { y: IG ? 270 : 1330, size: 96 } : { size: 100 });
+const capA2 = mkCap(null, ['E il quaderno', 'non basta più.'], V ? { y: IG ? 270 : 1330, size: 96 } : { size: 100 });
 
 function drawA(t) {
   drawCap(capA1, t, beat(1), beat(4.2));
   drawCap(capA2, t, beat(4.4), bar(2) - .05);
   const on = show(paperWrap, t < bar(2) + .1);
   if (!on) return;
-  const x = V ? 540 : 1340, y = V ? 640 : 545;
+  const x = V ? 540 : 1340, y = IG ? 1080 : V ? 640 : 545;
   const inP = P(t, 0, 1.3, E.outX), outP = P(t, bar(1.6), bar(2), E.inX);
   const drift = t * 2;
   tf(paperWrap, `translate3d(${x + (1 - inP) * 120}px,${y + (1 - inP) * 200 + outP * 300}px,${-300 * (1 - inP) - outP * 900}px)
@@ -590,7 +593,7 @@ const C = {
   alg: mkCap('Accoglienza', ['Le allergie,', 'segnate sul tavolo.']),
   com: mkCap('Comande', ['Dal tavolo', 'alla cucina.']),
   sync: mkCap('Sincronizzazione', V ? ['Telefono e tablet,', 'sempre allineati.'] : ['Telefono e tablet, sempre allineati.'],
-    V ? { y: 1520 } : { y: 125, x: 150, w: 1600, size: 64 }),
+    V ? { y: IG ? 250 : 1520 } : { y: 125, x: 150, w: 1600, size: 64 }),
 };
 
 /* ============================================================
@@ -836,7 +839,7 @@ function drawTablet(t) {
    ============================================================ */
 const RECAP = ['Prenotazioni.', 'Walk-in.', 'Accoglienza.', 'Comande.', 'Cassa.'];
 const recap = RECAP.map(w => { const e = $(`<div class="recap" style="font-size:${V ? 150 : 190}px;top:${H / 2 - (V ? 95 : 120)}px">${w}</div>`); UI.appendChild(e); return e; });
-const capLoc = mkCap('Sul campo', ['Già al lavoro alla', '~Locanda ~Del ~Convento.'],
+const capLoc = mkCap(IG ? 'In anteprima' : 'Sul campo', [IG ? 'Già in prova alla' : 'Già al lavoro alla', '~Locanda ~Del ~Convento.'],
   V ? { y: 760, size: 76 } : { x: 160, y: 540, w: 1600, size: 84 });
 if (!V) { capLoc.style.alignItems = 'center'; capLoc.style.textAlign = 'center'; capLoc.style.left = '160px'; capLoc.querySelector('.kick').style.justifyContent = 'center'; }
 const locLogo = $(`<div class="abs" style="left:0;top:0;width:${V ? 150 : 120}px;height:${V ? 150 : 120}px;border-radius:30px;background:#fff url(locanda.png) center/cover;box-shadow:0 30px 60px -10px rgba(0,0,0,.7)"></div>`);
@@ -867,8 +870,10 @@ const EL = V ? 250 : 190;
 const endBox = $(`<div class="abs" style="left:0;top:0;width:${W}px;height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
   <div class="elogo" style="position:relative;width:${EL}px;height:${EL}px"><div class="ring" style="inset:0"></div><div class="logoimg" style="width:100%;height:100%"><img src="../../logo.png"><div class="sheen"></div></div></div>
   <div class="head eh" style="font-size:${V ? 92 : 96}px;margin-top:${V ? 60 : 46}px"></div>
-  <div class="cta" style="margin-top:${V ? 76 : 56}px;padding:${V ? '32px 66px' : '26px 58px'};font-size:${V ? 46 : 38}px"><span>Prenota una visita</span><span style="font-size:.9em">→</span><div class="shine"></div></div>
-  <div class="url" style="margin-top:${V ? 36 : 28}px;font-size:${V ? 40 : 34}px;font-weight:700;color:#cfe0da;letter-spacing:.02em">salaflow.com</div>
+  ${IG ? `<div class="cta" style="margin-top:76px;padding:30px 60px;font-size:46px;background:rgba(45,216,163,.1);color:var(--mint);border:2px solid var(--mint);box-shadow:0 0 50px -10px rgba(45,216,163,.6)"><span class="pd" style="width:18px;height:18px;border-radius:50%;background:var(--mint);box-shadow:0 0 16px var(--mint)"></span><span>Presto disponibile</span><div class="shine"></div></div>`
+       : `<div class="cta" style="margin-top:${V ? 76 : 56}px;padding:${V ? '32px 66px' : '26px 58px'};font-size:${V ? 46 : 38}px"><span>Prenota una visita</span><span style="font-size:.9em">→</span><div class="shine"></div></div>`}
+  ${IG ? `<div class="url" style="margin-top:44px;font-size:34px;font-weight:500;color:#cfe0da;line-height:1.45">Hai un ristorante?<br>Prenota una visita su <b style="color:#fff;font-weight:800">salaflow.com</b></div>`
+       : `<div class="url" style="margin-top:${V ? 36 : 28}px;font-size:${V ? 40 : 34}px;font-weight:700;color:#cfe0da;letter-spacing:.02em">salaflow.com</div>`}
   <div class="team" style="margin-top:${V ? 110 : 64}px;font-size:${V ? 28 : 22}px;font-weight:500;color:#6f8580">Fatto da Luca, Filippo e Antonio</div>
 </div>`);
 UI.appendChild(endBox);
@@ -891,6 +896,7 @@ function drawEnd(t) {
   const c = P(t, bar(19.5), bar(19.5) + .8, E.outB);
   tf(cta, `translateY(${(1 - c) * 40}px) scale(${.85 + .15 * c})`); op(cta, cl(c * 1.5));
   const shT = ((t - bar(20)) % 1.8) / 1.8; tf(shine, `translateX(${t > bar(20) ? lerp(-150, 350, E.ioC(cl(shT * 1.6))) : -150}%)`);
+  const pd = cta.querySelector('.pd'); if (pd) { const ph = ((t - bar(19.5)) % 1.07) / 1.07; pd.style.boxShadow = `0 0 16px var(--mint),0 0 0 ${ph * 16}px rgba(45,216,163,${.5 * (1 - ph)})`; }
   const u = P(t, bar(19.75), bar(19.75) + .8, E.outX); tf(url, `translateY(${(1 - u) * 20}px)`); op(url, u);
   const tm = P(t, bar(20.1), bar(20.1) + 1, E.outC); op(team, tm);
   // gentle push-in over the whole end card
@@ -904,6 +910,7 @@ const flash = document.getElementById('flash'), fade = document.getElementById('
 window.render = function (t) {
   const energy = t > bar(9) ? .6 + .4 * Math.pow(1 - ((t - B0) % (BAR / 4)) / (BAR / 4), 3) : .2;
   drawBG(t, energy);
+  show(beam, false);
   drawA(t); drawB(t); drawPhone(t); drawKitchen(t); drawTablet(t); drawRecap(t); drawEnd(t);
   for (const k in C) show(C[k], false);
   drawCap(C.map, t, bar(4) + .6, bar(5.45));
