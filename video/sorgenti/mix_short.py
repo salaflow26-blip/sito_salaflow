@@ -1,17 +1,19 @@
-# Audio for the short Instagram cut: music from the build-up (bar 7) so the drop lands at 4.3s,
+# Audio for the short Instagram cut: music from bar 5 so the drop lands when the phone arrives (8.6s),
 # end card on the track's natural ending (bar 20 -> end), whooshes on cuts, taps where the app is touched.
 import numpy as np, wave
 SR=48000; BAR=2.1413; B0=0.163
 bar=lambda n:B0+n*BAR; beat=lambda n:B0+n*BAR/4
 m=np.fromfile('build/music.raw',dtype=np.float32).reshape(-1,2).astype(np.float64)
-A=m[int(bar(7)*SR):int(bar(15)*SR)]              # 8 bars: build-up, drop, groove
+A=m[int(bar(5)*SR):int(bar(18)*SR)]              # 13 bars: calm intro, drop, groove
 B=m[int(bar(20)*SR):int((bar(22)+.03)*SR)]        # natural ending
 x=12*SR//1000                                      # tiny crossfade at the bar-aligned join
 r=np.linspace(0,1,x)[:,None]; A[-x:]=A[-x:]*(1-r)+B[:x]*r
 out=np.vstack([A,B[x:]])*0.9; N=len(out)
 # long-timeline -> short-timeline mapping (same slices as stage.html)
-SEG=[(0,2.45,4.45,BAR),(BAR,bar(2)-.15,bar(3)+.9,BAR),(2*BAR,bar(4)-.15,bar(4)-.15+BAR,BAR),(3*BAR,bar(6)+.1,bar(6)+.1+BAR,BAR),
-     (4*BAR,bar(9),bar(10),BAR),(5*BAR,bar(11),bar(12),BAR),(6*BAR,bar(13)+.9,bar(13)+.9+BAR,BAR),(7*BAR,bar(15)+.9,bar(15)+.9+BAR,BAR)]
+F=1.5*BAR
+SEG=[(0,0,bar(2),2*BAR),(2*BAR,bar(2)-.15,bar(4)-.15,2*BAR),
+     (4*BAR,bar(4)-.15,bar(4)-.15+F,F),(4*BAR+F,bar(6)+.1,bar(6)+.1+F,F),(4*BAR+2*F,bar(9),bar(9)+F,F),
+     (4*BAR+3*F,bar(11),bar(11)+F,F),(4*BAR+4*F,bar(13)+.6,bar(13)+.6+F,F),(4*BAR+5*F,bar(15)+.6,bar(15)+.6+F,F)]
 def to_short(tl):
     for s0,a,b,d in SEG:
         if a<=tl<b: return s0+(tl-a)/(b-a)*d
@@ -26,8 +28,8 @@ def tap(t,gain=0.16):
     n=int(0.05*SR); tt=np.arange(n)/SR
     y=(np.sin(2*np.pi*1900*tt)*.6+np.sin(2*np.pi*3100*tt)*.4)*np.exp(-tt*90)*gain
     s=int(t*SR); out[s:s+n]+=y[:,None]
-for k in range(1,9): whoosh(k*BAR, up=k%2==1, gain=.2 if k in (2,8) else .13)
-for tl in [bar(6)+1.15, beat(46), beat(47), bar(13)+1.0, bar(14)-.05]:
+for k,c in enumerate([g[0] for g in SEG[1:]]+[13*BAR]): whoosh(c, up=k%2==0, gain=.16 if k in (1,7) else .09)
+for tl in [bar(6)+1.15, beat(46), beat(47), beat(49.5), bar(13)+1.0, bar(14)-.05]:
     ts=to_short(tl); 
     if ts is not None: tap(ts)
 ts=to_short(bar(14)-.05+.75); tap(ts,gain=.1)

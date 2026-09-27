@@ -930,22 +930,23 @@ window.render = function (t) {
 window.DURATION = END;
 
 /* ============================================================
-   Short cut: re-edit slices of the long timeline on the beat.
+   Short cut (~32s): re-edit slices of the long timeline on the beat.
    SEG = [short start, long start, long end, short length]
    ============================================================ */
 if (SHORT) {
+  const F = 1.5 * BAR;                                   // each feature gets a bar and a half
   const SEG = [
-    [0,       2.45,             4.45,            BAR],   // quaderno
-    [BAR,     bar(2) - .15,     bar(3) + .9,     BAR],   // logo (sped up)
-    [2 * BAR, bar(4) - .15,     bar(4) - .15 + BAR, BAR], // drop: phone in + piantina
-    [3 * BAR, bar(6) + .1,      bar(6) + .1 + BAR, BAR], // walk-in
-    [4 * BAR, bar(9),           bar(10),         BAR],   // stato del servizio
-    [5 * BAR, bar(11),          bar(12),         BAR],   // allergeni
-    [6 * BAR, bar(13) + .9,     bar(13) + .9 + BAR, BAR],// comanda -> cucina
-    [7 * BAR, bar(15) + .9,     bar(15) + .9 + BAR, BAR],// telefono + tablet
-    [8 * BAR, bar(19),          bar(19) + 2 * BAR + .03, 2 * BAR + .03], // chiusura
+    [0,           0,                  bar(2),               2 * BAR], // Sabato sera -> quaderno
+    [2 * BAR,     bar(2) - .15,       bar(4) - .15,         2 * BAR], // logo
+    [4 * BAR,         bar(4) - .15,   bar(4) - .15 + F,     F],       // drop: phone in + piantina
+    [4 * BAR + F,     bar(6) + .1,    bar(6) + .1 + F,      F],       // walk-in
+    [4 * BAR + 2 * F, bar(9),         bar(9) + F,           F],       // stato del servizio
+    [4 * BAR + 3 * F, bar(11),        bar(11) + F,          F],       // allergeni
+    [4 * BAR + 4 * F, bar(13) + .6,   bar(13) + .6 + F,     F],       // comanda -> cucina
+    [4 * BAR + 5 * F, bar(15) + .6,   bar(15) + .6 + F,     F],       // telefono + tablet
+    [13 * BAR,        bar(19),        bar(19) + 2 * BAR + .03, 2 * BAR + .03], // chiusura
   ];
-  const TOTAL = 10 * BAR + .03;
+  const TOTAL = 15 * BAR + .03;
   const longRender = window.render;
   window.render = function (ts) {
     let sg = SEG[0];
@@ -955,8 +956,8 @@ if (SHORT) {
     // flash + punch-in on every cut
     let d = 1e9; for (let i = 1; i < SEG.length; i++) d = Math.min(d, Math.abs(ts - SEG[i][0]));
     const after = SEG.slice(1).reduce((m, g) => ts >= g[0] ? Math.min(m, ts - g[0]) : m, 1e9);
-    op(flash, Math.max(+flash.style.opacity || 0, (1 - cl(d / .16)) * .55));
-    stage.style.transform = `scale(${1 + .035 * Math.exp(-after * 7)})`;
+    op(flash, Math.max(+flash.style.opacity || 0, (1 - cl(d / .16)) * .3));
+    stage.style.transform = `scale(${1 + .018 * Math.exp(-after * 6)})`;
     op(fade, Math.max(1 - P(ts, 0, .25), P(ts, TOTAL - .8, TOTAL - .02)));
   };
   window.DURATION = TOTAL;
