@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — lancio</title>
+<style>
+@font-face{font-family:PJS;font-weight:400;src:url(font/PJS-400.ttf)}
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+@font-face{font-family:Caveat;font-weight:600;src:url(font/Caveat.ttf)}
+@font-face{font-family:DMSerif;src:url(font/DMSerif.ttf)}
+
+:root{
+  --bg:#0a0e0d; --mint:#2dd8a3; --mint-l:#7bf0c8; --ink:#f2f7f5; --mute:#9fb3ab;
+  /* app */
+  --a-bg:#0b1222; --a-card:#111a2c; --a-card2:#0f1728; --a-line:rgba(148,163,184,.14);
+  --a-text:#e6ebf2; --a-mute:#8b97ab; --a-teal1:#2dd4bf; --a-teal2:#22d3ee;
+  --a-blue:#1d4ed8; --a-indigo:#4f46e5; --a-purple:#7c3aed; --a-green:#16a34a; --a-red:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;overflow:hidden}
+body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:0;top:0;overflow:hidden;background:var(--bg);perspective:2400px}
+.abs{position:absolute}
+.world{position:absolute;inset:0;transform-style:preserve-3d}
+
+/* ---------- background ---------- */
+.orb{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform}
+#grain{position:absolute;inset:-50%;opacity:.07;mix-blend-mode:overlay;pointer-events:none}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.65) 100%);pointer-events:none}
+#flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(123,240,200,.55),rgba(45,216,163,0) 60%);opacity:0;pointer-events:none;mix-blend-mode:screen}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+
+/* ---------- bokeh ---------- */
+.bok{position:absolute;left:0;top:0;border-radius:50%;will-change:transform}
+
+/* ---------- desktop side panels (site): cropped away on phones ---------- */
+.sidel{position:absolute;left:120px;top:330px;width:370px}
+.sidel .sn{display:flex;align-items:baseline;gap:12px;overflow:hidden;padding-bottom:6px}
+.sidel .sn b{font-size:132px;font-weight:800;letter-spacing:-.05em;line-height:1;color:transparent;-webkit-text-stroke:2px var(--mint);display:inline-block}
+.sidel .sn span{font-size:30px;font-weight:700;color:#4f625d;display:inline-block}
+.sidel .st{font-size:29px;line-height:1.42;color:#b5c7c0;font-weight:500;margin-top:14px}
+.steps{position:absolute;left:1455px;top:318px;width:360px}
+.steps .rail{position:absolute;left:9px;top:26px;width:2px;background:rgba(159,179,171,.18);border-radius:2px}
+.steps .rail i{position:absolute;left:0;top:0;width:2px;background:var(--mint);box-shadow:0 0 10px var(--mint);border-radius:2px}
+.steps .it{position:relative;display:flex;align-items:center;gap:20px;height:56px;font-size:25px;font-weight:600;white-space:nowrap}
+.steps .it .d{width:20px;height:20px;border-radius:50%;border:2px solid #3b4a46;background:var(--bg);flex:none;display:grid;place-items:center}
+.steps .it .d i{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+
+/* ---------- captions ---------- */
+.cap{position:absolute;display:flex;flex-direction:column;gap:26px}
+.kick{font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);display:flex;align-items:center;gap:14px;font-size:24px}
+.kick i{display:block;width:34px;height:2px;background:var(--mint);box-shadow:0 0 12px var(--mint);transform-origin:left}
+.line{display:block;overflow:hidden;padding:.06em 0 .12em;margin:-.06em 0 -.12em}
+.w{display:inline-block;will-change:transform}
+.head{font-weight:800;letter-spacing:-.025em;word-spacing:.06em;line-height:1.06}
+.mint{color:var(--mint)}
+.cap{align-items:center;text-align:center}
+.kick{justify-content:center}
+
+/* ---------- notebook ---------- */
+#paper{position:absolute;width:560px;height:700px;left:-280px;top:-350px;border-radius:10px;
+  background:
+    linear-gradient(90deg,transparent 70px,rgba(220,80,80,.45) 70px,rgba(220,80,80,.45) 72px,transparent 72px),
+    repeating-linear-gradient(180deg,transparent 0 47px,rgba(80,120,170,.28) 47px 48px),
+    #f4efe3;
+  box-shadow:0 60px 120px -30px rgba(0,0,0,.8),inset 0 0 80px rgba(120,90,40,.18);
+  font-family:Caveat;color:#23324a;transform-style:preserve-3d}
+#paper .ttl{position:absolute;left:92px;top:40px;font-size:46px;color:#1c2b44}
+#paper .e{position:absolute;left:92px;font-size:40px;white-space:nowrap;overflow:hidden}
+#paper svg{position:absolute;inset:0;overflow:visible}
+#paper path{fill:none;stroke:#b3261e;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- logo ---------- */
+.logoimg{border-radius:22.5%;overflow:hidden;position:relative;box-shadow:0 30px 80px -20px rgba(45,216,163,.45)}
+.logoimg img{width:100%;height:100%;display:block;transform:scale(1.025)}
+.sheen{position:absolute;inset:-20%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);mix-blend-mode:screen}
+.ring{position:absolute;border-radius:50%;border:2px solid var(--mint);box-shadow:0 0 30px var(--mint),inset 0 0 30px rgba(45,216,163,.4)}
+
+/* ---------- phone ---------- */
+.dev{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.phone{position:absolute;width:414px;height:868px;left:-207px;top:-434px;transform-style:preserve-3d}
+.phone .frame{position:absolute;inset:0;border-radius:64px;
+  background:linear-gradient(145deg,#3a4046,#15181b 30%,#0c0e10 60%,#2c3136);
+  box-shadow:0 80px 140px -30px rgba(0,0,0,.85),0 0 0 1.5px rgba(255,255,255,.08) inset,0 0 60px -10px rgba(45,216,163,.25)}
+.phone .scr{transform:translateZ(1px);position:absolute;left:12px;top:12px;width:390px;height:844px;border-radius:52px;overflow:hidden;background:var(--a-bg)}
+.island{position:absolute;left:50%;top:11px;width:122px;height:36px;margin-left:-61px;background:#000;border-radius:20px;z-index:50}
+.glare{position:absolute;inset:0;border-radius:52px;pointer-events:none;z-index:60;
+  background:linear-gradient(115deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 35%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05) 100%)}
+
+/* ---------- tablet ---------- */
+.tablet{position:absolute;width:1060px;height:760px;left:-530px;top:-380px;transform-style:flat}
+.tablet .frame{position:absolute;inset:0;border-radius:46px;background:linear-gradient(145deg,#3a4046,#121416 35%,#0c0e10 65%,#2c3136);
+  box-shadow:0 80px 140px -30px rgba(0,0,0,.85),0 0 0 1.5px rgba(255,255,255,.08) inset}
+.tablet .scr{transform:translateZ(1px);position:absolute;left:20px;top:20px;width:1020px;height:720px;border-radius:28px;overflow:hidden;background:var(--a-bg)}
+
+/* ---------- app UI ---------- */
+.app{position:absolute;inset:0;font-family:PJS;color:var(--a-text);font-size:13px}
+.sb{position:absolute;left:0;right:0;top:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0 34px;font-weight:700;font-size:16px;z-index:40}
+.sb svg{height:13px}
+.hdr{position:absolute;left:14px;right:14px;top:58px;height:78px;border-radius:0 0 22px 22px;display:flex;align-items:center;gap:12px;padding:0 10px;background:linear-gradient(180deg,#0e1628,#0c1324);border-bottom:1px solid var(--a-line)}
+.hdr .lg{width:46px;height:46px;border-radius:12px;background:#fff center/cover;flex:none}
+.hdr .nm{font-family:DMSerif;font-size:19px;color:#f1f4f9;line-height:1.1}
+.hdr .sub{font-size:11.5px;font-weight:600;color:var(--a-teal1);margin-top:3px}
+.hdr .hb{margin-left:auto;width:40px;height:40px;border-radius:12px;border:1px solid var(--a-line);background:#141d31;display:grid;place-items:center}
+.hdr .hb i{display:block;width:16px;height:2px;background:#cbd5e1;box-shadow:0 5px 0 #cbd5e1,0 -5px 0 #cbd5e1}
+.card{background:var(--a-card);border:1px solid var(--a-line);border-radius:18px}
+.pane{position:absolute;left:0;right:0;top:150px;bottom:0}
+.nav{position:absolute;left:14px;right:14px;bottom:22px;height:74px;border-radius:24px;background:rgba(14,21,37,.96);border:1px solid var(--a-line);display:flex;align-items:center;justify-content:space-around;z-index:30;box-shadow:0 -10px 30px rgba(0,0,0,.4)}
+.nav .it{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10.5px;color:#7c889c;font-weight:600;width:56px}
+.nav .it svg{width:20px;height:20px;stroke:#7c889c;fill:none;stroke-width:1.8}
+.nav .it.on{color:var(--a-teal1)}
+.nav .it.on .ic{width:34px;height:34px;border-radius:50%;background:var(--a-teal1);display:grid;place-items:center;margin-top:-10px}
+.nav .it.on svg{stroke:#06231a}
+.nav .plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--a-teal1),var(--a-teal2));display:grid;place-items:center;box-shadow:0 8px 24px rgba(45,212,191,.45);color:#fff;font-size:34px;font-weight:500;line-height:1}
+.legend{position:absolute;left:14px;right:14px;top:14px;height:56px;display:flex;align-items:center;gap:12px;padding:0 12px;font-size:12px;color:#c3cad6}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.ib{width:32px;height:32px;border-radius:9px;border:1px solid var(--a-line);background:#18223a;display:grid;place-items:center;color:#cbd5e1;font-size:16px}
+.dash{position:absolute;left:14px;right:14px;top:84px;height:40px;border:1.5px dashed rgba(148,163,184,.3);border-radius:14px;display:grid;place-items:center;font-size:12px;color:#c3cad6;font-weight:500}
+.zone{position:absolute;left:14px;right:14px;top:138px;bottom:0;border-radius:18px 18px 0 0}
+.zone .zt{position:absolute;left:16px;top:16px;font-weight:700;font-size:15px}
+.zone .zc{position:absolute;right:52px;top:19px;font-size:11px;color:var(--a-mute)}
+.map{position:absolute;left:16px;right:16px;top:58px;bottom:0;border-radius:14px;background:
+  linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px) 0 0/22px 22px,
+  linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px) 0 0/22px 22px,#0d1526;border:1px solid var(--a-line)}
+.tb{position:absolute;border-radius:5px;border:1.5px solid;display:grid;place-items:center;font-size:9px;font-weight:700;color:rgba(255,255,255,.75)}
+.tb.g{border-color:#16a34a;background:rgba(21,128,61,.35)}
+.tb.r{border-color:#dc2626;background:rgba(127,29,29,.65)}
+.tb.b{border-color:#3b5bdb;background:rgba(30,58,160,.55)}
+.dim{position:absolute;inset:0;background:rgba(3,7,18,.72);z-index:20}
+.sheet{position:absolute;left:18px;right:18px;border-radius:20px;background:#121b2e;border:1px solid rgba(148,163,184,.2);z-index:25;padding:16px;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.chip{display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:700}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;height:40px;border-radius:12px;font-weight:800;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase}
+.btn.o{border:1px solid var(--a-line);background:#0f1728;color:#c7d2fe}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.toast{position:absolute;left:50%;white-space:nowrap;padding:11px 18px;border-radius:999px;font-weight:700;font-size:12px;z-index:35;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.toast.gr{background:#15803d;color:#eafff3;border:1px solid #22c55e}
+.toast.pu{background:#6d28d9;color:#f5f0ff;border:1px solid #8b5cf6}
+.teal{background:linear-gradient(120deg,var(--a-teal1),var(--a-teal2));border-radius:20px;color:#fff}
+.tile{position:absolute;width:84px;height:94px;border-radius:14px;border:1.5px solid rgba(34,197,94,.55);background:linear-gradient(180deg,#0f2a22,#0d1c1a);text-align:center;padding-top:10px}
+.tile b{display:block;font-size:26px;font-weight:800;color:#86efac;line-height:1.05}
+.tile s{display:block;text-decoration:none;font-size:10px;color:#cbd5e1;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
+.tile u{display:inline-block;text-decoration:none;font-size:9px;color:#94a3b8;margin-top:4px}
+.tile u:before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#e2e8f0;margin-right:4px;vertical-align:0}
+.tile.red{border-color:rgba(239,68,68,.8);background:linear-gradient(180deg,#3b0d14,#260a10)}
+.tile.red b{color:#fca5a5}
+.tile.blue{border-color:rgba(96,165,250,.8);background:linear-gradient(180deg,#0f1f47,#0b1633)}
+.tile.blue b{color:#bfdbfe}
+.ck{display:flex;align-items:center;gap:10px;height:38px;padding:0 12px;border-radius:10px;background:#0f1728;border:1px solid var(--a-line);font-size:12.5px;color:#dbe3ee}
+.ck .bx{width:17px;height:17px;border-radius:5px;background:#f1f5f9;flex:none;display:grid;place-items:center}
+.ck .bx svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none}
+.ck.on{border-color:rgba(45,212,191,.6);background:rgba(20,83,74,.45)}
+.ck.on .bx{background:var(--a-teal1)}
+.prm{position:absolute;left:14px;right:14px;top:622px;z-index:36;border-radius:18px;padding:14px 14px 10px;
+  background:linear-gradient(180deg,#221f55,#1a1846);border:1px solid rgba(129,140,248,.45);box-shadow:0 18px 40px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:30px 1fr auto;align-items:center;column-gap:10px}
+.prm .pi{font-size:24px;color:#c7d2fe;font-weight:700;text-align:center}
+.prm .pt{font-size:13px;font-weight:700;color:#e0e7ff;line-height:1.3}
+.prm .pb{display:flex;gap:8px}
+.prm .pb span{display:grid;place-items:center;min-width:48px;height:36px;padding:0 12px;border-radius:10px;font-weight:800;font-size:13px}
+.prm .no{border:1px solid rgba(148,163,184,.45);color:#e2e8f0;background:#111a2c}
+.prm .si{background:#4f46e5;color:#fff}
+.prm .pl{grid-column:1/-1;text-align:right;font-size:10.5px;color:#a5b4fc;text-decoration:underline;margin-top:8px}
+.tap{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;z-index:70;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.9) 0 9px,rgba(255,255,255,.35) 10px 13px,transparent 14px);
+  box-shadow:0 0 0 2px rgba(255,255,255,.6)}
+
+/* pop-out cards (float off the phone in 3D) */
+.pop{position:absolute;left:0;top:0;border-radius:18px;white-space:nowrap;box-shadow:0 40px 80px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.08) inset}
+
+/* kitchen node */
+#kitchen{position:absolute;left:0;top:0;display:flex;align-items:center;gap:14px;padding:18px 26px 18px 18px;border-radius:24px;background:rgba(18,24,21,.9);border:1px solid rgba(45,216,163,.35);box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+#kitchen .ki{width:54px;height:54px;border-radius:16px;background:rgba(45,216,163,.14);display:grid;place-items:center}
+#kitchen .ki svg{width:30px;height:30px;stroke:var(--mint);fill:none;stroke-width:1.8}
+#ticket{position:absolute;left:0;top:0;padding:12px 16px;border-radius:14px;background:#f6f3ea;color:#18202b;font-weight:700;font-size:15px;box-shadow:0 20px 40px -10px rgba(0,0,0,.7)}
+#beam{position:absolute;left:0;top:0;overflow:visible}
+
+/* end */
+.cta{display:inline-flex;align-items:center;gap:14px;border-radius:999px;background:var(--mint);color:#05241a;font-weight:800;position:relative;overflow:hidden;box-shadow:0 18px 50px -12px rgba(45,216,163,.7)}
+.cta .shine{position:absolute;top:-20%;bottom:-20%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent)}
+.recap{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.035em}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bgl" class="abs" style="inset:0">
+    <div class="orb" id="o1"></div><div class="orb" id="o2"></div><div class="orb" id="o3"></div>
+  </div>
+  <div class="world" id="world"></div>
+  <div id="ui" class="abs" style="inset:0"></div>
+  <div id="flash"></div>
+  <canvas id="grain"></canvas>
+  <div id="vig"></div>
+  <div id="fade"></div>
+</div>
+
+<script>
+/* ============================================================
+   Deterministic motion engine: window.render(t) draws frame at t
+   ============================================================ */
+const Q = new URLSearchParams(location.search);
+const SHORT = Q.get('f') === 'igs';      // Instagram short cut (~21s), same scenes re-edited on the beat
+const IG = Q.get('f') === 'ig' || SHORT;  // Instagram Reels: 9:16 with safe zones + teaser copy
+const V = Q.get('f') === 'v' || IG;
+const SITE = !V;                          // 16:9 for the site player (#video-demo on salaflow.com)
+const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+document.body.classList.toggle('V', V);
+const stage = document.getElementById('stage');
+stage.style.width = W + 'px'; stage.style.height = H + 'px';
+
+// ---------- music grid (112 BPM, first downbeat 0.163s) ----------
+const BAR = 2.1413, B0 = 0.163;
+// Site version: 2 extra bars (the "promemoria" scene) before the comanda scene. The music repeats
+// bars 11-12 there (mix.py site), so every scene from bar 13 on simply moves 2 bars later.
+const INS = 13, EXT = SITE ? 2 : 0;
+const rawBar = n => B0 + n * BAR;
+const bar = n => rawBar(n >= INS ? n + EXT : n);
+const beat = n => bar(n / 4);
+const PM0 = rawBar(INS), PM1 = rawBar(INS + EXT);   // promemoria scene (site only)
+const END = 47.3 + EXT * BAR;
+
+// ---------- easing ----------
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const E = {
+  lin: x => x,
+  inC: x => x * x * x,
+  outC: x => 1 - Math.pow(1 - x, 3),
+  ioC: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  outQ: x => 1 - Math.pow(1 - x, 5),
+  ioQ: x => x < .5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2,
+  outX: x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x),
+  ioX: x => x === 0 ? 0 : x === 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2,
+  inX: x => x === 0 ? 0 : Math.pow(2, 10 * x - 10),
+  outB: x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  spr: x => x >= 1 ? 1 : 1 - Math.exp(-7 * x) * Math.cos(11 * x) * (1 - x) - 0 * x, // soft spring settling at 1
+};
+const lerp = (a, b, x) => a + (b - a) * x;
+const P = (t, t0, t1, ease = E.ioC) => ease(cl((t - t0) / (t1 - t0)));
+// keyframe track of objects: [[time, {..}, ease], ...]  (ease used to arrive at that key)
+function track(keys, t) {
+  if (t <= keys[0][0]) return { ...keys[0][1] };
+  for (let i = 1; i < keys.length; i++) {
+    const [t1, v1, e = E.ioC] = keys[i], [t0, v0] = keys[i - 1];
+    if (t < t1) {
+      const x = e(cl((t - t0) / (t1 - t0))), o = {};
+      for (const k in v1) o[k] = lerp(v0[k] ?? v1[k], v1[k], x);
+      for (const k in v0) if (!(k in o)) o[k] = v0[k];
+      return o;
+    }
+  }
+  const o = {}; for (const [, v] of keys) Object.assign(o, v); return o;
+}
+// carry forward missing props so each key is complete
+function full(keys) { let acc = {}; return keys.map(([t, v, e]) => (acc = { ...acc, ...v }, [t, { ...acc }, e])); }
+
+// ---------- DOM helpers ----------
+const $ = (h) => { const d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstElementChild; };
+const css = (el, o) => { for (const k in o) el.style[k] = o[k]; return el; };
+const show = (el, on) => { if (el._d === undefined) el._d = el.style.display === 'none' ? '' : el.style.display; el.style.display = on ? el._d : 'none'; return on; };
+const tf = (el, s) => el.style.transform = s;
+const op = (el, v) => el.style.opacity = v;
+
+// ---------- layout ----------
+const L = V ? {
+  px: 540, py: 800, s: 1.3, capX: 60, capY: 1500, capW: 960, capAlign: 'center', headSize: 78, kickSize: 26,
+  pop: 1.0, tabX: 520, tabY: 560, tabS: 1.0, phX: 790, phY: 1080, phS: .5,
+  kitX: 540, kitY: 150, recap: 150,
+} : {
+  // Site player: on phones the page crops the 16:9 frame to its centre 810x1080 (3:4), so everything
+  // essential lives in x 585..1335. The sides only carry desktop extras (steps list, explanations).
+  px: 960, py: 648, s: .84, capX: 585, capY: 46, capW: 750, capAlign: 'center', headSize: 60, kickSize: 24,
+  pop: 1.0, tabX: 960, tabY: 590, tabS: 1.0, phX: 1215, phY: 760, phS: .6,
+  kitX: 1195, kitY: 560, comX: -95, recap: 150,
+};
+if (IG) Object.assign(L, { py: 1090, s: 1.2, capY: 250, tabY: 800, phY: 1260, kitX: 290, kitY: 1470 });
+
+/* ============================================================
+   Background: drifting orbs + film grain
+   ============================================================ */
+const o1 = document.getElementById('o1'), o2 = document.getElementById('o2'), o3 = document.getElementById('o3');
+css(o1, { width: '900px', height: '900px', background: 'rgba(45,216,163,.20)' });
+css(o2, { width: '700px', height: '700px', background: 'rgba(34,211,238,.12)' });
+css(o3, { width: '800px', height: '800px', background: 'rgba(45,216,163,.10)' });
+const grain = document.getElementById('grain');
+grain.width = 512; grain.height = 512;
+{ const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 1234567;
+  for (let i = 0; i < im.data.length; i += 4) { s = (s * 1103515245 + 12345) & 0x7fffffff; const v = s % 256; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); }
+css(grain, { width: (W * 2) + 'px', height: (H * 2) + 'px', imageRendering: 'pixelated' });
+
+const BOK = [];
+{ let sd = 42; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 24; i++) {
+    const d = rnd(), size = 5 + d * 24, e = document.createElement('div');
+    e.className = 'bok';
+    css(e, { width: size + 'px', height: size + 'px', filter: `blur(${1.5 + d * 5}px)`, background: rnd() > .5 ? '#2dd8a3' : '#7bf0c8' });
+    document.getElementById('bgl').appendChild(e);
+    BOK.push({ e, x: rnd() * W, y: rnd() * H, d, a: .05 + rnd() * .14, sp: 6 + rnd() * 16, ph: rnd() * 6.28 });
+  } }
+function drawBG(t, energy, camx = 0) {
+  BOK.forEach(b => {
+    const y = ((b.y - t * b.sp) % (H + 80) + H + 80) % (H + 80) - 40;
+    const x = b.x + Math.sin(t * .3 + b.ph) * 26 - camx * (.03 + b.d * .07);
+    tf(b.e, `translate(${x}px,${y}px)`);
+    op(b.e, b.a * (.65 + .35 * Math.sin(t * .8 + b.ph)) * (.75 + energy * .4));
+  });
+  const a = t * .25;
+  tf(o1, `translate(${W * .62 + Math.sin(a) * 180 - 450}px,${H * .45 + Math.cos(a * .8) * 120 - 450}px) scale(${1 + energy * .25})`);
+  tf(o2, `translate(${W * .2 + Math.cos(a * .7) * 220 - 350}px,${H * .75 + Math.sin(a * 1.1) * 140 - 350}px)`);
+  tf(o3, `translate(${W * .85 + Math.sin(a * .6 + 2) * 160 - 400}px,${H * .12 + Math.cos(a * .9) * 100 - 400}px)`);
+  const f = Math.floor(t * 24); // grain moves at 24fps like film
+  tf(grain, `translate(${-((f * 173) % 400)}px,${-((f * 97) % 400)}px)`);
+}
+
+/* ============================================================
+   Captions (kinetic word reveal)
+   ============================================================ */
+const UI = document.getElementById('ui');
+if (IG) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:0;height:640px;background:linear-gradient(0deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 35%,rgba(10,14,13,.96) 100%)"></div>`));
+else if (V) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:1300px;bottom:0;background:linear-gradient(180deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 30%,rgba(10,14,13,.96) 100%)"></div>`));
+// site: a dark band behind the captions, faded in only while a zoomed phone reaches up under them
+const scrim = $(`<div class="abs" style="left:0;right:0;top:0;height:340px;background:linear-gradient(180deg,rgba(10,14,13,.95) 0%,rgba(10,14,13,.9) 55%,rgba(10,14,13,0) 100%)"></div>`);
+if (SITE) UI.appendChild(scrim);
+function mkCap(kick, lines, opt = {}) {
+  const size = opt.size || L.headSize;
+  const el = $(`<div class="cap"></div>`);
+  if (kick) el.appendChild($(`<div class="kick" style="font-size:${L.kickSize}px"><i></i><span>${kick}</span></div>`));
+  const hd = $(`<div class="head" style="font-size:${size}px"></div>`);
+  lines.forEach(l => {
+    const ln = $(`<span class="line"></span>`);
+    l.split(' ').forEach((w, i) => { if (i) ln.appendChild(document.createTextNode(' ')); const m = w.startsWith('~'); ln.appendChild($(`<span class="w${m ? ' mint' : ''}">${m ? w.slice(1) : w}</span>`)); });
+    hd.appendChild(ln);
+  });
+  el.appendChild(hd);
+  css(el, { left: (opt.x ?? L.capX) + 'px', width: (opt.w ?? L.capW) + 'px', top: (opt.y ?? L.capY) + 'px' });
+  if (opt.center) { el.style.alignItems = 'center'; el.style.textAlign = 'center'; }
+  UI.appendChild(el);
+  el._w = [...el.querySelectorAll('.w')];
+  el._k = el.querySelector('.kick');
+  return el;
+}
+function drawCap(el, t, tin, tout) {
+  if (!show(el, t >= tin - .05 && t <= tout + .1)) return;
+  el._w.forEach((w, i) => {
+    const pi = P(t, tin + .08 + i * .05, tin + .08 + i * .05 + .75, E.outX);
+    const po = P(t, tout - .45 + i * .02, tout - .45 + i * .02 + .4, E.inC);
+    const y = (1 - pi) * 110 - po * 110;
+    tf(w, `translateY(${y}%) rotate(${(1 - pi) * 4}deg)`);
+    w.style.filter = `blur(${(1 - pi) * 6 + po * 6}px)`;
+    op(w, Math.min(pi * 1.4, 1 - po));
+  });
+  if (el._k) {
+    const pi = P(t, tin, tin + .6, E.outX), po = P(t, tout - .5, tout - .1, E.inC);
+    op(el._k, pi * (1 - po));
+    tf(el._k, `translateX(${(1 - pi) * -30}px)`);
+    tf(el._k.querySelector('i'), `scaleX(${pi})`);
+  }
+}
+
+/* ============================================================
+   Scene A — the paper notebook
+   ============================================================ */
+const paperWrap = $(`<div class="dev"></div>`);
+const paper = $(`<div id="paper">
+  <div class="ttl">Sabato 20 · Prenotazioni</div>
+</div>`);
+const entries = [
+  ['Rossi — 4 pers. — 20:30', 130], ['Bianchi — 2 — 20:45', 178], ['Tav. 12 ?? spostato al 7', 226],
+  ['Walk-in 3 pers. — dove??', 274], ['Ferri 6 — 21:00 — allergia?', 322], ['Colombo — 2 — 21:15', 370],
+  ['tel. Martini → richiamare', 418], ['Tav. 5 — conto?', 466],
+];
+const entEls = entries.map(([s, y]) => { const e = $(`<div class="e" style="top:${y}px">${s}</div>`); paper.appendChild(e); return e; });
+const svgNS = 'http://www.w3.org/2000/svg';
+const psvg = document.createElementNS(svgNS, 'svg'); psvg.setAttribute('width', 560); psvg.setAttribute('height', 700);
+const strokes = [
+  'M86 200 C 200 196, 330 204, 430 198', 'M86 248 C 180 252, 300 244, 470 250',
+  'M470 296 c 18 -20 40 -18 44 4 c 4 22 -30 30 -44 10 c -10 -16 6 -34 26 -30',
+  'M86 392 C 190 388, 320 396, 420 390', 'M300 330 l 150 30 M300 360 l 150 -30',
+];
+const pathEls = strokes.map(d => { const p = document.createElementNS(svgNS, 'path'); p.setAttribute('d', d); psvg.appendChild(p); const L_ = p.getTotalLength ? 600 : 600; return p; });
+paper.appendChild(psvg);
+paperWrap.appendChild(paper);
+document.getElementById('world').appendChild(paperWrap);
+
+const capA1 = mkCap(null, ['Sabato sera.', '~Sala ~piena.'], V ? { y: IG ? 270 : 1330, size: 96 } : { y: 56, size: 84 });
+const capA2 = mkCap(null, ['E il quaderno', 'non basta più.'], V ? { y: IG ? 270 : 1330, size: 96 } : { y: 56, size: 84 });
+
+function drawA(t) {
+  drawCap(capA1, t, beat(1), beat(4.2));
+  drawCap(capA2, t, beat(4.4), bar(2) - .05);
+  const on = show(paperWrap, t < bar(2) + .1);
+  if (!on) return;
+  const x = V ? 540 : 960, y = IG ? 1080 : 640;
+  const inP = P(t, 0, 1.3, E.outX), outP = P(t, bar(1.6), bar(2), E.inX);
+  const drift = t * 2;
+  tf(paperWrap, `translate3d(${x + (1 - inP) * 120}px,${y + (1 - inP) * 200 + outP * 300}px,${-300 * (1 - inP) - outP * 900}px)
+      rotateX(${18 - inP * 6 + outP * 50}deg) rotateY(${-14 + drift * .8}deg) rotateZ(${-6 + inP * 3 + outP * 12}deg) scale(${V ? .95 : .82})`);
+  paperWrap.style.filter = `blur(${outP * 14}px)`;
+  op(paperWrap, inP * (1 - outP));
+  entEls.forEach((e, i) => {
+    const p = P(t, .35 + i * .22, .35 + i * .22 + .5, E.outC);
+    e.style.clipPath = `inset(0 ${100 - p * 100}% 0 0)`;
+  });
+  pathEls.forEach((p, i) => {
+    const len = p.getTotalLength();
+    const st = [1.6, 1.9, 2.3, 2.6, 2.9][i];
+    const k = P(t, st, st + .35, E.outC);
+    p.style.strokeDasharray = len; p.style.strokeDashoffset = len * (1 - k);
+  });
+}
+
+/* ============================================================
+   Scene B — logo reveal
+   ============================================================ */
+const LOGO_SIZE = V ? 280 : 230;
+const logoBox = $(`<div class="abs" style="left:0;top:0;width:${W}px;height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+  <div class="lw" style="position:relative;width:${LOGO_SIZE}px;height:${LOGO_SIZE}px">
+    <div class="ring r1" style="inset:0"></div><div class="ring r2" style="inset:0"></div>
+    <div class="logoimg" style="width:100%;height:100%"><img src="../../logo.png"><div class="sheen"></div></div>
+  </div>
+  <div class="wm head" style="font-size:${V ? 128 : 116}px;margin-top:44px;display:flex"></div>
+  <div class="tg" style="font-size:${V ? 44 : 38}px;font-weight:500;color:var(--mute);margin-top:18px;text-align:center;padding:0 60px"></div>
+</div>`);
+UI.appendChild(logoBox);
+const lw = logoBox.querySelector('.lw'), sheen = logoBox.querySelector('.sheen'),
+  r1 = logoBox.querySelector('.r1'), r2 = logoBox.querySelector('.r2'), wm = logoBox.querySelector('.wm'), tg = logoBox.querySelector('.tg');
+const wmL = 'SalaFlow'.split('').map((c, i) => { const s = $(`<span style="display:inline-block;${i >= 4 ? 'color:var(--mint)' : ''}">${c}</span>`); wm.appendChild(s); return s; });
+const tgW = 'La tua sala, finalmente sotto controllo.'.split(' ').map((w, i) => { if (i) tg.appendChild(SITE && i === 3 ? document.createElement('br') : document.createTextNode(' ')); const s = $(`<span style="display:inline-block">${w}</span>`); tg.appendChild(s); return s; });
+
+function drawB(t) {
+  const t0 = bar(2) - .15, t1 = bar(4);
+  if (!show(logoBox, t > t0 && t < t1 + .1)) return;
+  const pin = P(t, t0, t0 + 1.1, E.outX);
+  const pout = P(t, t1 - .55, t1, E.inX);
+  tf(lw, `perspective(900px) rotateY(${(1 - pin) * -50}deg) scale(${.35 + pin * .65 + pout * .6})`);
+  lw.style.filter = `blur(${(1 - pin) * 18 + pout * 18}px)`;
+  op(lw, Math.min(1, pin * 2) * (1 - pout));
+  tf(sheen, `translateX(${lerp(-120, 120, P(t, t0 + .6, t0 + 1.5, E.ioC))}%)`);
+  [[r1, t0 + .15], [r2, t0 + .45]].forEach(([r, s]) => {
+    const k = P(t, s, s + 1.4, E.outC);
+    tf(r, `scale(${1 + k * 1.8})`); op(r, (1 - k) * .8 * (k > 0));
+  });
+  wmL.forEach((s, i) => {
+    const k = P(t, t0 + .45 + i * .045, t0 + 1.25 + i * .045, E.outX);
+    tf(s, `translateY(${(1 - k) * 60}px) scale(${1 + pout * .2})`); s.style.filter = `blur(${(1 - k) * 10 + pout * 12}px)`;
+    op(s, k * (1 - pout));
+  });
+  tgW.forEach((s, i) => {
+    const k = P(t, bar(3) + i * .06, bar(3) + i * .06 + .8, E.outX);
+    tf(s, `translateY(${(1 - k) * 24}px)`); s.style.filter = `blur(${(1 - k) * 8 + pout * 10}px)`; op(s, k * (1 - pout));
+  });
+}
+
+/* ============================================================
+   App screens
+   ============================================================ */
+const ICON = {
+  tav: '<svg viewBox="0 0 24 24"><path d="M4 9h16M6 9v9M18 9v9M4 6h16"/></svg>',
+  ser: '<svg viewBox="0 0 24 24"><path d="M4 17h16M6 17a6 6 0 0 1 12 0M12 8v3"/></svg>',
+  cer: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>',
+  map: '<svg viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',
+};
+const statusBar = `<div class="sb"><span>09:41</span><span style="display:flex;gap:6px;align-items:center">
+  <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+  <svg viewBox="0 0 16 12"><path d="M8 11.5l2.3-2.6a3.2 3.2 0 0 0-4.6 0zM3.4 6.7a6.6 6.6 0 0 1 9.2 0l1.5-1.6a8.9 8.9 0 0 0-12.2 0zM.2 3.3a11 11 0 0 1 15.6 0" fill="#fff" stroke="#fff" stroke-width=".5"/></svg>
+  <svg viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#fff"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="#fff" opacity=".5"/></svg></span></div>`;
+const header = `<div class="hdr"><div class="lg" style="background-image:url(locanda.png)"></div><div><div class="nm">Locanda Del Convento</div><div class="sub">Cucina tipica abruzzese</div></div><div class="hb"><i></i></div></div>`;
+const nav = (on) => `<div class="nav">${[['tav', 'Tavoli'], ['ser', 'Servizio'], ['+'], ['cer', 'Cerca'], ['map', 'Mappa']].map(([k, n]) =>
+  k === '+' ? `<div class="plus">+</div>` : `<div class="it ${on === k ? 'on' : ''}"><div class="ic">${ICON[k]}</div>${n}</div>`).join('')}</div>`;
+
+// floor plan (Pergolato) — positions traced from the real app
+const TABLES = [
+  ['3', 14, 12, 40, 28, 'b'], ['2', 128, 8, 36, 26, 'b'], ['1', 240, 12, 46, 30, 'b'],
+  ['4', 10, 52, 52, 36, 'g'], ['5', 124, 56, 46, 40, 'b'], ['6', 250, 86, 26, 36, 'r'],
+  ['28', 12, 102, 44, 68, 'b'], ['7', 234, 146, 54, 80, 'g'], ['26', 12, 184, 46, 70, 'r'],
+  ['25', 12, 268, 40, 56, 'b'], ['19', 128, 272, 46, 32, 'b'], ['8', 236, 272, 46, 32, 'b'],
+  ['24', 14, 344, 34, 24, 'g'], ['9', 244, 330, 34, 24, 'g'], ['22', 14, 440, 46, 26, 'g'],
+  ['17', 130, 448, 44, 28, 'b'], ['12', 236, 460, 46, 26, 'g'], ['14', 128, 360, 46, 30, 'g'],
+];
+function mkApp(kind) {
+  const a = $(`<div class="app">${statusBar}${header}</div>`);
+  return a;
+}
+const phone = $(`<div class="dev"><div class="phone">
+  <div class="frame"></div>
+  <div class="scr"><div class="island"></div><div class="glare"></div></div>
+</div></div>`);
+document.getElementById('world').appendChild(phone);
+const scr = phone.querySelector('.scr');
+const phoneEl = phone.querySelector('.phone');
+
+// --- map pane ---
+const app = $(`<div class="app">${statusBar}${header}</div>`);
+scr.appendChild(app);
+const mapPane = $(`<div class="pane">
+  <div class="legend card"><span><i class="dot" style="background:#22c55e"></i>Libero</span><span><i class="dot" style="background:#ef4444"></i>Prenotato</span><span><i class="dot" style="background:#3b82f6"></i>Arrivato</span>
+    <span style="margin-left:auto;display:flex;gap:8px"><span class="ib">+</span><span class="ib" style="font-size:13px">✎</span></span></div>
+  <div class="dash">▯ Piantina diversa solo per oggi</div>
+  <div class="zone card"><div class="zt">Pergolato</div><div class="zc">27 tavoli ⌃</div><span class="ib" style="position:absolute;right:12px;top:10px;font-size:13px">✎</span>
+    <div class="map"></div></div>
+  ${nav('map')}
+</div>`);
+app.appendChild(mapPane);
+const mapEl = mapPane.querySelector('.map');
+const tableEls = TABLES.map(([n, x, y, w, h, c]) => { const e = $(`<div class="tb ${c}" style="left:${x}px;top:${y + 10}px;width:${w}px;height:${h}px">${n}</div>`); mapEl.appendChild(e); e._c = c; return e; });
+const t6 = tableEls[5];
+// walk-in sheet
+const dim = $(`<div class="dim"></div>`); app.appendChild(dim);
+const sheet1 = $(`<div class="sheet" style="top:250px">
+  <div style="display:flex;gap:8px;align-items:center"><span class="chip" style="background:rgba(22,163,74,.2);color:#4ade80;border:1px solid rgba(34,197,94,.5)">Tavolo 6</span><span class="chip" style="background:#1b2438;color:#cbd5e1">Pergolato</span><span style="margin-left:auto;color:#94a3b8;font-size:18px">✕</span></div>
+  <div style="height:1px;background:var(--a-line);margin:14px 0"></div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-weight:800;font-size:16px">Non Prenotato</div><div style="color:#94a3b8;font-size:12px;margin-top:4px">👥 2 Persone • ◷ 19:32</div></div>
+    <span class="chip" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.5)">Arrivato</span></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin:16px 0 14px"><span class="ib" style="color:#a5b4fc">Ħ</span><span class="ib">✎</span><span class="ib">⊘</span><span class="ib" style="background:#3b0d14;color:#f87171;border-color:#7f1d1d">🗑</span></div>
+  <div class="row" style="margin-bottom:12px"><div class="btn o">☆ Priorità</div><div class="btn o">🔔 Avvisa</div></div>
+  <div class="btn arr" style="background:linear-gradient(180deg,#2563eb,#1d4ed8);color:#fff;height:46px;margin-bottom:12px">✓ Cliente arrivato</div>
+  <div class="row"><div class="btn o" style="color:#e2e8f0">🖐 Accoglienza</div><div class="btn o" style="color:#e2e8f0">▤ Comanda</div></div>
+</div>`);
+app.appendChild(sheet1);
+const btnArr = sheet1.querySelector('.arr');
+const toastA = $(`<div class="toast gr">✓ Ħ Arrivato: Tavolo 6 – Non Prenotato (2 persone)</div>`);
+const toastB = $(`<div class="toast gr">✓ Tavolo segnato come arrivato!</div>`);
+app.appendChild(toastA); app.appendChild(toastB);
+
+// --- search pane ---
+const searchPane = $(`<div class="pane">
+  <div class="teal" style="position:absolute;left:14px;right:14px;top:18px;height:118px;padding:18px">
+    <div style="font-weight:800;font-size:13px;letter-spacing:.06em">RICERCA RAPIDA</div>
+    <div style="margin-top:14px;height:44px;border-radius:14px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;padding:0 14px;gap:10px;font-size:14px">
+      <span style="opacity:.9">⌕</span><span class="q" style="font-weight:600"></span><span class="caret" style="width:2px;height:18px;background:#fff;margin-left:-8px"></span></div>
+  </div>
+  <div class="res card" style="position:absolute;left:14px;right:14px;top:156px;padding:14px">
+    <div style="display:flex;align-items:center;gap:10px"><span class="chip" style="background:rgba(22,163,74,.2);color:#4ade80">T1</span><b style="font-size:16px">Francesca</b>
+      <span class="chip" style="margin-left:auto;background:rgba(22,163,74,.15);color:#4ade80;border:1px solid rgba(34,197,94,.45)">◷ 19:30</span></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin:14px 0 10px"><span class="ib" style="color:#a5b4fc">Ħ</span><span class="ib">⊘</span><span class="ib">✎</span><span class="ib" style="background:#3b0d14;color:#f87171;border-color:#7f1d1d">🗑</span></div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:12px">👥 4 Persone • Pergolato</div>
+    <div class="btn" style="background:linear-gradient(180deg,#2563eb,#1d4ed8);color:#fff">✓ Cliente arrivato</div>
+  </div>
+  ${nav('cer')}
+</div>`);
+app.appendChild(searchPane);
+const qEl = searchPane.querySelector('.q'), caret = searchPane.querySelector('.caret'), resCard = searchPane.querySelector('.res');
+
+// --- service grid pane ---
+const GRID = [
+  ['6', 'Non Pren.', '0 min', 'red'], ['111', 'Cristiana', '48 min'], ['107', 'Montini', '44 min'], ['103', 'Non Pren.', '41 min'],
+  ['5', 'Carla', '38 min'], ['35', 'Non Pren.', '35 min'], ['19', 'Salvi', '31 min'], ['30', 'Non Pren.', '29 min'],
+  ['17', 'Fabio', '26 min'], ['31', 'Non Pren.', '22 min'], ['25', 'Masci', '19 min'], ['13', 'Renato', '15 min'],
+  ['32', 'Non Pren.', '12 min'], ['8', 'Berardo', '9 min'], ['1', 'Francesca', '4 min'], ['3', 'Non Pren.', '2 min'],
+];
+const gridPane = $(`<div class="pane">
+  <div class="teal" style="position:absolute;left:14px;right:14px;top:18px;height:84px;padding:16px 18px">
+    <div style="font-weight:800;font-size:14px;letter-spacing:.05em">🖐 STATO DEL SERVIZIO</div>
+    <div style="font-size:11.5px;opacity:.85;margin-top:6px">Tavoli arrivati, accoglienza e comande</div>
+    <span class="chip" style="position:absolute;right:14px;top:26px;background:rgba(255,255,255,.25);font-size:10.5px">LIVE ●</span>
+  </div>
+  <div style="position:absolute;left:22px;top:118px;font-size:12px;font-weight:800;color:var(--a-teal1);letter-spacing:.04em">⌖ TAVOLI ARRIVATI</div>
+  <div class="gr" style="position:absolute;left:14px;top:142px;width:362px;height:600px;perspective:700px"></div>
+  ${nav('ser')}
+</div>`);
+app.appendChild(gridPane);
+const grEl = gridPane.querySelector('.gr');
+const tileEls = GRID.map(([n, nm, tm, c], i) => {
+  const e = $(`<div class="tile ${c || ''}" style="left:${(i % 4) * 92}px;top:${Math.floor(i / 4) * 102}px"><b>${n}</b><s>${nm}</s><u>${tm}</u></div>`);
+  grEl.appendChild(e); return e;
+});
+// allergen modal
+const dim2 = $(`<div class="dim"></div>`); app.appendChild(dim2);
+const ALG = ['Glutine', 'Crostacei', 'Uova', 'Pesce', 'Arachidi', 'Soia', 'Latte', 'Frutta a guscio', 'Sedano', 'Senape', 'Sesamo', 'Solfiti', 'Lupini', 'Molluschi'];
+const chk = '<svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.5L10 3"/></svg>';
+const alg = $(`<div class="sheet" style="top:150px">
+  <div style="display:flex;align-items:center;font-weight:800;font-size:14px;letter-spacing:.03em">🖐 ACCOGLIENZA – ALLERGENI<span style="margin-left:auto;color:#94a3b8;font-size:18px;font-weight:400">✕</span></div>
+  <div style="height:1px;background:var(--a-line);margin:12px 0"></div>
+  <div style="font-size:11.5px;color:#aab4c4;line-height:1.4;margin-bottom:12px">Seleziona gli allergeni presenti per il tavolo oppure scegli "Nessuno".</div>
+  <div class="ck" style="margin-bottom:10px;border-color:rgba(34,197,94,.35);background:rgba(20,83,45,.35);color:#86efac"><span class="bx"></span>⊘ Nessuno / Nessuna intolleranza</div>
+  <div class="al" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+  <div class="row" style="margin-top:14px"><div class="btn" style="background:#334155;color:#e2e8f0">Annulla</div><div class="btn conf" style="background:linear-gradient(120deg,var(--a-teal1),var(--a-teal2));color:#fff">Conferma</div></div>
+</div>`);
+app.appendChild(alg);
+const algEls = ALG.map(n => { const e = $(`<div class="ck"><span class="bx">${chk}</span>${n}</div>`); alg.querySelector('.al').appendChild(e); return e; });
+const btnConf = alg.querySelector('.conf');
+const toastC = $(`<div class="toast gr">✓ Accoglienza e intolleranze registrate!</div>`); app.appendChild(toastC);
+// table 6 management sheet
+const sheet2 = $(`<div class="sheet" style="top:200px">
+  <div style="display:flex;align-items:center;font-weight:800;font-size:15px;letter-spacing:.02em">TAVOLO 6 – NON PRENOTATO<span style="margin-left:auto;color:#94a3b8;font-size:18px;font-weight:400">✕</span></div>
+  <div style="height:1px;background:var(--a-line);margin:12px 0"></div>
+  <div class="card" style="padding:12px;font-size:12px;color:#aab4c4;line-height:1.7;background:#0f1728">👥 2 Persone • Pergolato<br>◷ Orario di prenotazione: 19:32<br><span class="chip" style="background:rgba(99,102,241,.2);color:#c7d2fe;padding:2px 9px;font-size:10.5px">⏱ 1 min</span></div>
+  <div class="btn" style="background:linear-gradient(180deg,#5b5bf0,#4f46e5);color:#fff;margin:12px 0">Ħ Tavolo liberato</div>
+  <div class="row" style="margin-bottom:10px"><div class="btn o" style="flex:5;color:#e2e8f0">✎ Modifica prenotazione</div><div class="btn" style="flex:1;background:#3b0d14;color:#f87171">🗑</div></div>
+  <div class="row" style="margin-bottom:10px"><div class="btn o" style="color:#a5b4fc">☆ Priorità</div><div class="btn o pr" style="color:#c4b5fd">🔔 Avvisa</div></div>
+  <div class="row"><div class="btn" style="background:linear-gradient(180deg,#16a34a,#15803d);color:#fff">✓ 🖐 Accoglienza</div><div class="btn o com" style="color:#e2e8f0">▤ Comanda</div></div>
+</div>`);
+app.appendChild(sheet2);
+const btnPr = sheet2.querySelector('.pr'), btnCom = sheet2.querySelector('.com');
+const toastD = $(`<div class="toast pu">★ 🔔 Tavolo 6 – Non Prenotato è pronto per ordinare!</div>`); app.appendChild(toastD);
+// promemoria (site): the real reminder card of the app
+const prm = $(`<div class="prm"><div class="pi">Ħ</div><div class="pt">Tavolo 111 (Cristiana) si è alzato?</div>
+  <div class="pb"><span class="no">No</span><span class="si">Sì</span></div><div class="pl">Non lo so, chiedi a qualcun altro</div></div>`);
+if (SITE) app.appendChild(prm);
+const prmSi = prm.querySelector('.si');
+const tapEl = $(`<div class="tap"></div>`); app.appendChild(tapEl);
+
+// pop-outs (children of the 3D phone so they lift off the screen)
+const popA = $(`<div class="pop" style="background:#15803d;border:1px solid #22c55e;padding:22px 30px;font-weight:800;font-size:22px;color:#eafff3">✓ Tavolo 6 · Cliente arrivato</div>`);
+const popS = $(`<div class="pop" style="background:#121b2e;border:1px solid rgba(148,163,184,.25);padding:20px 26px;font-size:18px;color:#e6ebf2">
+  <div style="display:flex;align-items:center;gap:12px"><span class="chip" style="background:rgba(22,163,74,.2);color:#4ade80;font-size:15px">T1</span><b style="font-size:26px">Francesca</b></div>
+  <div style="color:#94a3b8;margin-top:8px">4 persone · Pergolato · 19:30</div></div>`);
+const popG1 = $(`<div class="pop" style="background:#15383a;border:1px solid var(--a-teal1);padding:16px 26px;font-weight:800;font-size:24px;color:#ccfbf1">⚠ Glutine</div>`);
+const popG2 = $(`<div class="pop" style="background:#15383a;border:1px solid var(--a-teal1);padding:16px 26px;font-weight:800;font-size:24px;color:#ccfbf1">⚠ Latte</div>`);
+const popT = $(`<div class="pop" style="background:#6d28d9;border:1px solid #a78bfa;padding:20px 28px;font-weight:800;font-size:21px;color:#f5f0ff">🔔 Tavolo 6 è pronto per ordinare</div>`);
+const popL = $(`<div class="pop" style="background:#15803d;border:1px solid #22c55e;padding:20px 28px;font-weight:800;font-size:22px;color:#eafff3">✓ Tavolo 111 liberato</div>`);
+[popA, popS, popG1, popG2, popT, ...(SITE ? [popL] : [])].forEach(p => phoneEl.appendChild(p));
+
+// kitchen node + ticket
+const kitchen = $(`<div id="kitchen"><div class="ki"><svg viewBox="0 0 24 24"><path d="M6 13.5V20h12v-6.5M6 13.5a4 4 0 1 1 2.3-7.3A4.5 4.5 0 0 1 16 5.4a4 4 0 1 1 2 8.1zM6 17h12"/></svg></div>
+  <div><div style="font-weight:800;font-size:24px">Cucina</div><div class="kst" style="font-size:15px;color:var(--mute);margin-top:2px">In attesa</div></div></div>`);
+UI.appendChild(kitchen);
+const kst = kitchen.querySelector('.kst');
+const ticket = $(`<div id="ticket">▤ Comanda · Tavolo 6</div>`); UI.appendChild(ticket);
+
+// ---------- tablet ----------
+const tablet = $(`<div class="dev"><div class="tablet"><div class="frame"></div><div class="scr"><div class="app">
+  <div class="sb" style="padding:4px 30px 0;font-size:14px;height:36px"><span>09:41</span><span>● ● ●</span></div>
+  <div class="hdr" style="top:40px;left:20px;right:20px;height:74px"><div class="lg" style="background-image:url(locanda.png)"></div><div><div class="nm" style="font-size:22px">Locanda Del Convento</div><div class="sub">Cucina tipica abruzzese</div></div><div class="hb"><i></i></div></div>
+  <div class="teal" style="position:absolute;left:24px;right:24px;top:132px;height:70px;padding:14px 20px">
+    <div style="font-weight:800;font-size:15px;letter-spacing:.05em">🖐 STATO DEL SERVIZIO</div><div style="font-size:12px;opacity:.85;margin-top:5px">Tavoli arrivati, accoglienza e comande</div>
+    <span class="chip" style="position:absolute;right:18px;top:22px;background:rgba(255,255,255,.25)">LIVE ●</span></div>
+  <div class="tgr" style="position:absolute;left:24px;top:222px;width:972px;height:480px"></div>
+</div></div></div></div>`);
+document.getElementById('world').appendChild(tablet);
+const tgr = tablet.querySelector('.tgr');
+const TG = [...GRID.slice(SITE ? 2 : 1), ['21', 'Lombardi', '1 min'], ['40', 'Non Pren.', '6 min'], ['11', 'Di Carlo', '8 min'], ['16', 'Marini', '10 min'], ['23', 'Non Pren.', '14 min'], ...(SITE ? [['29', 'Ferri', '3 min']] : [])];
+const tabTiles = TG.map(([n, nm, tm], i) => { const e = $(`<div class="tile" style="left:${(i % 10) * 97}px;top:${Math.floor(i / 10) * 106}px"><b>${n}</b><s>${nm}</s><u>${tm}</u></div>`); tgr.appendChild(e); return e; });
+const NT = TG.length;
+const newTab = $(`<div class="tile red" style="left:${(NT % 10) * 97}px;top:${Math.floor(NT / 10) * 106}px"><b>12</b><s>Rossi</s><u>0 min</u></div>`); tgr.appendChild(newTab);
+const newPh = $(`<div class="tile red" style="left:0;top:0"><b>12</b><s>Rossi</s><u>0 min</u></div>`); grEl.appendChild(newPh);
+const beam = document.createElementNS(svgNS, 'svg'); beam.id = 'beam'; beam.setAttribute('width', W); beam.setAttribute('height', H);
+beam.innerHTML = `<defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#2dd8a3" stop-opacity="0"/><stop offset=".5" stop-color="#7bf0c8"/><stop offset="1" stop-color="#2dd8a3" stop-opacity="0"/></linearGradient></defs>
+  <path id="bp" d="" stroke="url(#bg1)" stroke-width="4" fill="none" stroke-linecap="round"/><circle id="bd" r="9" fill="#bff7e4"/>`;
+UI.appendChild(beam);
+const bp = beam.querySelector('#bp'), bd = beam.querySelector('#bd');
+
+// captions for app scenes
+const C = {
+  map: mkCap('Piantina', ['La tua sala,', 'in tempo reale.']),
+  walk: mkCap('Walk-in', ['Un tocco, e il', 'cliente è ~arrivato.']),
+  search: mkCap('Ricerca', ['Ogni prenotazione,', 'in un secondo.']),
+  grid: mkCap('Stato del servizio', ['Tutta la serata,', 'a colpo d’occhio.']),
+  alg: mkCap(SITE ? 'Allergeni' : 'Accoglienza', ['Le allergie,', 'segnate sul tavolo.']),
+  ...(SITE ? { promo: mkCap('Promemoria', ['Il tavolo si è alzato?', 'Te lo chiede ~SalaFlow.']) } : {}),
+  com: mkCap('Comande', ['Dal tavolo', 'alla cucina.']),
+  sync: mkCap('Sincronizzazione', ['Telefono e tablet,', 'sempre allineati.'], V ? { y: IG ? 250 : 1520 } : {}),
+};
+
+/* ============================================================
+   Phone choreography (single continuous track)
+   ============================================================ */
+const S = L.s, X = L.px, Y = L.py;
+// focus points in phone-local coords (relative to phone centre, px)
+const tb6 = { fx: -207 + 12 + 14 + 16 + 250 + 13, fy: -434 + 12 + 150 + 138 + 58 + 96 + 18 };
+const F_SHEET = { fx: 0, fy: -40 }, F_TOP = { fx: 0, fy: -190 }, F_TILE6 = { fx: -207 + 12 + 14 + 42, fy: -434 + 12 + 150 + 142 + 47 };
+const F_COM = { fx: 96, fy: 240 }, F_PRM = { fx: 0, fy: -434 + 12 + 662 };
+const PH = full([
+  [bar(4) - .6, { x: X + 260, y: Y + 700, z: -1200, rx: 38, ry: 42, rz: -10, s: S, fx: 0, fy: 0, f: 0, o: 0, bl: 20 }],
+  [bar(4) + 1.1, { x: X, y: Y, z: 0, rx: 7, ry: -18, rz: 2, o: 1, bl: 0 }, E.outX],
+  [bar(5.3), { rx: 5, ry: -10, rz: 1, s: S * 1.05 }, E.ioC],
+  [bar(5.75), { ...tb6, f: 1, s: S * 2.3, rx: 2, ry: -3, rz: 0 }, E.ioX],
+  [bar(6) + .1, { s: S * 2.4 }, E.lin],
+  [bar(6) + .9, { ...F_SHEET, f: .7, s: S * 1.3, rx: 4, ry: -9, rz: 1 }, E.outX],
+  [bar(7.2), { s: S * 1.36, ry: -12 }, E.ioC],
+  [bar(8) - .05, { f: 0, s: S, ry: -14, rx: 6 }, E.ioC],
+  [bar(8) + .7, { ry: 13, rz: -2, rx: 6 }, E.outB],
+  [bar(9) - .45, { ...F_TOP, f: .7, s: S * 1.3, ry: 8 }, E.ioC],
+  [bar(9) - .02, { s: S * 1.9, bl: 14, o: .0 }, E.inX],
+  [bar(9) + .001, { f: 0, s: S * .8, ry: -24, rx: 14, rz: 3, o: 1, bl: 10 }, E.lin],
+  [bar(9) + 1.0, { s: S, ry: -12, rx: 6, rz: 1, bl: 0 }, E.outX],
+  [bar(10.4), { s: S * 1.05, ry: -8 }, E.ioC],
+  [bar(10.9), { ...F_TILE6, f: 1, s: S * 2.1, ry: -3, rx: 2, rz: 0 }, E.ioX],
+  [bar(11) + .8, { ...F_SHEET, f: .5, s: S * 1.2, ry: -9, rx: 5 }, E.outX],
+  [bar(12.8), { s: S * 1.26, ry: -12 }, E.ioC],
+  ...(SITE ? [                                              // promemoria: centre, zoom on the card, back
+    [PM0 + .9, { fx: 0, fy: 0, f: 0, s: S * 1.08, rx: 5, ry: -10, rz: 1 }, E.outX],
+    [PM0 + 1.75, { ...F_PRM, f: .8, s: S * 1.7, rx: 3, ry: -5, rz: 0 }, E.ioX],
+    [PM0 + 2.45, { s: S * 1.76 }, E.lin],
+    [PM0 + 3.35, { f: 0, s: S * 1.05, rx: 5, ry: -9, rz: 1 }, E.outX],
+    [PM1 - .05, { s: S * 1.1, ry: -12 }, E.ioC],
+  ] : []),
+  [bar(13) + .8, { x: X + (L.comX || 0), fx: 0, fy: 0, f: 0, s: S * 1.05, ry: 11, rz: -1.5, rx: 5 }, E.outX],
+  [bar(13.8), { ...F_COM, f: .8, s: S * 1.75, ry: 5 }, E.ioX],
+  [bar(14.5), { f: 0, s: S, ry: 12 }, E.ioC],
+  [bar(15) + .9, { x: L.phX, y: L.phY, z: 150, s: S * L.phS, rx: 6, ry: -18, rz: 2 }, E.outX],
+  [bar(16.9), { ry: -12, rx: 4 }, E.ioC],
+  [bar(17) + .6, { z: -500, o: 0, bl: 18, ry: -30 }, E.inC],
+]);
+// in vertical, phone scale for sync scene should be L.phS
+function phoneState(t) { const p = track(PH, t); if (t > bar(15)) { /* keep */ } return p; }
+function place(dev, inner, p) {
+  tf(dev, `translate3d(${p.x}px,${p.y}px,${p.z}px) rotateX(${p.rx}deg) rotateY(${p.ry}deg) rotateZ(${p.rz}deg) scale(${p.s}) translate(${-p.fx * p.f}px,${-p.fy * p.f}px)`);
+  dev.style.filter = p.bl > .05 ? `blur(${p.bl}px)` : 'none';
+  op(dev, p.o);
+}
+function tapAt(t, t0, x, y) {
+  const k = P(t, t0 - .25, t0 + .45, E.lin);
+  if (k <= 0 || k >= 1) return false;
+  css(tapEl, { left: x + 'px', top: y + 'px' });
+  const inn = P(t, t0 - .25, t0, E.outC), out = P(t, t0, t0 + .45, E.outC);
+  tf(tapEl, `scale(${1.3 - inn * .5 + out * .9})`); op(tapEl, inn * (1 - out));
+  return true;
+}
+function pop(el, t, tin, tout, x, y, z, rz = 0) {
+  if (!show(el, t > tin && t < tout)) return;
+  const k = P(t, tin, tin + .9, E.outB), o = P(t, tout - .5, tout, E.inC);
+  tf(el, `translate3d(${x * (V ? .78 : 1) + 207}px,${y + 434}px,${z * k + o * 60}px) translate(-50%,-50%) scale(${.6 + .4 * k}) rotateZ(${rz * k}deg)`);
+  op(el, Math.min(1, k * 2) * (1 - o));
+  el.style.filter = `blur(${o * 8}px)`;
+}
+function toast(el, t, tin, tout, bottom) {
+  if (!show(el, t > tin && t < tout)) return;
+  const k = P(t, tin, tin + .6, E.outB), o = P(t, tout - .35, tout, E.inC);
+  css(el, { top: (844 - bottom) + 'px' });
+  tf(el, `translate(-50%,${(1 - k) * 60 + o * 20}px) scale(${.9 + .1 * k})`); op(el, Math.min(1, k * 1.5) * (1 - o));
+}
+
+const glare = phone.querySelector('.glare');
+function drawPhone(t) {
+  if (!show(phone, t > bar(4) - .7 && t < bar(17) + .7)) return;
+  const p = phoneState(t);
+  place(phone, null, p);
+  // the highlight on the glass slides as the phone turns
+  const ga = 14 + (p.ry + 26) * 1.5;
+  glare.style.background = `linear-gradient(115deg,rgba(255,255,255,0) ${ga}%,rgba(255,255,255,.085) ${ga + 8}%,rgba(255,255,255,0) ${ga + 24}%),linear-gradient(115deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 38%)`;
+
+  // screen state
+  const sMap = t < bar(8) + .25, sSearch = t >= bar(8) + .25 && t < bar(9), sGrid = t >= bar(9);
+  show(mapPane, sMap || (t >= bar(8) && t < bar(8) + .6)); show(searchPane, t >= bar(8) && t < bar(9)); show(gridPane, sGrid);
+  // slide map -> search
+  const sw = P(t, bar(8), bar(8) + .6, E.ioX);
+  tf(mapPane, `translateX(${-sw * 100}%)`); tf(searchPane, `translateX(${(1 - sw) * 100}%)`);
+
+  // tables pop in
+  tableEls.forEach((e, i) => {
+    const k = P(t, bar(4) + .5 + i * .045, bar(4) + 1.2 + i * .045, E.outB);
+    tf(e, `scale(${k})`); op(e, cl(k * 2));
+  });
+  // table 6 : red -> blue after arrival
+  const arrived = t > bar(7) + .35;
+  t6.className = 'tb ' + (arrived ? 'b' : 'r');
+  const pulse = P(t, bar(7) + .35, bar(7) + 1.2, E.outC);
+  t6.style.boxShadow = pulse > 0 && pulse < 1 ? `0 0 0 ${pulse * 18}px rgba(59,130,246,${.5 * (1 - pulse)})` : 'none';
+
+  // walk-in sheet
+  const sh = P(t, bar(6) - .05, bar(6) + .55, E.outX), shOut = P(t, bar(7) + .05, bar(7) + .4, E.inC);
+  const shOn = show(sheet1, sh > 0 && shOut < 1);
+  show(dim, shOn); op(dim, sh * (1 - shOut));
+  if (shOn) { tf(sheet1, `translateY(${(1 - sh) * 120 + shOut * 80}px) scale(${.94 + .06 * sh})`); op(sheet1, sh * (1 - shOut)); }
+  const tA = bar(6) + 1.15;
+  const pressed = P(t, tA - .08, tA + .05) * (1 - P(t, tA + .1, tA + .3));
+  tf(btnArr, `scale(${1 - pressed * .05})`); btnArr.style.filter = `brightness(${1 + pressed * .35})`;
+  toast(toastA, t, tA + .25, bar(8) + .3, 160); toast(toastB, t, tA + .45, bar(8) + .3, 110);
+  pop(popA, t, tA + .4, bar(8), 140, 170, 160 * L.pop, -3);
+
+  // search typing
+  const typed = 'franc'.slice(0, Math.floor(cl((t - (bar(8) + .6)) / .1, 0, 5)));
+  qEl.textContent = typed || '';
+  op(caret, Math.floor(t * 3) % 2 ? 1 : .15);
+  const rk = P(t, bar(8) + 1.05, bar(8) + 1.6, E.outX);
+  tf(resCard, `translateY(${(1 - rk) * 40}px)`); op(resCard, rk);
+  pop(popS, t, bar(8) + 1.3, bar(9) - .15, 150, -60, 170, 2);
+
+  // grid wave on the drop
+  tileEls.forEach((e, i) => {
+    const r = Math.floor(i / 4), c = i % 4, st = bar(9) + .05 + (r + c) * .07;
+    const k = P(t, st, st + .7, E.outB);
+    const lift = P(t, bar(9.5), bar(9.5) + .5, E.ioC) * (1 - P(t, bar(10.2), bar(10.2) + .6, E.ioC));
+    tf(e, `rotateX(${(1 - k) * -90}deg) translateZ(${lift * (20 + ((r * 7 + c * 3) % 5) * 12)}px) translateY(${lift * -4}px)`);
+    op(e, cl(k * 1.5));
+    if (i === 0) e.style.boxShadow = `0 0 ${10 + 14 * Math.max(0, Math.sin(t * 6))}px rgba(239,68,68,.45)`;
+  });
+  grEl.style.transformStyle = 'preserve-3d';
+  show(newPh, false);
+  // tap on tile 6 -> allergens
+  const tg6 = bar(10.9) + .15;
+  const tile6Press = P(t, tg6 - .1, tg6) * (1 - P(t, tg6 + .05, tg6 + .25));
+  if (tile6Press) tf(tileEls[0], `scale(${1 - tile6Press * .06})`);
+
+  // allergens modal
+  const am = P(t, bar(11) - .05, bar(11) + .55, E.outX), amOut = P(t, bar(12.6), bar(12.6) + .35, E.inC);
+  const amOn = show(alg, am > 0 && amOut < 1);
+  show(dim2, amOn || (t > bar(13) - .1 && t < bar(15) + .2));
+  op(dim2, amOn ? am * (1 - amOut) : P(t, bar(13) - .1, bar(13) + .3) * (1 - P(t, bar(15), bar(15) + .2)));
+  if (amOn) { tf(alg, `translateY(${(1 - am) * 120 + amOut * 60}px) scale(${.94 + .06 * am})`); op(alg, am * (1 - amOut)); }
+  const ticks = [[0, beat(46)], [6, beat(47)]];
+  algEls.forEach((e, i) => { const tk = ticks.find(([j]) => j === i); const on = tk && t > tk[1]; e.classList.toggle('on', !!on);
+    if (tk) { const k = P(t, tk[1], tk[1] + .3, E.outB); e.querySelector('.bx').style.transform = `scale(${on ? .7 + .3 * k : 1})`; } });
+  const tC = beat(49.5);
+  const cp = P(t, tC - .08, tC + .05) * (1 - P(t, tC + .1, tC + .3));
+  tf(btnConf, `scale(${1 - cp * .05})`); btnConf.style.filter = `brightness(${1 + cp * .3})`;
+  toast(toastC, t, tC + .2, rawBar(13) + .2, 110);
+  pop(popG1, t, beat(46) + .1, bar(12.7), 190, -60, 150, -4);
+  pop(popG2, t, beat(47) + .1, bar(12.7), 215, 60, 190, 3);
+
+  // table management sheet: Pronto -> Comanda
+  const s2 = P(t, bar(13) - .05, bar(13) + .55, E.outX), s2o = P(t, bar(15) - .1, bar(15) + .25, E.inC);
+  const s2On = show(sheet2, s2 > 0 && s2o < 1);
+  if (s2On) { tf(sheet2, `translateY(${(1 - s2) * 120}px) scale(${.94 + .06 * s2})`); op(sheet2, s2 * (1 - s2o)); }
+  const tP = bar(13) + 1.0, tCom = bar(14) - .05;
+  const readyOn = t > tP;
+  btnPr.innerHTML = readyOn ? '🔔 Pronto!' : '🔔 Avvisa';
+  css(btnPr, readyOn ? { background: 'linear-gradient(180deg,#7c3aed,#6d28d9)', color: '#fff', borderColor: '#8b5cf6' } : { background: '', color: '#c4b5fd', borderColor: '' });
+  toast(toastD, t, tP + .2, bar(15), 110);
+  pop(popT, t, tP + .3, tCom - .1, 120, 300, 150, -2);
+  const cm = P(t, tCom - .08, tCom + .05) * (1 - P(t, tCom + .1, tCom + .3));
+  tf(btnCom, `scale(${1 - cm * .06})`);
+  const comOn = t > tCom;
+  css(btnCom, comOn ? { background: 'linear-gradient(180deg,#7c3aed,#6d28d9)', color: '#fff', borderColor: '#8b5cf6' } : { background: '', color: '#e2e8f0', borderColor: '' });
+  btnCom.textContent = comOn ? '✓ ▤ Comanda' : '▤ Comanda';
+
+  // grid slots: in the site version 111 leaves after the promemoria; in the sync scene the new
+  // table 12 enters at the front and every other tile moves one slot on
+  const tPrm = PM0 + .8, tYes = PM0 + 2.2;
+  const tS = bar(16) - .1;
+  const rem = SITE ? P(t, tYes + .2, tYes + .75, E.ioC) : 0;
+  const shift = t > bar(15) ? P(t, tS - .2, tS + .3, E.ioC) : 0;
+  const slot = k => { const a = Math.floor(k), f = k - a; return [lerp((a % 4) * 92, ((a + 1) % 4) * 92, f), lerp(Math.floor(a / 4) * 102, Math.floor((a + 1) / 4) * 102, f)]; };
+  tileEls.forEach((e, i) => { const [x, y] = slot(i - (i > 1 ? rem : 0) + shift); css(e, { left: x + 'px', top: y + 'px' }); });
+  if (t < (SITE ? PM0 : bar(15))) tileEls[0].className = 'tile red';
+  else { tileEls[0].className = 'tile'; tileEls[0].style.boxShadow = 'none'; }
+  if (t > bar(15)) {
+    show(newPh, true);
+    tileEls.forEach(e => tf(e, 'none'));
+    const k = P(t, tS, tS + .6, E.outB);
+    tf(newPh, `scale(${k})`); op(newPh, cl(k * 2));
+    newPh.style.boxShadow = `0 0 ${20 * (1 - P(t, tS, tS + 1.5))}px 6px rgba(239,68,68,${.6 * (1 - P(t, tS, tS + 1.5))})`;
+  }
+  if (SITE) {
+    // table 111 glows amber while the app asks about it, then leaves the grid
+    const e = tileEls[1];
+    if (show(e, rem < 1)) {
+      const warn = P(t, tPrm - .3, tPrm + .2) * (1 - P(t, tYes + .1, tYes + .3));
+      e.style.borderColor = warn > 0 ? `rgba(251,191,36,${.5 + .4 * warn})` : '';
+      e.style.boxShadow = warn > 0 ? `0 0 ${8 + 14 * warn * (.6 + .4 * Math.sin(t * 7))}px rgba(251,191,36,${.55 * warn})` : 'none';
+      if (rem > 0) { tf(e, `scale(${1 - .45 * rem})`); op(e, 1 - rem); }
+    }
+    const pi = P(t, tPrm, tPrm + .55, E.outX), po = P(t, tYes + .15, tYes + .45, E.inC);
+    if (show(prm, pi > 0 && po < 1)) { tf(prm, `translateY(${(1 - pi) * 90 + po * 60}px) scale(${.96 + .04 * pi})`); op(prm, pi * (1 - po)); }
+    const sp = P(t, tYes - .08, tYes + .05) * (1 - P(t, tYes + .1, tYes + .3));
+    tf(prmSi, `scale(${1 - sp * .08})`); prmSi.style.filter = `brightness(${1 + sp * .4})`;
+    pop(popL, t, tYes + .45, PM1 - .1, 120, -150, 170, -2);
+  }
+
+  // tap indicators (screen coords inside .app)
+  let tapped = false;
+  tapped = tapAt(t, bar(5.75) + .35, 14 + 16 + 250 + 13, 150 + 138 + 58 + 96 + 18) || tapped;
+  tapped = tapAt(t, tA, 195, 250 + 196) || tapped;
+  tapped = tapAt(t, tg6, 14 + 42, 150 + 142 + 47) || tapped;
+  tapped = tapAt(t, beat(46), 90, 150 + 172 + 19) || tapped;
+  tapped = tapAt(t, beat(47), 90, 150 + 172 + 3 * 46 + 19) || tapped;
+  tapped = tapAt(t, tC, 290, 150 + 530) || tapped;
+  tapped = tapAt(t, tP, 290, 200 + 380) || tapped;
+  tapped = tapAt(t, tCom, 290, 200 + 430) || tapped;
+  if (SITE) tapped = tapAt(t, tYes, 338, 654) || tapped;
+  if (!tapped) op(tapEl, 0);
+}
+
+/* ============================================================
+   Kitchen ticket (comande) & tablet sync
+   ============================================================ */
+function drawKitchen(t) {
+  const tin = bar(13) + .6, tout = SITE ? bar(14.5) + .3 : bar(15) + .1;   // site: gone before the phone moves under it
+  const on = show(kitchen, t > tin && t < tout + .1);
+  const tCom = bar(14) - .05;
+  if (on) {
+    const k = P(t, tin, tin + .8, E.outX), o = P(t, tout - .4, tout, E.inC);
+    const hit = P(t, tCom + .75, tCom + 1.4, E.outC);
+    css(kitchen, { transform: `translate(${L.kitX}px,${L.kitY}px) translate(-50%,-50%) translateY(${(1 - k) * -40}px) scale(${1 + (hit > 0 && hit < 1 ? Math.sin(hit * Math.PI) * .08 : 0)})` });
+    op(kitchen, k * (1 - o));
+    kst.textContent = t > tCom + .75 ? 'Nuova comanda · Tavolo 6' : 'In attesa';
+    kst.style.color = t > tCom + .75 ? 'var(--mint)' : 'var(--mute)';
+    kitchen.style.borderColor = t > tCom + .75 ? 'rgba(45,216,163,.9)' : 'rgba(45,216,163,.35)';
+  }
+  const fl = P(t, tCom + .05, tCom + .8, E.ioC);
+  if (show(ticket, fl > 0 && fl < 1)) {
+    // start near the phone's Comanda button, arc to kitchen
+    const p = track(PH, tCom);
+    const sx = p.x + (96) * p.s, sy = p.y + 240 * p.s;
+    const ex = L.kitX, ey = L.kitY;
+    const x = lerp(sx, ex, fl), y = lerp(sy, ey, fl) - Math.sin(fl * Math.PI) * 160;
+    css(ticket, { transform: `translate(${x}px,${y}px) translate(-50%,-50%) rotate(${(1 - fl) * -8}deg) scale(${1.2 - fl * .5})` });
+    op(ticket, Math.min(1, fl * 6) * (1 - P(t, tCom + .65, tCom + .8)));
+  }
+}
+function drawTablet(t) {
+  const tin = bar(15) - .1, tout = bar(17) + .6;
+  if (!show(tablet, t > tin && t < tout)) return;
+  const k = P(t, tin, tin + 1.2, E.outX), o = P(t, bar(17), tout, E.inC);
+  const s = L.tabS;
+  tf(tablet, `translate3d(${L.tabX + (1 - k) * -400}px,${L.tabY}px,${-450 - 200 * (1 - k) - o * 500}px) rotateX(${8 - 2 * k}deg) rotateY(${22 - 8 * k + (t - tin) * 1.2}deg) rotateZ(${-2}deg) scale(${s})`);
+  op(tablet, k * (1 - o)); tablet.style.filter = o > 0 ? `blur(${o * 18}px)` : 'none';
+  tabTiles.forEach((e, i) => { const r = Math.floor(i / 10), c = i % 10, st = tin + .3 + (r + c) * .04, q = P(t, st, st + .6, E.outB); tf(e, `scale(${q})`); op(e, cl(q * 2)); });
+  const tS = bar(16) - .1;
+  const q = P(t, tS, tS + .6, E.outB);
+  tf(newTab, `scale(${q})`); op(newTab, cl(q * 2));
+  newTab.style.boxShadow = `0 0 ${20 * (1 - P(t, tS, tS + 1.5))}px 6px rgba(239,68,68,${.6 * (1 - P(t, tS, tS + 1.5))})`;
+  // beam between devices
+  const bk = P(t, tS - .5, tS, E.ioC), bo = P(t, tS + .2, tS + .8);
+  if (show(beam, bk > 0 && bo < 1)) {
+    // from the new tile on the phone to the new tile on the tablet (both still at scale 0 here,
+    // so their boxes collapse to their centres)
+    const ra = newPh.getBoundingClientRect(), rb = newTab.getBoundingClientRect();
+    const ax = ra.left + ra.width / 2, ay = ra.top + ra.height / 2, bx = rb.left + rb.width / 2, by = rb.top + rb.height / 2;
+    const cx = (ax + bx) / 2, cy = Math.min(ay, by) - 160;
+    bp.setAttribute('d', `M${ax},${ay} Q${cx},${cy} ${bx},${by}`);
+    const len = bp.getTotalLength();
+    bp.style.strokeDasharray = `${len * .35} ${len}`; bp.style.strokeDashoffset = `${len * .35 - bk * len * 1.35}`;
+    const pt = bp.getPointAtLength(len * bk);
+    bd.setAttribute('cx', pt.x); bd.setAttribute('cy', pt.y);
+    op(beam, 1 - bo);
+  }
+}
+
+/* ============================================================
+   Scene J — rapid recap on the beat + Locanda line
+   Scene K — end card
+   ============================================================ */
+const RECAP = ['Prenotazioni.', 'Walk-in.', 'Accoglienza.', 'Comande.', 'Cassa.'];
+const recap = RECAP.map(w => { const e = $(`<div class="recap" style="font-size:${V ? 150 : 112}px;top:${H / 2 - (V ? 95 : 71)}px">${w}</div>`); UI.appendChild(e); return e; });
+const capLoc = mkCap(IG ? 'In anteprima' : 'Sul campo', [IG ? 'Già in prova alla' : 'Già al lavoro alla', '~Locanda ~Del ~Convento.'],
+  V ? { y: 760, size: 76 } : { y: 510, size: 60 });
+const locLogo = $(`<div class="abs" style="left:0;top:0;width:${V ? 150 : 120}px;height:${V ? 150 : 120}px;border-radius:30px;background:#fff url(locanda.png) center/cover;box-shadow:0 30px 60px -10px rgba(0,0,0,.7)"></div>`);
+UI.appendChild(locLogo);
+
+function drawRecap(t) {
+  const base = bar(17);
+  recap.forEach((e, i) => {
+    const tin = base + i * BAR / 4 * 1, tout = tin + BAR / 4;
+    const on = show(e, t > tin - .02 && t < tout + .15);
+    if (!on) return;
+    const k = P(t, tin, tin + .35, E.outX), o = P(t, tout - .05, tout + .15, E.inC);
+    tf(e, `scale(${1.25 - .25 * k + o * .08}) translateY(${o * -20}px)`);
+    e.style.filter = `blur(${(1 - k) * 12 + o * 10}px)`;
+    op(e, k * (1 - o));
+    e.style.color = i === RECAP.length - 1 ? 'var(--mint)' : 'var(--ink)';
+  });
+  drawCap(capLoc, t, bar(18.3), bar(19) - .05);
+  const lo = show(locLogo, t > bar(18.3) - .05 && t < bar(19) + .1);
+  if (lo) {
+    const k = P(t, bar(18.3), bar(18.3) + .7, E.outB), o = P(t, bar(19) - .45, bar(19) - .05, E.inC);
+    const lx = V ? 540 - 75 : W / 2 - 60, ly = V ? 520 : 350;
+    tf(locLogo, `translate(${lx}px,${ly}px) scale(${.6 + .4 * k})`); op(locLogo, k * (1 - o)); locLogo.style.filter = `blur(${o * 8}px)`;
+  }
+}
+
+const EL = V ? 250 : 190;
+const endBox = $(`<div class="abs" style="left:0;top:0;width:${W}px;height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+  <div class="elogo" style="position:relative;width:${EL}px;height:${EL}px"><div class="ring" style="inset:0"></div><div class="logoimg" style="width:100%;height:100%"><img src="../../logo.png"><div class="sheen"></div></div></div>
+  <div class="head eh" style="font-size:${V ? 92 : 96}px;margin-top:${V ? 60 : 46}px"></div>
+  ${IG ? `<div class="cta" style="margin-top:76px;padding:30px 60px;font-size:46px;background:rgba(45,216,163,.1);color:var(--mint);border:2px solid var(--mint);box-shadow:0 0 50px -10px rgba(45,216,163,.6)"><span class="pd" style="width:18px;height:18px;border-radius:50%;background:var(--mint);box-shadow:0 0 16px var(--mint)"></span><span>Presto disponibile</span><div class="shine"></div></div>`
+       : `<div class="cta" style="margin-top:${V ? 76 : 56}px;padding:${V ? '32px 66px' : '26px 58px'};font-size:${V ? 46 : 38}px"><span>Prenota una visita</span><span style="font-size:.9em">→</span><div class="shine"></div></div>`}
+  ${IG ? `<div class="url" style="margin-top:44px;font-size:34px;font-weight:500;color:#cfe0da;line-height:1.45">Hai un ristorante?<br>Prenota una visita su <b style="color:#fff;font-weight:800">salaflow.com</b></div>`
+       : `<div class="url" style="margin-top:${V ? 36 : 28}px;font-size:${V ? 40 : 34}px;font-weight:700;color:#cfe0da;letter-spacing:.02em">salaflow.com</div>`}
+  <div class="team" style="margin-top:${V ? 110 : 64}px;font-size:${V ? 28 : 22}px;font-weight:500;color:#6f8580">Fatto da Luca, Filippo e Antonio</div>
+</div>`);
+UI.appendChild(endBox);
+const eLogo = endBox.querySelector('.elogo'), eRing = endBox.querySelector('.ring'), eSheen = endBox.querySelector('.sheen'), eh = endBox.querySelector('.eh'),
+  cta = endBox.querySelector('.cta'), shine = endBox.querySelector('.shine'), url = endBox.querySelector('.url'), team = endBox.querySelector('.team');
+const ehW = [];
+[['Dalla', ''], ['sala,', ''], ['per', 'mint'], ['la', 'mint'], ['sala.', 'mint']].forEach(([w, c], i) => {
+  if (i) eh.appendChild(document.createTextNode(' '));
+  if (i === 2) eh.appendChild(document.createElement('br'));
+  const ln = $(`<span class="line" style="display:inline-block"><span class="w ${c}">${w}</span></span>`); eh.appendChild(ln); ehW.push(ln.firstChild);
+});
+function drawEnd(t) {
+  const t0 = bar(19);
+  if (!show(endBox, t > t0 - .05)) return;
+  const k = P(t, t0, t0 + 1, E.outX);
+  tf(eLogo, `perspective(900px) rotateY(${(1 - k) * 40}deg) scale(${.5 + .5 * k})`); eLogo.style.filter = `blur(${(1 - k) * 14}px)`; op(eLogo, cl(k * 2));
+  const rk = P(t, t0 + .1, t0 + 1.5, E.outC); tf(eRing, `scale(${1 + rk * 2})`); op(eRing, (1 - rk) * .8 * (rk > 0));
+  tf(eSheen, `translateX(${lerp(-120, 120, P(t, t0 + .5, t0 + 1.4))}%)`);
+  ehW.forEach((w, i) => { const q = P(t, t0 + .35 + i * .07, t0 + 1.1 + i * .07, E.outX); tf(w, `translateY(${(1 - q) * 110}%)`); w.style.filter = `blur(${(1 - q) * 6}px)`; op(w, q); });
+  const c = P(t, bar(19.5), bar(19.5) + .8, E.outB);
+  tf(cta, `translateY(${(1 - c) * 40}px) scale(${.85 + .15 * c})`); op(cta, cl(c * 1.5));
+  const shT = ((t - bar(20)) % 1.8) / 1.8; tf(shine, `translateX(${t > bar(20) ? lerp(-150, 350, E.ioC(cl(shT * 1.6))) : -150}%)`);
+  const pd = cta.querySelector('.pd'); if (pd) { const ph = ((t - bar(19.5)) % 1.07) / 1.07; pd.style.boxShadow = `0 0 16px var(--mint),0 0 0 ${ph * 16}px rgba(45,216,163,${.5 * (1 - ph)})`; }
+  const u = P(t, bar(19.75), bar(19.75) + .8, E.outX); tf(url, `translateY(${(1 - u) * 20}px)`); op(url, u);
+  const tm = P(t, bar(20.1), bar(20.1) + 1, E.outC); op(team, tm);
+  // gentle push-in over the whole end card
+  tf(endBox, `scale(${1 + P(t, t0, END, E.lin) * .04})`);
+}
+
+/* ============================================================
+   Desktop side panels (site only): left = step number + one line of explanation,
+   right = the tour's steps. Both sit outside the centre column, so phones never see them.
+   ============================================================ */
+const STEPS = SITE ? [
+  ['Piantina', 'Libero, prenotato, arrivato: ogni tavolo cambia colore mentre la sala si muove.', bar(4) + .6, bar(6)],
+  ['Walk-in', 'Cliente senza prenotazione? Lo segni come arrivato e il tavolo si aggiorna al volo.', bar(6), bar(8)],
+  ['Ricerca', 'Bastano le prime lettere del nome: tavolo, orario e persone, subito.', bar(8), bar(9)],
+  ['Stato del servizio', 'Tavoli arrivati, accoglienza e comande, tutti in una sola schermata.', bar(9), bar(11)],
+  ['Allergeni', 'All’accoglienza segni allergie e intolleranze del tavolo, tra i 14 allergeni.', bar(11), PM0],
+  ['Promemoria', 'Un avviso ti ricorda i tavoli occupati da troppo tempo, senza disturbarti a vuoto con le tavolate numerose.', PM0, PM1],
+  ['Comande', 'Segni il tavolo pronto per ordinare e la comanda parte da lì, verso la cucina.', bar(13), bar(15)],
+  ['Sincronizzazione', 'Tutto lo staff vede gli stessi dati, in tempo reale, da qualsiasi tablet o telefono.', bar(15), bar(17) - .1],
+] : [];
+const sideL = STEPS.map(([, txt], i) => {
+  const e = $(`<div class="sidel"><div class="sn"><b>${String(i + 1).padStart(2, '0')}</b><span>/ 0${STEPS.length}</span></div><div class="st">${txt}</div></div>`);
+  UI.appendChild(e); e._n = e.querySelector('.sn'); e._t = e.querySelector('.st'); return e;
+});
+const stepsEl = $(`<div class="steps"><div class="rail"><i></i></div></div>`);
+const stepIts = STEPS.map(([name]) => { const e = $(`<div class="it"><span class="d"><i></i></span><span class="n">${name}</span></div>`); stepsEl.appendChild(e); return e; });
+if (SITE) {
+  UI.appendChild(stepsEl);
+  css(stepsEl.querySelector('.rail'), { height: (STEPS.length - 1) * 56 + 'px' });
+}
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, x) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], x))).join(',')})`; };
+function drawSide(t) {
+  if (!SITE) return;
+  const vis = P(t, bar(4) + .3, bar(4) + 1.1) * (1 - P(t, bar(17) - .7, bar(17) - .1));
+  // hide a side only while the (zoomed) phone would reach into it
+  const p = track(PH, t), inPh = t > bar(4) - .6 && t < bar(17) + .6;
+  const pl = inPh ? p.x + p.s * (-207 - p.fx * p.f) : 960, pr = inPh ? p.x + p.s * (207 - p.fx * p.f) : 960;
+  const aL = vis * cl((pl - 470) / 70), aR = vis * cl((1440 - pr) / 70);
+  sideL.forEach((e, i) => {
+    const [, , a, b] = STEPS[i];
+    const pi = P(t, a + .15, a + .85, E.outX), po = P(t, b - .45, b - .05, E.inC);
+    if (!show(e, pi > 0 && po < 1 && aL > 0)) return;
+    op(e, aL);
+    tf(e._n.querySelector('b'), `translateY(${(1 - pi) * 100 + po * -100}%)`);
+    op(e._n, Math.min(1, pi * 1.5) * (1 - po));
+    tf(e._t, `translateY(${(1 - pi) * 24 - po * 12}px)`); e._t.style.filter = `blur(${(1 - pi) * 6 + po * 6}px)`;
+    op(e._t, P(t, a + .35, a + 1.05, E.outC) * (1 - po));
+  });
+  if (!show(stepsEl, aR > 0)) return;
+  op(stepsEl, aR);
+  let prog = 0;
+  stepIts.forEach((e, i) => {
+    const [, , a, b] = STEPS[i];
+    const on = P(t, a - .1, a + .4) * (1 - P(t, b - .1, b + .4)), done = P(t, b - .1, b + .4);
+    const base = done > 0 ? mix('#4b5c57', '#7f958f', done) : '#4b5c57';
+    e.querySelector('.n').style.color = on > 0 ? mix(done > 0 ? '#7f958f' : '#4b5c57', '#2dd8a3', on) : base;
+    tf(e.querySelector('.n'), `translateX(${on * 8}px)`);
+    const d = e.querySelector('.d');
+    d.style.borderColor = on > 0 || done > 0 ? mix('#4b5c57', '#2dd8a3', Math.max(on, done * .6)) : '#4b5c57';
+    d.style.boxShadow = on > 0 ? `0 0 ${14 * on}px rgba(45,216,163,${.7 * on})` : 'none';
+    tf(d.querySelector('i'), `scale(${Math.max(on, done * .55)})`);
+    prog += P(t, a, a + .5, E.ioC) * (i ? 1 : 0);
+  });
+  stepsEl.querySelector('.rail i').style.height = prog * 56 + 'px';
+}
+
+/* ============================================================
+   Master render
+   ============================================================ */
+const flash = document.getElementById('flash'), fade = document.getElementById('fade');
+window.render = function (t) {
+  const energy = t > bar(9) ? .6 + .4 * Math.pow(1 - ((t - B0) % (BAR / 4)) / (BAR / 4), 3) : .2;
+  const cam = track(PH, t);
+  drawBG(t, energy, (cam.x - X) * P(t, bar(4) - .6, bar(4) + 1.1) * (1 - P(t, bar(17), bar(17) + .8)));
+  show(beam, false);
+  drawA(t); drawB(t); drawPhone(t); drawKitchen(t); drawTablet(t); drawRecap(t); drawEnd(t); drawSide(t);
+  if (SITE) {
+    const top = cam.y + cam.s * (-434 - cam.fy * cam.f), onPh = t > bar(4) - .6 && t < bar(17) + .6;
+    op(scrim, onPh ? cl((300 - top) / 140) * cam.o : 0);
+  }
+  for (const k in C) show(C[k], false);
+  drawCap(C.map, t, bar(4) + .6, bar(5.45));
+  drawCap(C.walk, t, bar(6) + .3, bar(8) - .05);
+  drawCap(C.search, t, bar(8) + .2, bar(9) - .1);
+  drawCap(C.grid, t, bar(9) + .25, bar(10.6));
+  drawCap(C.alg, t, bar(11) + .2, rawBar(13) - .1);
+  if (SITE) drawCap(C.promo, t, PM0 + .2, PM1 - .1);
+  drawCap(C.com, t, bar(13) + .2, bar(15) - .1);
+  drawCap(C.sync, t, bar(15) + .5, bar(17) - .1);
+  // flashes on the big cuts
+  const fl = Math.max(
+    1 - cl(Math.abs(t - bar(2)) / .35), 1 - cl(Math.abs(t - bar(9)) / .3) * 1, 1 - cl(Math.abs(t - bar(19)) / .4));
+  op(flash, fl * .9);
+  op(fade, Math.max(1 - P(t, 0, .5), P(t, END - .9, END - .05)));
+};
+window.DURATION = END;
+
+/* ============================================================
+   Short cut (~32s): re-edit slices of the long timeline on the beat.
+   SEG = [short start, long start, long end, short length]
+   ============================================================ */
+if (SHORT) {
+  const F = 1.5 * BAR;                                   // each feature gets a bar and a half
+  const SEG = [
+    [0,           0,                  bar(2),               2 * BAR], // Sabato sera -> quaderno
+    [2 * BAR,     bar(2) - .15,       bar(4) - .15,         2 * BAR], // logo
+    [4 * BAR,         bar(4) - .15,   bar(4) - .15 + F,     F],       // drop: phone in + piantina
+    [4 * BAR + F,     bar(6) + .1,    bar(6) + .1 + F,      F],       // walk-in
+    [4 * BAR + 2 * F, bar(9),         bar(9) + F,           F],       // stato del servizio
+    [4 * BAR + 3 * F, bar(11),        bar(11) + F,          F],       // allergeni
+    [4 * BAR + 4 * F, bar(13) + .6,   bar(13) + .6 + F,     F],       // comanda -> cucina
+    [4 * BAR + 5 * F, bar(15) + .6,   bar(15) + .6 + F,     F],       // telefono + tablet
+    [13 * BAR,        bar(19),        bar(19) + 2 * BAR + .03, 2 * BAR + .03], // chiusura
+  ];
+  const TOTAL = 15 * BAR + .03;
+  const longRender = window.render;
+  window.render = function (ts) {
+    let sg = SEG[0];
+    for (const g of SEG) if (ts >= g[0]) sg = g;
+    const tl = sg[1] + (sg[2] - sg[1]) * cl((ts - sg[0]) / sg[3]);
+    longRender(tl);
+    // flash + punch-in on every cut
+    let d = 1e9; for (let i = 1; i < SEG.length; i++) d = Math.min(d, Math.abs(ts - SEG[i][0]));
+    const after = SEG.slice(1).reduce((m, g) => ts >= g[0] ? Math.min(m, ts - g[0]) : m, 1e9);
+    op(flash, Math.max(+flash.style.opacity || 0, (1 - cl(d / .16)) * .3));
+    stage.style.transform = `scale(${1 + .018 * Math.exp(-after * 6)})`;
+    op(fade, Math.max(1 - P(ts, 0, .25), P(ts, TOTAL - .8, TOTAL - .02)));
+  };
+  window.DURATION = TOTAL;
+}
+// shrink a caption's font until its longest line fits the caption box
+function fitCaps() {
+  document.querySelectorAll('.cap').forEach(cap => {
+    const d = cap.style.display; cap.style.display = '';
+    const hd = cap.querySelector('.head'), lines = [...hd.querySelectorAll('.line')], maxW = cap.clientWidth;
+    lines.forEach(l => l.style.whiteSpace = 'nowrap');
+    let fs = parseFloat(hd.style.fontSize);
+    while (fs > 20 && lines.some(l => l.scrollWidth > maxW + 1)) { fs *= .97; hd.style.fontSize = fs + 'px'; }
+    cap.style.display = d;
+  });
+}
+// how far (px) anything visible moves between t-dt and t+dt: the renderer only spends
+// motion-blur subframes where something actually moves
+const PROBE = [phoneEl, tablet.querySelector('.tablet'), paper, lw, eLogo, ticket, kitchen, locLogo, ...recap, ...wmL, ...tgW,
+  popA, popS, popG1, popG2, popT, popL, prm, sheet1, sheet2, alg, toastA, toastB, toastC, toastD, resCard, newPh, newTab,
+  ...tileEls, ...tableEls, ...tabTiles, mapPane, searchPane, cta, url, ...sideL, ...stepIts, ...document.querySelectorAll('.cap .w, .cap .kick, .eh .w')];
+function rects() { return PROBE.map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects();
+  let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 99); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return m;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(fitCaps);
+render(0);
+</script>
+</body>
+</html>
