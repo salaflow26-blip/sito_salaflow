@@ -17,4 +17,9 @@ for f in ${@:-h ig}; do
   "$FF" -loglevel error -y -f concat -safe 0 -i "build/parts_$f.txt" -i "build/$wav.wav" -map 0:v -map 1:a \
     -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart \
     "../salaflow-$name.mp4"
+  if [ "$f" = h ]; then                                                                  # versione leggera per il sito
+    "$FF" -loglevel error -y -f concat -safe 0 -i build/parts_h.txt -i build/mix_site.wav -map 0:v -map 1:a \
+      -c:v libx264 -preset slower -crf 25 -tune animation -pix_fmt yuv420p -profile:v high -level 4.2 \
+      -c:a aac -b:a 128k -shortest -movflags +faststart ../../salaflow-tour.mp4
+  fi
 done

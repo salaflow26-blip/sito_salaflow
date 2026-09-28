@@ -13,9 +13,9 @@
 @font-face{font-family:DMSerif;src:url(font/DMSerif.ttf)}
 
 :root{
-  --bg:#0a0e0d; --mint:#2dd8a3; --mint-l:#7bf0c8; --ink:#f2f7f5; --mute:#9fb3ab;
+  --bg:#020617; --mint:#2dd4bf; --mint-l:#5eead4; --ink:#f1f5f9; --mute:#9aa6b8;
   /* app */
-  --a-bg:#0b1222; --a-card:#111a2c; --a-card2:#0f1728; --a-line:rgba(148,163,184,.14);
+  --a-bg:#020617; --a-card:#0d1324; --a-card2:#0f1728; --a-line:rgba(148,163,184,.14);
   --a-text:#e6ebf2; --a-mute:#8b97ab; --a-teal1:#2dd4bf; --a-teal2:#22d3ee;
   --a-blue:#1d4ed8; --a-indigo:#4f46e5; --a-purple:#7c3aed; --a-green:#16a34a; --a-red:#dc2626;
 }
@@ -30,7 +30,7 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .orb{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform}
 #grain{position:absolute;inset:-50%;opacity:.07;mix-blend-mode:overlay;pointer-events:none}
 #vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.65) 100%);pointer-events:none}
-#flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(123,240,200,.55),rgba(45,216,163,0) 60%);opacity:0;pointer-events:none;mix-blend-mode:screen}
+#flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(94,234,212,.55),rgba(45,212,191,0) 60%);opacity:0;pointer-events:none;mix-blend-mode:screen}
 #fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 
 /* ---------- bokeh ---------- */
@@ -40,8 +40,8 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .sidel{position:absolute;left:120px;top:330px;width:370px}
 .sidel .sn{display:flex;align-items:baseline;gap:12px;overflow:hidden;padding-bottom:6px}
 .sidel .sn b{font-size:132px;font-weight:800;letter-spacing:-.05em;line-height:1;color:transparent;-webkit-text-stroke:2px var(--mint);display:inline-block}
-.sidel .sn span{font-size:30px;font-weight:700;color:#4f625d;display:inline-block}
-.sidel .st{font-size:29px;line-height:1.42;color:#b5c7c0;font-weight:500;margin-top:14px}
+.sidel .sn span{font-size:30px;font-weight:700;color:#56627a;display:inline-block}
+.sidel .st{font-size:29px;line-height:1.42;color:#b4bfd0;font-weight:500;margin-top:14px}
 .steps{position:absolute;left:1455px;top:318px;width:360px}
 .steps .rail{position:absolute;left:9px;top:26px;width:2px;background:rgba(159,179,171,.18);border-radius:2px}
 .steps .rail i{position:absolute;left:0;top:0;width:2px;background:var(--mint);box-shadow:0 0 10px var(--mint);border-radius:2px}
@@ -74,17 +74,17 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 #paper path{fill:none;stroke:#b3261e;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- logo ---------- */
-.logoimg{border-radius:22.5%;overflow:hidden;position:relative;box-shadow:0 30px 80px -20px rgba(45,216,163,.45)}
+.logoimg{border-radius:22.5%;overflow:hidden;position:relative;box-shadow:0 30px 80px -20px rgba(45,212,191,.45)}
 .logoimg img{width:100%;height:100%;display:block;transform:scale(1.025)}
 .sheen{position:absolute;inset:-20%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);mix-blend-mode:screen}
-.ring{position:absolute;border-radius:50%;border:2px solid var(--mint);box-shadow:0 0 30px var(--mint),inset 0 0 30px rgba(45,216,163,.4)}
+.ring{position:absolute;border-radius:50%;border:2px solid var(--mint);box-shadow:0 0 30px var(--mint),inset 0 0 30px rgba(45,212,191,.4)}
 
 /* ---------- phone ---------- */
 .dev{position:absolute;left:0;top:0;transform-style:preserve-3d}
 .phone{position:absolute;width:414px;height:868px;left:-207px;top:-434px;transform-style:preserve-3d}
 .phone .frame{position:absolute;inset:0;border-radius:64px;
   background:linear-gradient(145deg,#3a4046,#15181b 30%,#0c0e10 60%,#2c3136);
-  box-shadow:0 80px 140px -30px rgba(0,0,0,.85),0 0 0 1.5px rgba(255,255,255,.08) inset,0 0 60px -10px rgba(45,216,163,.25)}
+  box-shadow:0 80px 140px -30px rgba(0,0,0,.85),0 0 0 1.5px rgba(255,255,255,.08) inset,0 0 60px -10px rgba(45,212,191,.25)}
 .phone .scr{transform:translateZ(1px);position:absolute;left:12px;top:12px;width:390px;height:844px;border-radius:52px;overflow:hidden;background:var(--a-bg)}
 .island{position:absolute;left:50%;top:11px;width:122px;height:36px;margin-left:-61px;background:#000;border-radius:20px;z-index:50}
 .glare{position:absolute;inset:0;border-radius:52px;pointer-events:none;z-index:60;
@@ -114,7 +114,7 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .nav .it.on{color:var(--a-teal1)}
 .nav .it.on .ic{width:34px;height:34px;border-radius:50%;background:var(--a-teal1);display:grid;place-items:center;margin-top:-10px}
 .nav .it.on svg{stroke:#06231a}
-.nav .plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--a-teal1),var(--a-teal2));display:grid;place-items:center;box-shadow:0 8px 24px rgba(45,212,191,.45);color:#fff;font-size:34px;font-weight:500;line-height:1}
+.nav .plus{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#2dd4bf);display:grid;place-items:center;box-shadow:0 8px 24px rgba(45,212,191,.45);color:#fff;font-size:34px;font-weight:500;line-height:1}
 .legend{position:absolute;left:14px;right:14px;top:14px;height:56px;display:flex;align-items:center;gap:12px;padding:0 12px;font-size:12px;color:#c3cad6}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
 .ib{width:32px;height:32px;border-radius:9px;border:1px solid var(--a-line);background:#18223a;display:grid;place-items:center;color:#cbd5e1;font-size:16px}
@@ -139,9 +139,9 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .toast{position:absolute;left:50%;white-space:nowrap;padding:11px 18px;border-radius:999px;font-weight:700;font-size:12px;z-index:35;box-shadow:0 12px 30px rgba(0,0,0,.45)}
 .toast.gr{background:#15803d;color:#eafff3;border:1px solid #22c55e}
 .toast.pu{background:#6d28d9;color:#f5f0ff;border:1px solid #8b5cf6}
-.teal{background:linear-gradient(120deg,var(--a-teal1),var(--a-teal2));border-radius:20px;color:#fff}
-.tile{position:absolute;width:84px;height:94px;border-radius:14px;border:1.5px solid rgba(34,197,94,.55);background:linear-gradient(180deg,#0f2a22,#0d1c1a);text-align:center;padding-top:10px}
-.tile b{display:block;font-size:26px;font-weight:800;color:#86efac;line-height:1.05}
+.teal{background:linear-gradient(120deg,#22d3ee 0%,#2dd4bf 50%,#34d399 100%);border-radius:20px;color:#fff}
+.tile{position:absolute;width:84px;height:94px;border-radius:14px;border:1.5px solid rgba(52,211,153,.6);background:linear-gradient(180deg,#032e24,#022c22);text-align:center;padding-top:10px}
+.tile b{display:block;font-size:26px;font-weight:800;color:#6ee7b7;line-height:1.05}
 .tile s{display:block;text-decoration:none;font-size:10px;color:#cbd5e1;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
 .tile u{display:inline-block;text-decoration:none;font-size:9px;color:#94a3b8;margin-top:4px}
 .tile u:before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#e2e8f0;margin-right:4px;vertical-align:0}
@@ -172,14 +172,14 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .pop{position:absolute;left:0;top:0;border-radius:18px;white-space:nowrap;box-shadow:0 40px 80px -20px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.08) inset}
 
 /* kitchen node */
-#kitchen{position:absolute;left:0;top:0;display:flex;align-items:center;gap:14px;padding:18px 26px 18px 18px;border-radius:24px;background:rgba(18,24,21,.9);border:1px solid rgba(45,216,163,.35);box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
-#kitchen .ki{width:54px;height:54px;border-radius:16px;background:rgba(45,216,163,.14);display:grid;place-items:center}
+#kitchen{position:absolute;left:0;top:0;display:flex;align-items:center;gap:14px;padding:18px 26px 18px 18px;border-radius:24px;background:rgba(18,24,21,.9);border:1px solid rgba(45,212,191,.35);box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+#kitchen .ki{width:54px;height:54px;border-radius:16px;background:rgba(45,212,191,.14);display:grid;place-items:center}
 #kitchen .ki svg{width:30px;height:30px;stroke:var(--mint);fill:none;stroke-width:1.8}
 #ticket{position:absolute;left:0;top:0;padding:12px 16px;border-radius:14px;background:#f6f3ea;color:#18202b;font-weight:700;font-size:15px;box-shadow:0 20px 40px -10px rgba(0,0,0,.7)}
 #beam{position:absolute;left:0;top:0;overflow:visible}
 
 /* end */
-.cta{display:inline-flex;align-items:center;gap:14px;border-radius:999px;background:var(--mint);color:#05241a;font-weight:800;position:relative;overflow:hidden;box-shadow:0 18px 50px -12px rgba(45,216,163,.7)}
+.cta{display:inline-flex;align-items:center;gap:14px;border-radius:999px;background:linear-gradient(120deg,#22d3ee,#2dd4bf 50%,#34d399);color:#042f2e;font-weight:800;position:relative;overflow:hidden;box-shadow:0 18px 50px -12px rgba(45,212,191,.7)}
 .cta .shine{position:absolute;top:-20%;bottom:-20%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent)}
 .recap{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.035em}
 </style>
@@ -281,9 +281,9 @@ if (IG) Object.assign(L, { py: 1090, s: 1.2, capY: 250, tabY: 800, phY: 1260, ki
    Background: drifting orbs + film grain
    ============================================================ */
 const o1 = document.getElementById('o1'), o2 = document.getElementById('o2'), o3 = document.getElementById('o3');
-css(o1, { width: '900px', height: '900px', background: 'rgba(45,216,163,.20)' });
+css(o1, { width: '900px', height: '900px', background: 'rgba(45,212,191,.20)' });
 css(o2, { width: '700px', height: '700px', background: 'rgba(34,211,238,.12)' });
-css(o3, { width: '800px', height: '800px', background: 'rgba(45,216,163,.10)' });
+css(o3, { width: '800px', height: '800px', background: 'rgba(45,212,191,.10)' });
 const grain = document.getElementById('grain');
 grain.width = 512; grain.height = 512;
 { const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 1234567;
@@ -296,7 +296,7 @@ const BOK = [];
   for (let i = 0; i < 24; i++) {
     const d = rnd(), size = 5 + d * 24, e = document.createElement('div');
     e.className = 'bok';
-    css(e, { width: size + 'px', height: size + 'px', filter: `blur(${1.5 + d * 5}px)`, background: rnd() > .5 ? '#2dd8a3' : '#7bf0c8' });
+    css(e, { width: size + 'px', height: size + 'px', filter: `blur(${1.5 + d * 5}px)`, background: rnd() > .5 ? '#2dd4bf' : '#67e8f9' });
     document.getElementById('bgl').appendChild(e);
     BOK.push({ e, x: rnd() * W, y: rnd() * H, d, a: .05 + rnd() * .14, sp: 6 + rnd() * 16, ph: rnd() * 6.28 });
   } }
@@ -319,10 +319,10 @@ function drawBG(t, energy, camx = 0) {
    Captions (kinetic word reveal)
    ============================================================ */
 const UI = document.getElementById('ui');
-if (IG) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:0;height:640px;background:linear-gradient(0deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 35%,rgba(10,14,13,.96) 100%)"></div>`));
-else if (V) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:1300px;bottom:0;background:linear-gradient(180deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 30%,rgba(10,14,13,.96) 100%)"></div>`));
+if (IG) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:0;height:640px;background:linear-gradient(0deg,rgba(2,6,23,0) 0%,rgba(2,6,23,.88) 35%,rgba(2,6,23,.96) 100%)"></div>`));
+else if (V) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:1300px;bottom:0;background:linear-gradient(180deg,rgba(2,6,23,0) 0%,rgba(2,6,23,.88) 30%,rgba(2,6,23,.96) 100%)"></div>`));
 // site: a dark band behind the captions, faded in only while a zoomed phone reaches up under them
-const scrim = $(`<div class="abs" style="left:0;right:0;top:0;height:340px;background:linear-gradient(180deg,rgba(10,14,13,.95) 0%,rgba(10,14,13,.9) 55%,rgba(10,14,13,0) 100%)"></div>`);
+const scrim = $(`<div class="abs" style="left:0;right:0;top:0;height:340px;background:linear-gradient(180deg,rgba(2,6,23,.95) 0%,rgba(2,6,23,.9) 55%,rgba(2,6,23,0) 100%)"></div>`);
 if (SITE) UI.appendChild(scrim);
 function mkCap(kick, lines, opt = {}) {
   const size = opt.size || L.headSize;
@@ -557,7 +557,7 @@ const gridPane = $(`<div class="pane">
     <div style="font-size:11.5px;opacity:.85;margin-top:6px">Tavoli arrivati, accoglienza e comande</div>
     <span class="chip" style="position:absolute;right:14px;top:26px;background:rgba(255,255,255,.25);font-size:10.5px">LIVE ●</span>
   </div>
-  <div style="position:absolute;left:22px;top:118px;font-size:12px;font-weight:800;color:var(--a-teal1);letter-spacing:.04em">⌖ TAVOLI ARRIVATI</div>
+  <div style="position:absolute;left:22px;top:118px;font-size:12px;font-weight:800;color:#38bdf8;letter-spacing:.04em">⌖ TAVOLI ARRIVATI</div>
   <div class="gr" style="position:absolute;left:14px;top:142px;width:362px;height:600px;perspective:700px"></div>
   ${nav('ser')}
 </div>`);
@@ -638,8 +638,8 @@ const NT = TG.length;
 const newTab = $(`<div class="tile red" style="left:${(NT % 10) * 97}px;top:${Math.floor(NT / 10) * 106}px"><b>12</b><s>Rossi</s><u>0 min</u></div>`); tgr.appendChild(newTab);
 const newPh = $(`<div class="tile red" style="left:0;top:0"><b>12</b><s>Rossi</s><u>0 min</u></div>`); grEl.appendChild(newPh);
 const beam = document.createElementNS(svgNS, 'svg'); beam.id = 'beam'; beam.setAttribute('width', W); beam.setAttribute('height', H);
-beam.innerHTML = `<defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#2dd8a3" stop-opacity="0"/><stop offset=".5" stop-color="#7bf0c8"/><stop offset="1" stop-color="#2dd8a3" stop-opacity="0"/></linearGradient></defs>
-  <path id="bp" d="" stroke="url(#bg1)" stroke-width="4" fill="none" stroke-linecap="round"/><circle id="bd" r="9" fill="#bff7e4"/>`;
+beam.innerHTML = `<defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf" stop-opacity="0"/><stop offset=".5" stop-color="#5eead4"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></linearGradient></defs>
+  <path id="bp" d="" stroke="url(#bg1)" stroke-width="4" fill="none" stroke-linecap="round"/><circle id="bd" r="9" fill="#ccfbf1"/>`;
 UI.appendChild(beam);
 const bp = beam.querySelector('#bp'), bd = beam.querySelector('#bd');
 
@@ -879,7 +879,7 @@ function drawKitchen(t) {
     op(kitchen, k * (1 - o));
     kst.textContent = t > tCom + .75 ? 'Nuova comanda · Tavolo 6' : 'In attesa';
     kst.style.color = t > tCom + .75 ? 'var(--mint)' : 'var(--mute)';
-    kitchen.style.borderColor = t > tCom + .75 ? 'rgba(45,216,163,.9)' : 'rgba(45,216,163,.35)';
+    kitchen.style.borderColor = t > tCom + .75 ? 'rgba(45,212,191,.9)' : 'rgba(45,212,191,.35)';
   }
   const fl = P(t, tCom + .05, tCom + .8, E.ioC);
   if (show(ticket, fl > 0 && fl < 1)) {
@@ -957,11 +957,11 @@ const EL = V ? 250 : 190;
 const endBox = $(`<div class="abs" style="left:0;top:0;width:${W}px;height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
   <div class="elogo" style="position:relative;width:${EL}px;height:${EL}px"><div class="ring" style="inset:0"></div><div class="logoimg" style="width:100%;height:100%"><img src="../../logo.png"><div class="sheen"></div></div></div>
   <div class="head eh" style="font-size:${V ? 92 : 96}px;margin-top:${V ? 60 : 46}px"></div>
-  ${IG ? `<div class="cta" style="margin-top:76px;padding:30px 60px;font-size:46px;background:rgba(45,216,163,.1);color:var(--mint);border:2px solid var(--mint);box-shadow:0 0 50px -10px rgba(45,216,163,.6)"><span class="pd" style="width:18px;height:18px;border-radius:50%;background:var(--mint);box-shadow:0 0 16px var(--mint)"></span><span>Presto disponibile</span><div class="shine"></div></div>`
+  ${IG ? `<div class="cta" style="margin-top:76px;padding:30px 60px;font-size:46px;background:rgba(45,212,191,.1);color:var(--mint);border:2px solid var(--mint);box-shadow:0 0 50px -10px rgba(45,212,191,.6)"><span class="pd" style="width:18px;height:18px;border-radius:50%;background:var(--mint);box-shadow:0 0 16px var(--mint)"></span><span>Presto disponibile</span><div class="shine"></div></div>`
        : `<div class="cta" style="margin-top:${V ? 76 : 56}px;padding:${V ? '32px 66px' : '26px 58px'};font-size:${V ? 46 : 38}px"><span>Prenota una visita</span><span style="font-size:.9em">→</span><div class="shine"></div></div>`}
-  ${IG ? `<div class="url" style="margin-top:44px;font-size:34px;font-weight:500;color:#cfe0da;line-height:1.45">Hai un ristorante?<br>Prenota una visita su <b style="color:#fff;font-weight:800">salaflow.com</b></div>`
-       : `<div class="url" style="margin-top:${V ? 36 : 28}px;font-size:${V ? 40 : 34}px;font-weight:700;color:#cfe0da;letter-spacing:.02em">salaflow.com</div>`}
-  <div class="team" style="margin-top:${V ? 110 : 64}px;font-size:${V ? 28 : 22}px;font-weight:500;color:#6f8580">Fatto da Luca, Filippo e Antonio</div>
+  ${IG ? `<div class="url" style="margin-top:44px;font-size:34px;font-weight:500;color:#cbd5e1;line-height:1.45">Hai un ristorante?<br>Prenota una visita su <b style="color:#fff;font-weight:800">salaflow.com</b></div>`
+       : `<div class="url" style="margin-top:${V ? 36 : 28}px;font-size:${V ? 40 : 34}px;font-weight:700;color:#cbd5e1;letter-spacing:.02em">salaflow.com</div>`}
+  <div class="team" style="margin-top:${V ? 110 : 64}px;font-size:${V ? 28 : 22}px;font-weight:500;color:#7d8aa0">Fatto da Luca, Filippo e Antonio</div>
 </div>`);
 UI.appendChild(endBox);
 const eLogo = endBox.querySelector('.elogo'), eRing = endBox.querySelector('.ring'), eSheen = endBox.querySelector('.sheen'), eh = endBox.querySelector('.eh'),
@@ -983,7 +983,7 @@ function drawEnd(t) {
   const c = P(t, bar(19.5), bar(19.5) + .8, E.outB);
   tf(cta, `translateY(${(1 - c) * 40}px) scale(${.85 + .15 * c})`); op(cta, cl(c * 1.5));
   const shT = ((t - bar(20)) % 1.8) / 1.8; tf(shine, `translateX(${t > bar(20) ? lerp(-150, 350, E.ioC(cl(shT * 1.6))) : -150}%)`);
-  const pd = cta.querySelector('.pd'); if (pd) { const ph = ((t - bar(19.5)) % 1.07) / 1.07; pd.style.boxShadow = `0 0 16px var(--mint),0 0 0 ${ph * 16}px rgba(45,216,163,${.5 * (1 - ph)})`; }
+  const pd = cta.querySelector('.pd'); if (pd) { const ph = ((t - bar(19.5)) % 1.07) / 1.07; pd.style.boxShadow = `0 0 16px var(--mint),0 0 0 ${ph * 16}px rgba(45,212,191,${.5 * (1 - ph)})`; }
   const u = P(t, bar(19.75), bar(19.75) + .8, E.outX); tf(url, `translateY(${(1 - u) * 20}px)`); op(url, u);
   const tm = P(t, bar(20.1), bar(20.1) + 1, E.outC); op(team, tm);
   // gentle push-in over the whole end card
@@ -1039,12 +1039,12 @@ function drawSide(t) {
   stepIts.forEach((e, i) => {
     const [, , a, b] = STEPS[i];
     const on = P(t, a - .1, a + .4) * (1 - P(t, b - .1, b + .4)), done = P(t, b - .1, b + .4);
-    const base = done > 0 ? mix('#4b5c57', '#7f958f', done) : '#4b5c57';
-    e.querySelector('.n').style.color = on > 0 ? mix(done > 0 ? '#7f958f' : '#4b5c57', '#2dd8a3', on) : base;
+    const base = done > 0 ? mix('#4a5568', '#7d8aa0', done) : '#4a5568';
+    e.querySelector('.n').style.color = on > 0 ? mix(done > 0 ? '#7d8aa0' : '#4a5568', '#2dd4bf', on) : base;
     tf(e.querySelector('.n'), `translateX(${on * 8}px)`);
     const d = e.querySelector('.d');
-    d.style.borderColor = on > 0 || done > 0 ? mix('#4b5c57', '#2dd8a3', Math.max(on, done * .6)) : '#4b5c57';
-    d.style.boxShadow = on > 0 ? `0 0 ${14 * on}px rgba(45,216,163,${.7 * on})` : 'none';
+    d.style.borderColor = on > 0 || done > 0 ? mix('#4a5568', '#2dd4bf', Math.max(on, done * .6)) : '#4a5568';
+    d.style.boxShadow = on > 0 ? `0 0 ${14 * on}px rgba(45,212,191,${.7 * on})` : 'none';
     tf(d.querySelector('i'), `scale(${Math.max(on, done * .55)})`);
     prog += P(t, a, a + .5, E.ioC) * (i ? 1 : 0);
   });
