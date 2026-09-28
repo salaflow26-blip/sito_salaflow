@@ -246,11 +246,12 @@
         </div>
 
         <!--
-            demo.mp4 ha la musica, ma i browser fanno partire da soli solo i
-            video in muto: per questo il <video> ha "muted" e il pulsante
+            salaflow-tour.mp4 ha la musica, ma i browser fanno partire da soli
+            solo i video in muto: per questo il <video> ha "muted" e il pulsante
             #demoVideoSound la accende su richiesta (vedi script.js).
-            Su schermi stretti lo stile ritaglia il riquadro sul telefono
-            (vedi .demo-video-frame in styles.css).
+            Su schermi stretti lo stile ritaglia il centro del riquadro (vedi
+            .demo-video-frame in styles.css): il video è montato apposta per
+            quel ritaglio. Sorgenti e istruzioni in video/sorgenti/.
 
             Niente copertina (attributo "poster") né classe "reveal" su questo
             riquadro, di proposito: su Safari per iPhone il poster può restare
@@ -259,8 +260,8 @@
             video non parte si vede lo sfondo scuro del riquadro.
         -->
         <div class="demo-video-frame" id="demoVideoFrame">
-            <video muted loop playsinline preload="metadata" aria-label="Video dimostrativo dell'app SalaFlow: mappa tavoli, ricerca rapida e gestione dei tavoli">
-                <source src="demo.mp4" type="video/mp4">
+            <video muted loop playsinline preload="metadata" aria-label="Video dell'app SalaFlow: piantina in tempo reale, walk-in, ricerca, stato del servizio, allergeni, promemoria dei tavoli, comande e sincronizzazione tra telefono e tablet">
+                <source src="salaflow-tour.mp4" type="video/mp4">
             </video>
             <button type="button" class="demo-video-sound" id="demoVideoSound" aria-pressed="false" aria-label="Attiva l'audio">
                 <svg class="icon-muted" viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.75h2.75L10.5 4.5v11l-4.25-3.25H3.5z"/><path d="M13.5 8l3.5 4M17 8l-3.5 4"/></svg>
