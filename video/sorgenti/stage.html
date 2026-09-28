@@ -33,6 +33,22 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 #flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(123,240,200,.55),rgba(45,216,163,0) 60%);opacity:0;pointer-events:none;mix-blend-mode:screen}
 #fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 
+/* ---------- bokeh ---------- */
+.bok{position:absolute;left:0;top:0;border-radius:50%;will-change:transform}
+
+/* ---------- desktop side panels (site): cropped away on phones ---------- */
+.sidel{position:absolute;left:120px;top:330px;width:370px}
+.sidel .sn{display:flex;align-items:baseline;gap:12px;overflow:hidden;padding-bottom:6px}
+.sidel .sn b{font-size:132px;font-weight:800;letter-spacing:-.05em;line-height:1;color:transparent;-webkit-text-stroke:2px var(--mint);display:inline-block}
+.sidel .sn span{font-size:30px;font-weight:700;color:#4f625d;display:inline-block}
+.sidel .st{font-size:29px;line-height:1.42;color:#b5c7c0;font-weight:500;margin-top:14px}
+.steps{position:absolute;left:1455px;top:318px;width:360px}
+.steps .rail{position:absolute;left:9px;top:26px;width:2px;background:rgba(159,179,171,.18);border-radius:2px}
+.steps .rail i{position:absolute;left:0;top:0;width:2px;background:var(--mint);box-shadow:0 0 10px var(--mint);border-radius:2px}
+.steps .it{position:relative;display:flex;align-items:center;gap:20px;height:56px;font-size:25px;font-weight:600;white-space:nowrap}
+.steps .it .d{width:20px;height:20px;border-radius:50%;border:2px solid #3b4a46;background:var(--bg);flex:none;display:grid;place-items:center}
+.steps .it .d i{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+
 /* ---------- captions ---------- */
 .cap{position:absolute;display:flex;flex-direction:column;gap:26px}
 .kick{font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);display:flex;align-items:center;gap:14px;font-size:24px}
@@ -41,8 +57,8 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .w{display:inline-block;will-change:transform}
 .head{font-weight:800;letter-spacing:-.025em;word-spacing:.06em;line-height:1.06}
 .mint{color:var(--mint)}
-.V .cap{align-items:center;text-align:center}
-.V .kick{justify-content:center}
+.cap{align-items:center;text-align:center}
+.kick{justify-content:center}
 
 /* ---------- notebook ---------- */
 #paper{position:absolute;width:560px;height:700px;left:-280px;top:-350px;border-radius:10px;
@@ -138,6 +154,16 @@ body{font-family:PJS,sans-serif;color:var(--ink);-webkit-font-smoothing:antialia
 .ck .bx svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none}
 .ck.on{border-color:rgba(45,212,191,.6);background:rgba(20,83,74,.45)}
 .ck.on .bx{background:var(--a-teal1)}
+.prm{position:absolute;left:14px;right:14px;top:622px;z-index:36;border-radius:18px;padding:14px 14px 10px;
+  background:linear-gradient(180deg,#221f55,#1a1846);border:1px solid rgba(129,140,248,.45);box-shadow:0 18px 40px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:30px 1fr auto;align-items:center;column-gap:10px}
+.prm .pi{font-size:24px;color:#c7d2fe;font-weight:700;text-align:center}
+.prm .pt{font-size:13px;font-weight:700;color:#e0e7ff;line-height:1.3}
+.prm .pb{display:flex;gap:8px}
+.prm .pb span{display:grid;place-items:center;min-width:48px;height:36px;padding:0 12px;border-radius:10px;font-weight:800;font-size:13px}
+.prm .no{border:1px solid rgba(148,163,184,.45);color:#e2e8f0;background:#111a2c}
+.prm .si{background:#4f46e5;color:#fff}
+.prm .pl{grid-column:1/-1;text-align:right;font-size:10.5px;color:#a5b4fc;text-decoration:underline;margin-top:8px}
 .tap{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;z-index:70;pointer-events:none;
   background:radial-gradient(circle,rgba(255,255,255,.9) 0 9px,rgba(255,255,255,.35) 10px 13px,transparent 14px);
   box-shadow:0 0 0 2px rgba(255,255,255,.6)}
@@ -179,6 +205,7 @@ const Q = new URLSearchParams(location.search);
 const SHORT = Q.get('f') === 'igs';      // Instagram short cut (~21s), same scenes re-edited on the beat
 const IG = Q.get('f') === 'ig' || SHORT;  // Instagram Reels: 9:16 with safe zones + teaser copy
 const V = Q.get('f') === 'v' || IG;
+const SITE = !V;                          // 16:9 for the site player (#video-demo on salaflow.com)
 const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
 document.body.classList.toggle('V', V);
 const stage = document.getElementById('stage');
@@ -186,9 +213,14 @@ stage.style.width = W + 'px'; stage.style.height = H + 'px';
 
 // ---------- music grid (112 BPM, first downbeat 0.163s) ----------
 const BAR = 2.1413, B0 = 0.163;
-const bar = n => B0 + n * BAR;
-const beat = n => B0 + n * BAR / 4;
-const END = 47.3;
+// Site version: 2 extra bars (the "promemoria" scene) before the comanda scene. The music repeats
+// bars 11-12 there (mix.py site), so every scene from bar 13 on simply moves 2 bars later.
+const INS = 13, EXT = SITE ? 2 : 0;
+const rawBar = n => B0 + n * BAR;
+const bar = n => rawBar(n >= INS ? n + EXT : n);
+const beat = n => bar(n / 4);
+const PM0 = rawBar(INS), PM1 = rawBar(INS + EXT);   // promemoria scene (site only)
+const END = 47.3 + EXT * BAR;
 
 // ---------- easing ----------
 const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -237,9 +269,11 @@ const L = V ? {
   pop: 1.0, tabX: 520, tabY: 560, tabS: 1.0, phX: 790, phY: 1080, phS: .5,
   kitX: 540, kitY: 150, recap: 150,
 } : {
-  px: 1300, py: 545, s: 1.0, capX: 150, capY: 540, capW: 760, capAlign: 'left', headSize: 86, kickSize: 24,
-  pop: 1.0, tabX: 700, tabY: 600, tabS: 1.0, phX: 1480, phY: 640, phS: .7,
-  kitX: 1640, kitY: 170, recap: 150,
+  // Site player: on phones the page crops the 16:9 frame to its centre 810x1080 (3:4), so everything
+  // essential lives in x 585..1335. The sides only carry desktop extras (steps list, explanations).
+  px: 960, py: 648, s: .84, capX: 585, capY: 46, capW: 750, capAlign: 'center', headSize: 60, kickSize: 24,
+  pop: 1.0, tabX: 960, tabY: 590, tabS: 1.0, phX: 1215, phY: 760, phS: .6,
+  kitX: 1195, kitY: 560, comX: -95, recap: 150,
 };
 if (IG) Object.assign(L, { py: 1090, s: 1.2, capY: 250, tabY: 800, phY: 1260, kitX: 290, kitY: 1470 });
 
@@ -257,7 +291,22 @@ grain.width = 512; grain.height = 512;
   g.putImageData(im, 0, 0); }
 css(grain, { width: (W * 2) + 'px', height: (H * 2) + 'px', imageRendering: 'pixelated' });
 
-function drawBG(t, energy) {
+const BOK = [];
+{ let sd = 42; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 24; i++) {
+    const d = rnd(), size = 5 + d * 24, e = document.createElement('div');
+    e.className = 'bok';
+    css(e, { width: size + 'px', height: size + 'px', filter: `blur(${1.5 + d * 5}px)`, background: rnd() > .5 ? '#2dd8a3' : '#7bf0c8' });
+    document.getElementById('bgl').appendChild(e);
+    BOK.push({ e, x: rnd() * W, y: rnd() * H, d, a: .05 + rnd() * .14, sp: 6 + rnd() * 16, ph: rnd() * 6.28 });
+  } }
+function drawBG(t, energy, camx = 0) {
+  BOK.forEach(b => {
+    const y = ((b.y - t * b.sp) % (H + 80) + H + 80) % (H + 80) - 40;
+    const x = b.x + Math.sin(t * .3 + b.ph) * 26 - camx * (.03 + b.d * .07);
+    tf(b.e, `translate(${x}px,${y}px)`);
+    op(b.e, b.a * (.65 + .35 * Math.sin(t * .8 + b.ph)) * (.75 + energy * .4));
+  });
   const a = t * .25;
   tf(o1, `translate(${W * .62 + Math.sin(a) * 180 - 450}px,${H * .45 + Math.cos(a * .8) * 120 - 450}px) scale(${1 + energy * .25})`);
   tf(o2, `translate(${W * .2 + Math.cos(a * .7) * 220 - 350}px,${H * .75 + Math.sin(a * 1.1) * 140 - 350}px)`);
@@ -272,6 +321,9 @@ function drawBG(t, energy) {
 const UI = document.getElementById('ui');
 if (IG) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:0;height:640px;background:linear-gradient(0deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 35%,rgba(10,14,13,.96) 100%)"></div>`));
 else if (V) UI.appendChild($(`<div class="abs" style="left:0;right:0;top:1300px;bottom:0;background:linear-gradient(180deg,rgba(10,14,13,0) 0%,rgba(10,14,13,.88) 30%,rgba(10,14,13,.96) 100%)"></div>`));
+// site: a dark band behind the captions, faded in only while a zoomed phone reaches up under them
+const scrim = $(`<div class="abs" style="left:0;right:0;top:0;height:340px;background:linear-gradient(180deg,rgba(10,14,13,.95) 0%,rgba(10,14,13,.9) 55%,rgba(10,14,13,0) 100%)"></div>`);
+if (SITE) UI.appendChild(scrim);
 function mkCap(kick, lines, opt = {}) {
   const size = opt.size || L.headSize;
   const el = $(`<div class="cap"></div>`);
@@ -283,8 +335,7 @@ function mkCap(kick, lines, opt = {}) {
     hd.appendChild(ln);
   });
   el.appendChild(hd);
-  if (V) css(el, { left: L.capX + 'px', width: L.capW + 'px', top: (opt.y ?? L.capY) + 'px' });
-  else css(el, { left: (opt.x ?? L.capX) + 'px', width: (opt.w ?? L.capW) + 'px', top: (opt.y ?? L.capY) + 'px', transform: 'translateY(-50%)' });
+  css(el, { left: (opt.x ?? L.capX) + 'px', width: (opt.w ?? L.capW) + 'px', top: (opt.y ?? L.capY) + 'px' });
   if (opt.center) { el.style.alignItems = 'center'; el.style.textAlign = 'center'; }
   UI.appendChild(el);
   el._w = [...el.querySelectorAll('.w')];
@@ -334,19 +385,19 @@ paper.appendChild(psvg);
 paperWrap.appendChild(paper);
 document.getElementById('world').appendChild(paperWrap);
 
-const capA1 = mkCap(null, ['Sabato sera.', '~Sala ~piena.'], V ? { y: IG ? 270 : 1330, size: 96 } : { size: 100 });
-const capA2 = mkCap(null, ['E il quaderno', 'non basta più.'], V ? { y: IG ? 270 : 1330, size: 96 } : { size: 100 });
+const capA1 = mkCap(null, ['Sabato sera.', '~Sala ~piena.'], V ? { y: IG ? 270 : 1330, size: 96 } : { y: 56, size: 84 });
+const capA2 = mkCap(null, ['E il quaderno', 'non basta più.'], V ? { y: IG ? 270 : 1330, size: 96 } : { y: 56, size: 84 });
 
 function drawA(t) {
   drawCap(capA1, t, beat(1), beat(4.2));
   drawCap(capA2, t, beat(4.4), bar(2) - .05);
   const on = show(paperWrap, t < bar(2) + .1);
   if (!on) return;
-  const x = V ? 540 : 1340, y = IG ? 1080 : V ? 640 : 545;
+  const x = V ? 540 : 960, y = IG ? 1080 : 640;
   const inP = P(t, 0, 1.3, E.outX), outP = P(t, bar(1.6), bar(2), E.inX);
   const drift = t * 2;
   tf(paperWrap, `translate3d(${x + (1 - inP) * 120}px,${y + (1 - inP) * 200 + outP * 300}px,${-300 * (1 - inP) - outP * 900}px)
-      rotateX(${18 - inP * 6 + outP * 50}deg) rotateY(${-14 + drift * .8}deg) rotateZ(${-6 + inP * 3 + outP * 12}deg) scale(${V ? .95 : .92})`);
+      rotateX(${18 - inP * 6 + outP * 50}deg) rotateY(${-14 + drift * .8}deg) rotateZ(${-6 + inP * 3 + outP * 12}deg) scale(${V ? .95 : .82})`);
   paperWrap.style.filter = `blur(${outP * 14}px)`;
   op(paperWrap, inP * (1 - outP));
   entEls.forEach((e, i) => {
@@ -377,7 +428,7 @@ UI.appendChild(logoBox);
 const lw = logoBox.querySelector('.lw'), sheen = logoBox.querySelector('.sheen'),
   r1 = logoBox.querySelector('.r1'), r2 = logoBox.querySelector('.r2'), wm = logoBox.querySelector('.wm'), tg = logoBox.querySelector('.tg');
 const wmL = 'SalaFlow'.split('').map((c, i) => { const s = $(`<span style="display:inline-block;${i >= 4 ? 'color:var(--mint)' : ''}">${c}</span>`); wm.appendChild(s); return s; });
-const tgW = 'La tua sala, finalmente sotto controllo.'.split(' ').map((w, i) => { if (i) tg.appendChild(document.createTextNode(' ')); const s = $(`<span style="display:inline-block">${w}</span>`); tg.appendChild(s); return s; });
+const tgW = 'La tua sala, finalmente sotto controllo.'.split(' ').map((w, i) => { if (i) tg.appendChild(SITE && i === 3 ? document.createElement('br') : document.createTextNode(' ')); const s = $(`<span style="display:inline-block">${w}</span>`); tg.appendChild(s); return s; });
 
 function drawB(t) {
   const t0 = bar(2) - .15, t1 = bar(4);
@@ -545,6 +596,11 @@ const sheet2 = $(`<div class="sheet" style="top:200px">
 app.appendChild(sheet2);
 const btnPr = sheet2.querySelector('.pr'), btnCom = sheet2.querySelector('.com');
 const toastD = $(`<div class="toast pu">★ 🔔 Tavolo 6 – Non Prenotato è pronto per ordinare!</div>`); app.appendChild(toastD);
+// promemoria (site): the real reminder card of the app
+const prm = $(`<div class="prm"><div class="pi">Ħ</div><div class="pt">Tavolo 111 (Cristiana) si è alzato?</div>
+  <div class="pb"><span class="no">No</span><span class="si">Sì</span></div><div class="pl">Non lo so, chiedi a qualcun altro</div></div>`);
+if (SITE) app.appendChild(prm);
+const prmSi = prm.querySelector('.si');
 const tapEl = $(`<div class="tap"></div>`); app.appendChild(tapEl);
 
 // pop-outs (children of the 3D phone so they lift off the screen)
@@ -555,7 +611,8 @@ const popS = $(`<div class="pop" style="background:#121b2e;border:1px solid rgba
 const popG1 = $(`<div class="pop" style="background:#15383a;border:1px solid var(--a-teal1);padding:16px 26px;font-weight:800;font-size:24px;color:#ccfbf1">⚠ Glutine</div>`);
 const popG2 = $(`<div class="pop" style="background:#15383a;border:1px solid var(--a-teal1);padding:16px 26px;font-weight:800;font-size:24px;color:#ccfbf1">⚠ Latte</div>`);
 const popT = $(`<div class="pop" style="background:#6d28d9;border:1px solid #a78bfa;padding:20px 28px;font-weight:800;font-size:21px;color:#f5f0ff">🔔 Tavolo 6 è pronto per ordinare</div>`);
-[popA, popS, popG1, popG2, popT].forEach(p => phoneEl.appendChild(p));
+const popL = $(`<div class="pop" style="background:#15803d;border:1px solid #22c55e;padding:20px 28px;font-weight:800;font-size:22px;color:#eafff3">✓ Tavolo 111 liberato</div>`);
+[popA, popS, popG1, popG2, popT, ...(SITE ? [popL] : [])].forEach(p => phoneEl.appendChild(p));
 
 // kitchen node + ticket
 const kitchen = $(`<div id="kitchen"><div class="ki"><svg viewBox="0 0 24 24"><path d="M6 13.5V20h12v-6.5M6 13.5a4 4 0 1 1 2.3-7.3A4.5 4.5 0 0 1 16 5.4a4 4 0 1 1 2 8.1zM6 17h12"/></svg></div>
@@ -575,9 +632,10 @@ const tablet = $(`<div class="dev"><div class="tablet"><div class="frame"></div>
 </div></div></div></div>`);
 document.getElementById('world').appendChild(tablet);
 const tgr = tablet.querySelector('.tgr');
-const TG = [...GRID.slice(1), ['21', 'Lombardi', '1 min'], ['40', 'Non Pren.', '6 min'], ['11', 'Di Carlo', '8 min'], ['16', 'Marini', '10 min'], ['23', 'Non Pren.', '14 min']];
+const TG = [...GRID.slice(SITE ? 2 : 1), ['21', 'Lombardi', '1 min'], ['40', 'Non Pren.', '6 min'], ['11', 'Di Carlo', '8 min'], ['16', 'Marini', '10 min'], ['23', 'Non Pren.', '14 min'], ...(SITE ? [['29', 'Ferri', '3 min']] : [])];
 const tabTiles = TG.map(([n, nm, tm], i) => { const e = $(`<div class="tile" style="left:${(i % 10) * 97}px;top:${Math.floor(i / 10) * 106}px"><b>${n}</b><s>${nm}</s><u>${tm}</u></div>`); tgr.appendChild(e); return e; });
-const newTab = $(`<div class="tile red" style="left:${(20 % 10) * 97}px;top:${Math.floor(20 / 10) * 106}px"><b>12</b><s>Rossi</s><u>0 min</u></div>`); tgr.appendChild(newTab);
+const NT = TG.length;
+const newTab = $(`<div class="tile red" style="left:${(NT % 10) * 97}px;top:${Math.floor(NT / 10) * 106}px"><b>12</b><s>Rossi</s><u>0 min</u></div>`); tgr.appendChild(newTab);
 const newPh = $(`<div class="tile red" style="left:0;top:0"><b>12</b><s>Rossi</s><u>0 min</u></div>`); grEl.appendChild(newPh);
 const beam = document.createElementNS(svgNS, 'svg'); beam.id = 'beam'; beam.setAttribute('width', W); beam.setAttribute('height', H);
 beam.innerHTML = `<defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#2dd8a3" stop-opacity="0"/><stop offset=".5" stop-color="#7bf0c8"/><stop offset="1" stop-color="#2dd8a3" stop-opacity="0"/></linearGradient></defs>
@@ -591,10 +649,10 @@ const C = {
   walk: mkCap('Walk-in', ['Un tocco, e il', 'cliente è ~arrivato.']),
   search: mkCap('Ricerca', ['Ogni prenotazione,', 'in un secondo.']),
   grid: mkCap('Stato del servizio', ['Tutta la serata,', 'a colpo d’occhio.']),
-  alg: mkCap('Accoglienza', ['Le allergie,', 'segnate sul tavolo.']),
+  alg: mkCap(SITE ? 'Allergeni' : 'Accoglienza', ['Le allergie,', 'segnate sul tavolo.']),
+  ...(SITE ? { promo: mkCap('Promemoria', ['Il tavolo si è alzato?', 'Te lo chiede ~SalaFlow.']) } : {}),
   com: mkCap('Comande', ['Dal tavolo', 'alla cucina.']),
-  sync: mkCap('Sincronizzazione', V ? ['Telefono e tablet,', 'sempre allineati.'] : ['Telefono e tablet, sempre allineati.'],
-    V ? { y: IG ? 250 : 1520 } : { y: 125, x: 150, w: 1600, size: 64 }),
+  sync: mkCap('Sincronizzazione', ['Telefono e tablet,', 'sempre allineati.'], V ? { y: IG ? 250 : 1520 } : {}),
 };
 
 /* ============================================================
@@ -604,7 +662,7 @@ const S = L.s, X = L.px, Y = L.py;
 // focus points in phone-local coords (relative to phone centre, px)
 const tb6 = { fx: -207 + 12 + 14 + 16 + 250 + 13, fy: -434 + 12 + 150 + 138 + 58 + 96 + 18 };
 const F_SHEET = { fx: 0, fy: -40 }, F_TOP = { fx: 0, fy: -190 }, F_TILE6 = { fx: -207 + 12 + 14 + 42, fy: -434 + 12 + 150 + 142 + 47 };
-const F_COM = { fx: 96, fy: 240 };
+const F_COM = { fx: 96, fy: 240 }, F_PRM = { fx: 0, fy: -434 + 12 + 662 };
 const PH = full([
   [bar(4) - .6, { x: X + 260, y: Y + 700, z: -1200, rx: 38, ry: 42, rz: -10, s: S, fx: 0, fy: 0, f: 0, o: 0, bl: 20 }],
   [bar(4) + 1.1, { x: X, y: Y, z: 0, rx: 7, ry: -18, rz: 2, o: 1, bl: 0 }, E.outX],
@@ -623,7 +681,14 @@ const PH = full([
   [bar(10.9), { ...F_TILE6, f: 1, s: S * 2.1, ry: -3, rx: 2, rz: 0 }, E.ioX],
   [bar(11) + .8, { ...F_SHEET, f: .5, s: S * 1.2, ry: -9, rx: 5 }, E.outX],
   [bar(12.8), { s: S * 1.26, ry: -12 }, E.ioC],
-  [bar(13) + .8, { fx: 0, fy: 0, f: 0, s: S * 1.05, ry: 11, rz: -1.5, rx: 5 }, E.outX],
+  ...(SITE ? [                                              // promemoria: centre, zoom on the card, back
+    [PM0 + .9, { fx: 0, fy: 0, f: 0, s: S * 1.08, rx: 5, ry: -10, rz: 1 }, E.outX],
+    [PM0 + 1.75, { ...F_PRM, f: .8, s: S * 1.7, rx: 3, ry: -5, rz: 0 }, E.ioX],
+    [PM0 + 2.45, { s: S * 1.76 }, E.lin],
+    [PM0 + 3.35, { f: 0, s: S * 1.05, rx: 5, ry: -9, rz: 1 }, E.outX],
+    [PM1 - .05, { s: S * 1.1, ry: -12 }, E.ioC],
+  ] : []),
+  [bar(13) + .8, { x: X + (L.comX || 0), fx: 0, fy: 0, f: 0, s: S * 1.05, ry: 11, rz: -1.5, rx: 5 }, E.outX],
   [bar(13.8), { ...F_COM, f: .8, s: S * 1.75, ry: 5 }, E.ioX],
   [bar(14.5), { f: 0, s: S, ry: 12 }, E.ioC],
   [bar(15) + .9, { x: L.phX, y: L.phY, z: 150, s: S * L.phS, rx: 6, ry: -18, rz: 2 }, E.outX],
@@ -659,10 +724,14 @@ function toast(el, t, tin, tout, bottom) {
   tf(el, `translate(-50%,${(1 - k) * 60 + o * 20}px) scale(${.9 + .1 * k})`); op(el, Math.min(1, k * 1.5) * (1 - o));
 }
 
+const glare = phone.querySelector('.glare');
 function drawPhone(t) {
   if (!show(phone, t > bar(4) - .7 && t < bar(17) + .7)) return;
   const p = phoneState(t);
   place(phone, null, p);
+  // the highlight on the glass slides as the phone turns
+  const ga = 14 + (p.ry + 26) * 1.5;
+  glare.style.background = `linear-gradient(115deg,rgba(255,255,255,0) ${ga}%,rgba(255,255,255,.085) ${ga + 8}%,rgba(255,255,255,0) ${ga + 24}%),linear-gradient(115deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 38%)`;
 
   // screen state
   const sMap = t < bar(8) + .25, sSearch = t >= bar(8) + .25 && t < bar(9), sGrid = t >= bar(9);
@@ -729,7 +798,7 @@ function drawPhone(t) {
   const tC = beat(49.5);
   const cp = P(t, tC - .08, tC + .05) * (1 - P(t, tC + .1, tC + .3));
   tf(btnConf, `scale(${1 - cp * .05})`); btnConf.style.filter = `brightness(${1 + cp * .3})`;
-  toast(toastC, t, tC + .2, bar(13) + .2, 110);
+  toast(toastC, t, tC + .2, rawBar(13) + .2, 110);
   pop(popG1, t, beat(46) + .1, bar(12.7), 190, -60, 150, -4);
   pop(popG2, t, beat(47) + .1, bar(12.7), 215, 60, 190, 3);
 
@@ -749,21 +818,37 @@ function drawPhone(t) {
   css(btnCom, comOn ? { background: 'linear-gradient(180deg,#7c3aed,#6d28d9)', color: '#fff', borderColor: '#8b5cf6' } : { background: '', color: '#e2e8f0', borderColor: '' });
   btnCom.textContent = comOn ? '✓ ▤ Comanda' : '▤ Comanda';
 
-  // sync scene: phone shows the grid with the new table 12 appearing
+  // grid slots: in the site version 111 leaves after the promemoria; in the sync scene the new
+  // table 12 enters at the front and every other tile moves one slot on
+  const tPrm = PM0 + .8, tYes = PM0 + 2.2;
   const tS = bar(16) - .1;
+  const rem = SITE ? P(t, tYes + .2, tYes + .75, E.ioC) : 0;
+  const shift = t > bar(15) ? P(t, tS - .2, tS + .3, E.ioC) : 0;
+  const slot = k => { const a = Math.floor(k), f = k - a; return [lerp((a % 4) * 92, ((a + 1) % 4) * 92, f), lerp(Math.floor(a / 4) * 102, Math.floor((a + 1) / 4) * 102, f)]; };
+  tileEls.forEach((e, i) => { const [x, y] = slot(i - (i > 1 ? rem : 0) + shift); css(e, { left: x + 'px', top: y + 'px' }); });
+  if (t < (SITE ? PM0 : bar(15))) tileEls[0].className = 'tile red';
+  else { tileEls[0].className = 'tile'; tileEls[0].style.boxShadow = 'none'; }
   if (t > bar(15)) {
     show(newPh, true);
-    // shift everything to make room: new tile goes to slot 0, others move one slot
+    tileEls.forEach(e => tf(e, 'none'));
     const k = P(t, tS, tS + .6, E.outB);
-    const shift = P(t, tS - .2, tS + .3, E.ioC);
-    tileEls.forEach((e, i) => { const j = i + shift; const c = j % 4, r = Math.floor(j / 4);
-      const x = (i % 4) * 92 + shift * ((((i + 1) % 4) * 92) - (i % 4) * 92), y = Math.floor(i / 4) * 102 + shift * ((Math.floor((i + 1) / 4) - Math.floor(i / 4)) * 102);
-      css(e, { left: x + 'px', top: y + 'px' }); tf(e, 'none'); if (i === 0) { e.className = 'tile'; e.style.boxShadow = 'none'; e.querySelector('b').textContent = '6'; e.querySelector('s').textContent = 'Non Pren.'; } });
     tf(newPh, `scale(${k})`); op(newPh, cl(k * 2));
     newPh.style.boxShadow = `0 0 ${20 * (1 - P(t, tS, tS + 1.5))}px 6px rgba(239,68,68,${.6 * (1 - P(t, tS, tS + 1.5))})`;
-  } else {
-    tileEls.forEach((e, i) => css(e, { left: (i % 4) * 92 + 'px', top: Math.floor(i / 4) * 102 + 'px' }));
-    tileEls[0].className = 'tile red';
+  }
+  if (SITE) {
+    // table 111 glows amber while the app asks about it, then leaves the grid
+    const e = tileEls[1];
+    if (show(e, rem < 1)) {
+      const warn = P(t, tPrm - .3, tPrm + .2) * (1 - P(t, tYes + .1, tYes + .3));
+      e.style.borderColor = warn > 0 ? `rgba(251,191,36,${.5 + .4 * warn})` : '';
+      e.style.boxShadow = warn > 0 ? `0 0 ${8 + 14 * warn * (.6 + .4 * Math.sin(t * 7))}px rgba(251,191,36,${.55 * warn})` : 'none';
+      if (rem > 0) { tf(e, `scale(${1 - .45 * rem})`); op(e, 1 - rem); }
+    }
+    const pi = P(t, tPrm, tPrm + .55, E.outX), po = P(t, tYes + .15, tYes + .45, E.inC);
+    if (show(prm, pi > 0 && po < 1)) { tf(prm, `translateY(${(1 - pi) * 90 + po * 60}px) scale(${.96 + .04 * pi})`); op(prm, pi * (1 - po)); }
+    const sp = P(t, tYes - .08, tYes + .05) * (1 - P(t, tYes + .1, tYes + .3));
+    tf(prmSi, `scale(${1 - sp * .08})`); prmSi.style.filter = `brightness(${1 + sp * .4})`;
+    pop(popL, t, tYes + .45, PM1 - .1, 120, -150, 170, -2);
   }
 
   // tap indicators (screen coords inside .app)
@@ -776,6 +861,7 @@ function drawPhone(t) {
   tapped = tapAt(t, tC, 290, 150 + 530) || tapped;
   tapped = tapAt(t, tP, 290, 200 + 380) || tapped;
   tapped = tapAt(t, tCom, 290, 200 + 430) || tapped;
+  if (SITE) tapped = tapAt(t, tYes, 338, 654) || tapped;
   if (!tapped) op(tapEl, 0);
 }
 
@@ -783,7 +869,7 @@ function drawPhone(t) {
    Kitchen ticket (comande) & tablet sync
    ============================================================ */
 function drawKitchen(t) {
-  const tin = bar(13) + .6, tout = bar(15) + .1;
+  const tin = bar(13) + .6, tout = SITE ? bar(14.5) + .3 : bar(15) + .1;   // site: gone before the phone moves under it
   const on = show(kitchen, t > tin && t < tout + .1);
   const tCom = bar(14) - .05;
   if (on) {
@@ -816,14 +902,15 @@ function drawTablet(t) {
   tabTiles.forEach((e, i) => { const r = Math.floor(i / 10), c = i % 10, st = tin + .3 + (r + c) * .04, q = P(t, st, st + .6, E.outB); tf(e, `scale(${q})`); op(e, cl(q * 2)); });
   const tS = bar(16) - .1;
   const q = P(t, tS, tS + .6, E.outB);
-  show(newTab, t > tS - .1); tf(newTab, `scale(${q})`); op(newTab, cl(q * 2));
+  tf(newTab, `scale(${q})`); op(newTab, cl(q * 2));
   newTab.style.boxShadow = `0 0 ${20 * (1 - P(t, tS, tS + 1.5))}px 6px rgba(239,68,68,${.6 * (1 - P(t, tS, tS + 1.5))})`;
   // beam between devices
   const bk = P(t, tS - .5, tS, E.ioC), bo = P(t, tS + .2, tS + .8);
   if (show(beam, bk > 0 && bo < 1)) {
-    const p = track(PH, t);
-    const ax = p.x - 139 * p.s, ay = p.y - 83 * p.s;
-    const bx = V ? 150 : 362, by = V ? 712 : 700;
+    // from the new tile on the phone to the new tile on the tablet (both still at scale 0 here,
+    // so their boxes collapse to their centres)
+    const ra = newPh.getBoundingClientRect(), rb = newTab.getBoundingClientRect();
+    const ax = ra.left + ra.width / 2, ay = ra.top + ra.height / 2, bx = rb.left + rb.width / 2, by = rb.top + rb.height / 2;
     const cx = (ax + bx) / 2, cy = Math.min(ay, by) - 160;
     bp.setAttribute('d', `M${ax},${ay} Q${cx},${cy} ${bx},${by}`);
     const len = bp.getTotalLength();
@@ -839,10 +926,9 @@ function drawTablet(t) {
    Scene K — end card
    ============================================================ */
 const RECAP = ['Prenotazioni.', 'Walk-in.', 'Accoglienza.', 'Comande.', 'Cassa.'];
-const recap = RECAP.map(w => { const e = $(`<div class="recap" style="font-size:${V ? 150 : 190}px;top:${H / 2 - (V ? 95 : 120)}px">${w}</div>`); UI.appendChild(e); return e; });
+const recap = RECAP.map(w => { const e = $(`<div class="recap" style="font-size:${V ? 150 : 112}px;top:${H / 2 - (V ? 95 : 71)}px">${w}</div>`); UI.appendChild(e); return e; });
 const capLoc = mkCap(IG ? 'In anteprima' : 'Sul campo', [IG ? 'Già in prova alla' : 'Già al lavoro alla', '~Locanda ~Del ~Convento.'],
-  V ? { y: 760, size: 76 } : { x: 160, y: 540, w: 1600, size: 84 });
-if (!V) { capLoc.style.alignItems = 'center'; capLoc.style.textAlign = 'center'; capLoc.style.left = '160px'; capLoc.querySelector('.kick').style.justifyContent = 'center'; }
+  V ? { y: 760, size: 76 } : { y: 510, size: 60 });
 const locLogo = $(`<div class="abs" style="left:0;top:0;width:${V ? 150 : 120}px;height:${V ? 150 : 120}px;border-radius:30px;background:#fff url(locanda.png) center/cover;box-shadow:0 30px 60px -10px rgba(0,0,0,.7)"></div>`);
 UI.appendChild(locLogo);
 
@@ -862,7 +948,7 @@ function drawRecap(t) {
   const lo = show(locLogo, t > bar(18.3) - .05 && t < bar(19) + .1);
   if (lo) {
     const k = P(t, bar(18.3), bar(18.3) + .7, E.outB), o = P(t, bar(19) - .45, bar(19) - .05, E.inC);
-    const lx = V ? 540 - 75 : W / 2 - 60, ly = V ? 520 : 220;
+    const lx = V ? 540 - 75 : W / 2 - 60, ly = V ? 520 : 350;
     tf(locLogo, `translate(${lx}px,${ly}px) scale(${.6 + .4 * k})`); op(locLogo, k * (1 - o)); locLogo.style.filter = `blur(${o * 8}px)`;
   }
 }
@@ -883,7 +969,7 @@ const eLogo = endBox.querySelector('.elogo'), eRing = endBox.querySelector('.rin
 const ehW = [];
 [['Dalla', ''], ['sala,', ''], ['per', 'mint'], ['la', 'mint'], ['sala.', 'mint']].forEach(([w, c], i) => {
   if (i) eh.appendChild(document.createTextNode(' '));
-  if (V && i === 2) eh.appendChild(document.createElement('br'));
+  if (i === 2) eh.appendChild(document.createElement('br'));
   const ln = $(`<span class="line" style="display:inline-block"><span class="w ${c}">${w}</span></span>`); eh.appendChild(ln); ehW.push(ln.firstChild);
 });
 function drawEnd(t) {
@@ -905,20 +991,87 @@ function drawEnd(t) {
 }
 
 /* ============================================================
+   Desktop side panels (site only): left = step number + one line of explanation,
+   right = the tour's steps. Both sit outside the centre column, so phones never see them.
+   ============================================================ */
+const STEPS = SITE ? [
+  ['Piantina', 'Libero, prenotato, arrivato: ogni tavolo cambia colore mentre la sala si muove.', bar(4) + .6, bar(6)],
+  ['Walk-in', 'Cliente senza prenotazione? Lo segni come arrivato e il tavolo si aggiorna al volo.', bar(6), bar(8)],
+  ['Ricerca', 'Bastano le prime lettere del nome: tavolo, orario e persone, subito.', bar(8), bar(9)],
+  ['Stato del servizio', 'Tavoli arrivati, accoglienza e comande, tutti in una sola schermata.', bar(9), bar(11)],
+  ['Allergeni', 'All’accoglienza segni allergie e intolleranze del tavolo, tra i 14 allergeni.', bar(11), PM0],
+  ['Promemoria', 'Un avviso ti ricorda i tavoli occupati da troppo tempo, senza disturbarti a vuoto con le tavolate numerose.', PM0, PM1],
+  ['Comande', 'Segni il tavolo pronto per ordinare e la comanda parte da lì, verso la cucina.', bar(13), bar(15)],
+  ['Sincronizzazione', 'Tutto lo staff vede gli stessi dati, in tempo reale, da qualsiasi tablet o telefono.', bar(15), bar(17) - .1],
+] : [];
+const sideL = STEPS.map(([, txt], i) => {
+  const e = $(`<div class="sidel"><div class="sn"><b>${String(i + 1).padStart(2, '0')}</b><span>/ 0${STEPS.length}</span></div><div class="st">${txt}</div></div>`);
+  UI.appendChild(e); e._n = e.querySelector('.sn'); e._t = e.querySelector('.st'); return e;
+});
+const stepsEl = $(`<div class="steps"><div class="rail"><i></i></div></div>`);
+const stepIts = STEPS.map(([name]) => { const e = $(`<div class="it"><span class="d"><i></i></span><span class="n">${name}</span></div>`); stepsEl.appendChild(e); return e; });
+if (SITE) {
+  UI.appendChild(stepsEl);
+  css(stepsEl.querySelector('.rail'), { height: (STEPS.length - 1) * 56 + 'px' });
+}
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, x) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], x))).join(',')})`; };
+function drawSide(t) {
+  if (!SITE) return;
+  const vis = P(t, bar(4) + .3, bar(4) + 1.1) * (1 - P(t, bar(17) - .7, bar(17) - .1));
+  // hide a side only while the (zoomed) phone would reach into it
+  const p = track(PH, t), inPh = t > bar(4) - .6 && t < bar(17) + .6;
+  const pl = inPh ? p.x + p.s * (-207 - p.fx * p.f) : 960, pr = inPh ? p.x + p.s * (207 - p.fx * p.f) : 960;
+  const aL = vis * cl((pl - 470) / 70), aR = vis * cl((1440 - pr) / 70);
+  sideL.forEach((e, i) => {
+    const [, , a, b] = STEPS[i];
+    const pi = P(t, a + .15, a + .85, E.outX), po = P(t, b - .45, b - .05, E.inC);
+    if (!show(e, pi > 0 && po < 1 && aL > 0)) return;
+    op(e, aL);
+    tf(e._n.querySelector('b'), `translateY(${(1 - pi) * 100 + po * -100}%)`);
+    op(e._n, Math.min(1, pi * 1.5) * (1 - po));
+    tf(e._t, `translateY(${(1 - pi) * 24 - po * 12}px)`); e._t.style.filter = `blur(${(1 - pi) * 6 + po * 6}px)`;
+    op(e._t, P(t, a + .35, a + 1.05, E.outC) * (1 - po));
+  });
+  if (!show(stepsEl, aR > 0)) return;
+  op(stepsEl, aR);
+  let prog = 0;
+  stepIts.forEach((e, i) => {
+    const [, , a, b] = STEPS[i];
+    const on = P(t, a - .1, a + .4) * (1 - P(t, b - .1, b + .4)), done = P(t, b - .1, b + .4);
+    const base = done > 0 ? mix('#4b5c57', '#7f958f', done) : '#4b5c57';
+    e.querySelector('.n').style.color = on > 0 ? mix(done > 0 ? '#7f958f' : '#4b5c57', '#2dd8a3', on) : base;
+    tf(e.querySelector('.n'), `translateX(${on * 8}px)`);
+    const d = e.querySelector('.d');
+    d.style.borderColor = on > 0 || done > 0 ? mix('#4b5c57', '#2dd8a3', Math.max(on, done * .6)) : '#4b5c57';
+    d.style.boxShadow = on > 0 ? `0 0 ${14 * on}px rgba(45,216,163,${.7 * on})` : 'none';
+    tf(d.querySelector('i'), `scale(${Math.max(on, done * .55)})`);
+    prog += P(t, a, a + .5, E.ioC) * (i ? 1 : 0);
+  });
+  stepsEl.querySelector('.rail i').style.height = prog * 56 + 'px';
+}
+
+/* ============================================================
    Master render
    ============================================================ */
 const flash = document.getElementById('flash'), fade = document.getElementById('fade');
 window.render = function (t) {
   const energy = t > bar(9) ? .6 + .4 * Math.pow(1 - ((t - B0) % (BAR / 4)) / (BAR / 4), 3) : .2;
-  drawBG(t, energy);
+  const cam = track(PH, t);
+  drawBG(t, energy, (cam.x - X) * P(t, bar(4) - .6, bar(4) + 1.1) * (1 - P(t, bar(17), bar(17) + .8)));
   show(beam, false);
-  drawA(t); drawB(t); drawPhone(t); drawKitchen(t); drawTablet(t); drawRecap(t); drawEnd(t);
+  drawA(t); drawB(t); drawPhone(t); drawKitchen(t); drawTablet(t); drawRecap(t); drawEnd(t); drawSide(t);
+  if (SITE) {
+    const top = cam.y + cam.s * (-434 - cam.fy * cam.f), onPh = t > bar(4) - .6 && t < bar(17) + .6;
+    op(scrim, onPh ? cl((300 - top) / 140) * cam.o : 0);
+  }
   for (const k in C) show(C[k], false);
   drawCap(C.map, t, bar(4) + .6, bar(5.45));
   drawCap(C.walk, t, bar(6) + .3, bar(8) - .05);
   drawCap(C.search, t, bar(8) + .2, bar(9) - .1);
   drawCap(C.grid, t, bar(9) + .25, bar(10.6));
-  drawCap(C.alg, t, bar(11) + .2, bar(13) - .1);
+  drawCap(C.alg, t, bar(11) + .2, rawBar(13) - .1);
+  if (SITE) drawCap(C.promo, t, PM0 + .2, PM1 - .1);
   drawCap(C.com, t, bar(13) + .2, bar(15) - .1);
   drawCap(C.sync, t, bar(15) + .5, bar(17) - .1);
   // flashes on the big cuts
@@ -962,7 +1115,30 @@ if (SHORT) {
   };
   window.DURATION = TOTAL;
 }
-window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r))));
+// shrink a caption's font until its longest line fits the caption box
+function fitCaps() {
+  document.querySelectorAll('.cap').forEach(cap => {
+    const d = cap.style.display; cap.style.display = '';
+    const hd = cap.querySelector('.head'), lines = [...hd.querySelectorAll('.line')], maxW = cap.clientWidth;
+    lines.forEach(l => l.style.whiteSpace = 'nowrap');
+    let fs = parseFloat(hd.style.fontSize);
+    while (fs > 20 && lines.some(l => l.scrollWidth > maxW + 1)) { fs *= .97; hd.style.fontSize = fs + 'px'; }
+    cap.style.display = d;
+  });
+}
+// how far (px) anything visible moves between t-dt and t+dt: the renderer only spends
+// motion-blur subframes where something actually moves
+const PROBE = [phoneEl, tablet.querySelector('.tablet'), paper, lw, eLogo, ticket, kitchen, locLogo, ...recap, ...wmL, ...tgW,
+  popA, popS, popG1, popG2, popT, popL, prm, sheet1, sheet2, alg, toastA, toastB, toastC, toastD, resCard, newPh, newTab,
+  ...tileEls, ...tableEls, ...tabTiles, mapPane, searchPane, cta, url, ...sideL, ...stepIts, ...document.querySelectorAll('.cap .w, .cap .kick, .eh .w')];
+function rects() { return PROBE.map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects();
+  let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 99); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return m;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(fitCaps);
 render(0);
 </script>
 </body>
