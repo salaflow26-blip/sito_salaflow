@@ -10,7 +10,7 @@ const { spawn } = require('child_process');
 const path = require('path'), fs = require('fs');
 const FF = process.env.FFMPEG || 'ffmpeg';
 const [mode, f, arg, wk, sb] = process.argv.slice(2);
-const W = f === 'h' ? 1920 : 1080, H = f === 'h' ? 1080 : 1920;
+const W = f === 'h' ? 1920 : 1080, H = f === 'h' ? 1080 : 1920;   // h = 16:9, everything else vertical
 const url = 'file://' + path.join(__dirname, process.env.PAGE || 'stage.html') + '?f=' + f;   // PAGE=reel.html for the Reel
 const OUT = path.join(__dirname, 'build');
 fs.mkdirSync(path.join(OUT, 'stills'), { recursive: true });

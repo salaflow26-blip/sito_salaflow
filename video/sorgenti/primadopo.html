@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — prima/dopo</title>
+<style>
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+@font-face{font-family:Caveat;font-weight:600;src:url(font/Caveat.ttf)}
+:root{--g1:#22d3ee;--g2:#2dd4bf;--g3:#34d399;--ink:#020617;--red:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;font-family:PJS;color:#f1f5f9;
+  background:radial-gradient(900px 700px at 50% 70%,rgba(45,212,191,.12),transparent 70%),var(--ink)}
+.gt{background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.head{position:absolute;left:60px;right:60px;top:240px;text-align:center;font-weight:800;font-size:64px;letter-spacing:-.03em;line-height:1.05}
+.panel{position:absolute;left:60px;width:960px;height:520px;border-radius:36px;overflow:hidden}
+.panel.prima{top:400px;background:linear-gradient(160deg,#2a1414,#1a0d10);border:2px solid rgba(239,68,68,.45)}
+.panel.dopo{top:950px;background:linear-gradient(160deg,#0b1a2a,#061318);border:2px solid rgba(45,212,191,.55);box-shadow:0 0 60px -10px rgba(45,212,191,.35)}
+.tag{position:absolute;left:36px;top:32px;padding:10px 22px;border-radius:999px;font-weight:800;font-size:28px;letter-spacing:.12em}
+.prima .tag{background:rgba(239,68,68,.18);color:#fca5a5}
+.dopo .tag{background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));color:var(--ink)}
+.cap{position:absolute;left:36px;top:110px;width:380px;font-weight:700;font-size:44px;line-height:1.15;letter-spacing:-.02em}
+.prima .cap{color:#fecaca}
+.stamp{position:absolute;left:36px;bottom:34px;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font-size:56px;font-weight:800}
+.prima .stamp{background:var(--red);color:#fff}
+.dopo .stamp{background:linear-gradient(110deg,var(--g1),var(--g3));color:var(--ink)}
+.note{position:absolute;left:450px;top:40px;width:470px;height:440px;border-radius:10px;font-family:Caveat;color:#23324a;
+  background:repeating-linear-gradient(180deg,transparent 0 45px,rgba(80,120,170,.3) 45px 46px),#f4efe3;box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+.note.post{background:#fde68a;border-radius:4px}
+.note .l{position:absolute;left:34px;font-size:42px;white-space:nowrap;overflow:hidden}
+.note svg{position:absolute;inset:0;overflow:visible}
+.note path{fill:none;stroke:#b3261e;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.shot{position:absolute;left:0;top:0;width:900px;height:1800px;transform-origin:0 0}
+.clip{position:absolute;left:430px;top:0;width:530px;height:520px;overflow:hidden}
+.big{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.04em}
+.pill{position:absolute;left:50%;padding:34px 64px;border-radius:999px;font-weight:800;font-size:52px;color:var(--ink);white-space:nowrap;
+  background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));box-shadow:0 20px 60px -15px rgba(45,212,191,.7)}
+.small{position:absolute;left:0;right:0;text-align:center;font-weight:600;color:#cbd5e1}
+#logo{position:absolute;border-radius:22.5%;overflow:hidden;box-shadow:0 40px 90px -20px rgba(45,212,191,.55)}
+#logo img{width:100%;height:100%;display:block;transform:scale(1.025)}
+#grain{position:absolute;inset:-50%;opacity:.07;mix-blend-mode:overlay;pointer-events:none}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage"><div id="layer"></div><canvas id="grain"></canvas><div id="flash"></div><div id="fade"></div></div>
+<script>
+/* Prima / dopo: 5 situations, 2 bars each (problem, then the app). Music: the demo track from
+   bar 7 to its end, uncut, so the drop lands on the first situation. */
+const BAR = 2.1413, BEAT = BAR / 4, END = 47.3 - (0.163 + 7 * BAR);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
+const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), inC = x => x * x * x, ioC = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outB = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+const $ = h => { const d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstElementChild; };
+const L = document.getElementById('layer');
+const show = (e, on) => { e.style.display = on ? '' : 'none'; return on; };
+const tf = (e, s) => e.style.transform = s, op = (e, v) => e.style.opacity = v;
+const NS = 'http://www.w3.org/2000/svg';
+
+// [title, before caption, note lines, red strokes (svg paths in note coords), post-it?, after caption, shot, focus y]
+const SIT = [
+  ['Arriva un cliente<br>senza prenotazione', 'Sfogli il quaderno cercando un buco',
+    ['Sab 20 — completo??', 'tav 4 → Rossi 20:30', 'tav 7 → ??', 'walk-in 3: DOVE?'],
+    ['M150 250 c 60 -30 150 -20 170 10', 'M280 296 c 30 -30 90 -30 110 6 c 18 34 -80 50 -110 20 c -18 -18 10 -40 40 -34'], false,
+    'Un tocco:<br><span class="gt">cliente arrivato.</span>', 'walkin', 250],
+  ['Chi è già arrivato?', 'Chiedi in giro, spunti a matita',
+    ['Bianchi 2 — ✓?', 'Colombo — arrivati??', 'Ferri 6 — ?', 'Martini — boh'],
+    ['M30 118 C 140 110, 260 124, 400 114', 'M30 212 C 150 206, 280 218, 400 208'], false,
+    'Tutta la sala<br><span class="gt">in una schermata.</span>', 'grid', 250],
+  ['Un tavolo<br>con allergie', 'Scritto su un post-it, poi chissà',
+    ['tav 6:', 'celiaco?', 'o lattosio??'],
+    ['M40 330 c 80 -40 200 40 330 -10', 'M300 150 l 90 -60 M390 90 l -30 4 M390 90 l -4 30'], true,
+    'Allergie salvate<br><span class="gt">sul tavolo.</span>', 'alg', 150],
+  ['Quel tavolo<br>si è alzato?', 'Vai a controllare tavolo per tavolo',
+    ['tav 111 — ancora lì?', 'vado a vedere...', 'tav 3 — ?', 'tav 25 — ?'],
+    ['M30 170 C 150 164, 260 176, 380 168', 'M250 250 c 30 -30 90 -30 110 6 c 18 34 -80 50 -110 20'], false,
+    'Te lo chiede<br><span class="gt">l’app.</span>', 'promemoria', 560],
+  ['La comanda', 'Un foglietto che passa di mano',
+    ['tav 6 — 2 pers.', '1 x ... (non si legge)', 'allergie?? chiedere', '→ cucina'],
+    ['M30 166 C 150 160, 270 172, 400 162', 'M300 212 c 30 -30 90 -30 110 6'], false,
+    'Dal tavolo<br><span class="gt">alla cucina.</span>', 'comanda', 200],
+].map((r, i) => {
+  const [title, bcap, lines, strokes, post, acap, shot, fy] = r;
+  const t0 = (2 + 2 * i) * BAR;
+  const head = $(`<div class="head">${title}</div>`);
+  const pr = $(`<div class="panel prima"><div class="tag">PRIMA</div><div class="cap">${bcap}</div><div class="stamp">✕</div>
+    <div class="note ${post ? 'post' : ''}"></div></div>`);
+  const note = pr.querySelector('.note');
+  const ls = lines.map((s, k) => { const e = $(`<div class="l" style="top:${(post ? 70 : 40) + k * 92}px;${post ? 'font-size:60px' : ''}">${s}</div>`); note.appendChild(e); return e; });
+  const svg = document.createElementNS(NS, 'svg'); note.appendChild(svg);
+  const ps = strokes.map(d => { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); svg.appendChild(p); return p; });
+  const dp = $(`<div class="panel dopo"><div class="tag">DOPO</div><div class="cap">${acap}</div><div class="stamp">✓</div>
+    <div class="clip"><img class="shot" src="build/reel/${shot}.png"></div></div>`);
+  // phone image: app y -> image y = 32 + 2*(12 + y) (promemoria shot is already moved up 700px)
+  const k = .66, img = dp.querySelector('.shot'), iy = (shot === 'promemoria' ? -700 : 0) + 56 + 2 * fy;
+  tf(img, `translate(${-90 * k - 70}px,${60 - iy * k}px) scale(${k})`);
+  [head, pr, dp].forEach(e => L.appendChild(e));
+  return { t0, head, pr, dp, ls, ps, stP: pr.querySelector('.stamp'), stD: dp.querySelector('.stamp'), note, img };
+});
+
+// title + end
+const t1 = $(`<div class="big" style="top:560px;font-size:150px;color:#fca5a5">Prima</div>`);
+const t2 = $(`<div class="big gt" style="top:740px;font-size:150px">e dopo</div>`);
+const t3 = $(`<div class="small" style="top:960px;font-size:52px;line-height:1.3">Il sabato sera in sala,<br>con e senza <b style="color:#fff">SalaFlow</b>.</div>`);
+const eLogo = $(`<div id="logo" style="left:440px;top:300px;width:200px;height:200px"><img src="../../logo.png"></div>`);
+const e1 = $(`<div class="big" style="top:590px;font-size:140px;color:#fff">Presto</div>`);
+const e2 = $(`<div class="big gt" style="top:730px;font-size:140px">disponibile.</div>`);
+const ePill = $(`<div class="pill" style="top:1000px">Prenota una visita</div>`);
+const eUrl = $(`<div class="small" style="top:1170px;font-size:56px;color:#fff;font-weight:700">salaflow.com</div>`);
+const eTeam = $(`<div class="small" style="top:1290px;font-size:34px;color:#7d8aa0;font-weight:500">Fatto da Luca, Filippo e Antonio</div>`);
+[t1, t2, t3, eLogo, e1, e2, ePill, eUrl, eTeam].forEach(e => L.appendChild(e));
+
+const grain = document.getElementById('grain'); grain.width = grain.height = 512;
+{ const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 7;
+  for (let i = 0; i < im.data.length; i += 4) { s = (s * 1103515245 + 12345) & 0x7fffffff; im.data[i] = im.data[i + 1] = im.data[i + 2] = s % 256; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); }
+grain.style.width = '2160px'; grain.style.height = '3840px';
+const flash = document.getElementById('flash'), fade = document.getElementById('fade');
+
+window.render = function (t) {
+  const f = Math.floor(t * 24); tf(grain, `translate(${-((f * 173) % 500)}px,${-((f * 97) % 500)}px)`);
+  // title (bars 0-1)
+  const ti = t < 2 * BAR;
+  [t1, t2, t3].forEach(e => show(e, ti));
+  if (ti) {
+    const a = P(t, .1, .5, outB), b = P(t, 2 * BEAT, 2 * BEAT + .4, outB), c = P(t, BAR, BAR + .6, outX), o = P(t, 2 * BAR - .3, 2 * BAR, inC);
+    tf(t1, `scale(${lerp(1.3, 1, a)}) translateY(${-o * 60}px)`); op(t1, cl(a * 2) * (1 - o));
+    tf(t2, `scale(${lerp(1.3, 1, b)}) translateY(${-o * 60}px)`); op(t2, cl(b * 2) * (1 - o));
+    tf(t3, `translateY(${(1 - c) * 30}px)`); op(t3, c * (1 - o));
+  }
+  // situations
+  let fl = 0;
+  SIT.forEach(s => {
+    const lt = t - s.t0, on = lt >= 0 && lt < 2 * BAR;
+    [s.head, s.pr, s.dp].forEach(e => show(e, on));
+    if (!on) return;
+    fl = Math.max(fl, .35 * (1 - lt / .12));
+    const out = P(lt, 2 * BAR - .3, 2 * BAR, inC);
+    const h = P(lt, 0, .45, outB); tf(s.head, `scale(${lerp(1.15, 1, h)})`); op(s.head, cl(h * 2) * (1 - out));
+    const pa = P(lt, .05, .55, outB);
+    tf(s.pr, `translateX(${(1 - pa) * -1100 + out * -1100}px)`);
+    s.ls.forEach((e, k) => { const q = P(lt, .35 + k * .28, .35 + k * .28 + .35, outX); e.style.clipPath = `inset(0 ${100 - q * 100}% 0 0)`; });
+    s.ps.forEach((p, k) => { const len = p.getTotalLength(), q = P(lt, 1.3 + k * .35, 1.6 + k * .35, outX); p.style.strokeDasharray = len; p.style.strokeDashoffset = len * (1 - q); });
+    const shake = Math.exp(-Math.max(0, lt - (BAR - .1)) * 9) * (lt > BAR - .1);
+    tf(s.note, `rotate(${-3 + Math.sin(lt * 60) * 3 * shake}deg) translateX(${Math.sin(lt * 80) * 12 * shake}px)`);
+    const sp = P(lt, BAR - .15, BAR + .15, outB); tf(s.stP, `scale(${sp}) rotate(${(1 - sp) * -30}deg)`); op(s.stP, cl(sp * 2));
+    // after: slides in on the second bar, phone scrolls a touch, check stamp
+    const da = P(lt, BAR, BAR + .55, outB);
+    tf(s.dp, `translateX(${(1 - da) * 1100 + out * 1100}px)`);
+    const sd = P(lt, BAR + 2 * BEAT, BAR + 2 * BEAT + .3, outB); tf(s.stD, `scale(${sd}) rotate(${(1 - sd) * 30}deg)`); op(s.stD, cl(sd * 2));
+    // dim the "before" once the answer is on screen
+    op(s.pr, 1 - .45 * P(lt, BAR + .3, BAR + .8));
+  });
+  // end card (bar 12 on)
+  const et = t - 12 * BAR, en = et >= 0;
+  [eLogo, e1, e2, ePill, eUrl, eTeam].forEach(e => show(e, en));
+  if (en) {
+    fl = Math.max(fl, .35 * (1 - et / .12));
+    const lo = P(et, 0, .5, outB), s1 = P(et, BEAT, BEAT + .3, outB), s2 = P(et, 2 * BEAT, 2 * BEAT + .3, outB), pl = P(et, 3 * BEAT, 3 * BEAT + .45, outB), ur = P(et, 4 * BEAT, 4 * BEAT + .5, outX), tm = P(et, 6 * BEAT, 6 * BEAT + .8);
+    tf(eLogo, `scale(${lo})`); op(eLogo, cl(lo * 2));
+    tf(e1, `scale(${lerp(1.3, 1, s1)})`); op(e1, cl(s1 * 3));
+    tf(e2, `scale(${lerp(1.3, 1, s2)})`); op(e2, cl(s2 * 3));
+    tf(ePill, `translateX(-50%) scale(${lerp(.7, 1, pl)})`); op(ePill, cl(pl * 2));
+    tf(eUrl, `translateY(${(1 - ur) * 30}px)`); op(eUrl, ur); op(eTeam, tm);
+  }
+  op(flash, fl);
+  op(fade, Math.max(1 - P(t, 0, .3), P(t, END - .8, END - .05)));
+};
+window.DURATION = END;
+const PROBE = () => [...L.querySelectorAll('.head,.panel,.stamp,.note,.big,.pill,.small,#logo')];
+function rects() { return PROBE().map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects(); let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 99); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return m;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r))));
+render(0);
+</script>
+</body>
+</html>
