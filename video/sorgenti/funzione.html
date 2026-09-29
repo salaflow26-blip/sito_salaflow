@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — una funzione in 10 secondi</title>
+<style>
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+:root{--g1:#22d3ee;--g2:#2dd4bf;--g3:#34d399;--ink:#020617}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;font-family:PJS;background:var(--ink)}
+#cam{position:absolute;inset:0}
+.grad{position:absolute;inset:-12%;background:linear-gradient(160deg,var(--g1) 0%,var(--g2) 50%,var(--g3) 100%)}
+.hl{position:absolute;left:0;top:0;width:820px;height:820px;border-radius:50%;filter:blur(90px);background:rgba(255,255,255,.3)}
+#dark{position:absolute;inset:0;background:radial-gradient(900px 900px at 50% 42%,rgba(45,212,191,.16),transparent 70%),var(--ink)}
+.txt{position:absolute;left:80px;top:300px;width:920px}
+.ln{display:block;font-weight:800;text-transform:uppercase;letter-spacing:-.04em;word-spacing:.12em;line-height:.92;white-space:nowrap;transform-origin:0% 100%;color:var(--ink)}
+.wt{color:#fff}
+.gt{background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));-webkit-background-clip:text;background-clip:text;color:transparent}
+#ep{position:absolute;left:80px;top:220px;padding:10px 22px;border-radius:999px;background:var(--ink);color:#fff;font-weight:700;font-size:28px;letter-spacing:.08em}
+#ep b{color:var(--g2)}
+#phw{position:absolute;left:90px;top:0;width:900px;height:1800px}
+#ph{position:absolute;left:0;top:0;width:900px;height:1800px;filter:drop-shadow(0 50px 70px rgba(2,6,23,.45))}
+#ring{position:absolute;border:6px solid #fff;border-radius:28px;box-shadow:0 0 0 9999px rgba(2,6,23,.0),0 0 30px rgba(255,255,255,.7)}
+#exp{position:absolute;left:80px;right:80px;top:300px;font-weight:800;font-size:60px;line-height:1.15;letter-spacing:-.02em;color:var(--ink)}
+.word{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.04em;white-space:nowrap}
+.small{position:absolute;left:0;right:0;text-align:center;font-weight:600;color:#cbd5e1}
+#logo{position:absolute;left:440px;top:520px;width:200px;height:200px;border-radius:22.5%;overflow:hidden;box-shadow:0 40px 90px -20px rgba(45,212,191,.55)}
+#logo img{width:100%;height:100%;display:block;transform:scale(1.025)}
+.pill{position:absolute;left:50%;padding:30px 58px;border-radius:999px;font-weight:800;font-size:48px;color:var(--ink);white-space:nowrap;
+  background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));box-shadow:0 20px 60px -15px rgba(45,212,191,.7)}
+#grain{position:absolute;inset:-50%;opacity:.08;mix-blend-mode:overlay;pointer-events:none}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <div class="grad" id="grad"></div><div class="hl" id="hl1"></div><div class="hl" id="hl2"></div>
+  <div id="phw"><img id="ph"><div id="ring"></div></div>
+  <div class="txt" id="q"></div><div class="txt" id="a"></div><div id="exp"></div>
+  <div id="dark"></div>
+  <div id="logo"><img src="../../logo.png"></div>
+  <div class="word" id="e0" style="top:780px;font-size:120px"><span style="color:#fff">Sala</span><span class="gt">Flow</span></div>
+  <div class="small" id="e1" style="top:950px;font-size:44px;color:#fff;font-weight:700">Presto disponibile</div>
+  <div class="pill" id="e2" style="top:1060px">Prenota una visita</div>
+  <div class="small" id="e3" style="top:1220px;font-size:46px;color:#fff;font-weight:700">salaflow.com</div>
+  <div id="ep"></div>
+</div>
+<canvas id="grain"></canvas><div id="flash"></div><div id="fade"></div></div>
+<script>
+/* "Una funzione in 10 secondi": ?f=f1..f6. 5 bars of the demo track from its drop:
+   bar 0 question, bars 1-3 the app screen (zoom on the detail at bar 2), bar 4 end card. */
+const EPS = [
+  { img: 'promemoria', q: ['Tavolo seduto', 'da ore?'], a: ['Te lo ricorda', 'SalaFlow.'], fx: 460, fy: 680, rw: 800, rh: 190,
+    exp: 'Un avviso ti chiede se il tavolo si è liberato, e non disturba a vuoto con le tavolate numerose.' },
+  { img: 'walkin', q: ['Entra gente', 'senza prenotare?'], a: ['Un tocco:', 'cliente arrivato.'], fx: 460, fy: 1012, rw: 680, rh: 100,
+    exp: 'Lo segni come arrivato e il tavolo si aggiorna per tutto lo staff.' },
+  { img: 'alg', q: ['Celiaco?', 'Lattosio?'], a: ['Segnato', 'sul tavolo.'], fx: 290, fy: 830, rw: 380, rh: 380,
+    exp: 'All’accoglienza segni allergie e intolleranze del tavolo, tra i 14 allergeni.' },
+  { img: 'grid', q: ['Chi è già', 'seduto?'], a: ['Tutta la sala,', 'in una schermata.'], fx: 450, fy: 900, rw: 760, rh: 470,
+    exp: 'Tavoli arrivati, accoglienza e comande, in tempo reale.' },
+  { img: 'comanda', q: ['Il foglietto', 'della comanda?'], a: ['Parte', 'dal tavolo.'], fx: 450, fy: 1148, rw: 740, rh: 110,
+    exp: 'Segni il tavolo pronto per ordinare e fai la comanda da lì, verso la cucina.' },
+  { img: 'map', q: ['Il quaderno', 'delle prenotazioni?'], a: ['La tua sala,', 'in diretta.'], fx: 450, fy: 780, rw: 700, rh: 300,
+    exp: 'Libero, prenotato, arrivato: ogni tavolo cambia colore mentre lavori.' },
+];
+const N = +((new URLSearchParams(location.search).get('f') || 'f1').slice(1)) || 1, EP = EPS[N - 1];
+const BAR = 2.1413, BEAT = BAR / 4, END = 5 * BAR;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
+const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), inC = x => x * x * x, ioC = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outB = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+const $id = i => document.getElementById(i), tf = (e, s) => e.style.transform = s, op = (e, v) => e.style.opacity = v;
+const show = (e, on) => { e.style.display = on ? '' : 'none'; return on; };
+
+$id('ph').src = `build/reel/${EP.img}.png`;
+$id('ep').innerHTML = `UNA FUNZIONE IN 10 SECONDI · <b>0${N} / 0${EPS.length}</b>`;
+const mk = (box, lines, cls) => lines.map((w, k) => { const e = document.createElement('span'); e.className = 'ln ' + (k ? cls : ''); e.textContent = w; box.appendChild(e); return e; });
+const Q = mk($id('q'), EP.q, 'wt'), A = mk($id('a'), EP.a, 'wt');
+$id('exp').textContent = EP.exp;
+const ring = $id('ring'); Object.assign(ring.style, { left: EP.fx - EP.rw / 2 + 'px', top: EP.fy - EP.rh / 2 + 'px', width: EP.rw + 'px', height: EP.rh + 'px' });
+function fit() { [...Q, ...A].forEach(e => { const box = e.parentElement, d = box.style.display; box.style.display = ''; let fs = 170; e.style.fontSize = fs + 'px'; while (e.scrollWidth > 920 && fs > 60) { fs -= 4; e.style.fontSize = fs + 'px'; } box.style.display = d; }); }
+
+const grain = $id('grain'); grain.width = grain.height = 512;
+{ const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 11 + N;
+  for (let i = 0; i < im.data.length; i += 4) { s = (s * 1103515245 + 12345) & 0x7fffffff; im.data[i] = im.data[i + 1] = im.data[i + 2] = s % 256; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); }
+grain.style.width = '2160px'; grain.style.height = '3840px';
+
+window.render = function (t) {
+  const bar = Math.floor(t / BAR), lt = t - bar * BAR;
+  tf($id('grad'), `rotate(${Math.sin(t * .4) * 6}deg) scale(1.05)`);
+  tf($id('hl1'), `translate(${-200 + Math.sin(t * .7) * 260}px,${200 + Math.cos(t * .5) * 180}px)`);
+  tf($id('hl2'), `translate(${500 + Math.cos(t * .6) * 220}px,${1200 + Math.sin(t * .8) * 200}px)`);
+  const f = Math.floor(t * 24); tf(grain, `translate(${-((f * 173) % 500)}px,${-((f * 97) % 500)}px)`);
+  const beatAge = ((t % BEAT) + BEAT) % BEAT, kick = Math.exp(-beatAge * 16) * (t < END - 1.2 ? 1 : 0);
+  tf($id('cam'), `translate(${Math.sin(t * 91) * 6 * kick}px,${Math.cos(t * 77) * 6 * kick}px)`);
+  op($id('flash'), (t > .1 && (bar === 1 || bar === 4)) ? Math.max(0, .4 * (1 - lt / .12)) : 0);
+  const slam = (els, t0, beats) => els.forEach((e, k) => { const tb = t0 + beats[k] * BEAT, q = P(t, tb, tb + .28, outB), a = P(t, tb, tb + .06);
+    tf(e, `translateY(${(1 - q) * 40}px) scale(${lerp(1.35, 1, q)}) rotate(${(1 - q) * -4}deg)`); e.style.filter = `blur(${(1 - a) * 10}px)`; op(e, a); });
+  // question (bar 0)
+  if (show($id('q'), t < BAR)) slam(Q, 0, [0, 1]);
+  // phone + answer (bars 1-3)
+  const ap = t >= BAR && t < 4 * BAR;
+  show($id('phw'), ap); show($id('a'), ap); show($id('exp'), ap);
+  if (ap) {
+    const u = t - BAR, inn = P(u, 0, .55, outB), out = P(u, 3 * BAR - .3, 3 * BAR, inC);
+    // bar 2: texts step aside and the camera zooms on the detail (focus goes to screen y 1000)
+    const z = P(u, BAR, BAR + .6, ioC) * (1 - P(u, 2 * BAR - .1, 2 * BAR + .5, ioC));
+    const s = lerp(1, 1.35, z), tx = z * (450 - EP.fx), ty = z * (240 - EP.fy);
+    const phw = $id('phw');
+    phw.style.transformOrigin = `${EP.fx}px ${EP.fy}px`;
+    tf(phw, `translate(${tx + out * 1300}px,${760 + (1 - inn) * 900 + ty}px) rotate(${(1 - inn) * -12 + out * 16}deg) scale(${s})`);
+    const r = P(u, BAR + .45, BAR + .75, outB) * (1 - P(u, 2 * BAR + .8, 2 * BAR + 1.1));
+    op(ring, cl(r * 2)); tf(ring, `scale(${lerp(1.25, 1, r)})`);
+    slam(A, BAR, [0, 1]); op($id('a'), 1 - P(u, BAR - .1, BAR + .2));
+    const ex = P(u, 2 * BAR + .3, 2 * BAR + .9, outX); op($id('exp'), ex * (1 - out)); tf($id('exp'), `translateY(${(1 - ex) * 30}px)`);
+  }
+  // end card (bar 4)
+  const en = t >= 4 * BAR, et = t - 4 * BAR;
+  op($id('dark'), en ? 1 : 0);
+  ['logo', 'e0', 'e1', 'e2', 'e3'].forEach(i => show($id(i), en));
+  if (en) {
+    const lo = P(et, 0, .45, outB), w = P(et, BEAT, BEAT + .35, outB), a1 = P(et, 2 * BEAT, 2 * BEAT + .4, outX), pl = P(et, 2.5 * BEAT, 2.5 * BEAT + .45, outB), u2 = P(et, 3 * BEAT, 3 * BEAT + .5, outX);
+    tf($id('logo'), `scale(${lo})`); op($id('logo'), cl(lo * 2));
+    tf($id('e0'), `scale(${lerp(1.3, 1, w)})`); op($id('e0'), cl(w * 3));
+    op($id('e1'), a1); tf($id('pill'.replace('pill', 'e2')), `translateX(-50%) scale(${lerp(.7, 1, pl)})`); op($id('e2'), cl(pl * 2));
+    op($id('e3'), u2);
+  }
+  op($id('fade'), P(t, END - .6, END - .05));
+};
+window.DURATION = END;
+const PROBE = () => [...document.querySelectorAll('.ln,#phw,#ring,#exp,#logo,.word,.small,.pill')];
+function rects() { return PROBE().map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects(); let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 99); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return m;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(fit);
+render(0);
+</script>
+</body>
+</html>
