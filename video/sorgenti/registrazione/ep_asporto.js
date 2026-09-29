@@ -52,8 +52,15 @@ const ep = async d => {
   await d.tap(p.locator('#comanda-modal').getByText(/invia comanda/i).first(), { after: 1800 });
   await p.evaluate(() => switchTab('asporto')); await d.wait(1400);
   await d.shot({ b: 10, t: 'Nell’elenco *asporti*', s: 'Con l’orario di ritiro: quando passa, lo trovi pronto' });
+  await d.tap(p.locator('[onclick*="setAsportoStato"][onclick*="pronto"]').locator('visible=true').first(), { after: 1400 });
+  await d.shot({ b: 8, t: 'Pronto da *ritirare*', s: 'Lo segni pronto quando esce dalla cucina', settle: 300 });
+  await p.evaluate(() => { switchTab('impostazioni'); }); await d.wait(900);
+  await p.evaluate(() => openAsportoSettings()); await d.wait(1500);
+  await d.shot({ b: 6, t: 'La cucina *non va in tilt*', s: 'Impostazioni › Asporto: i limiti di capacità' });
+  await d.tap(d.R(/^\s*ogni 30 min\s*$/i), { after: 1300 });
+  await d.shot({ b: 10, t: 'Un tetto *ogni mezz’ora*', s: 'Quanti piatti per categoria: se è pieno, il sito propone al cliente un altro orario' });
 };
-ep.pre = async () => {
+ep.pre = async () => { await db.collection('restaurants').doc(currentRestaurantId).update({ asportoCapacityWindowMinutes: null });
   for (const c of ['asportoRequests', 'asporti']) for (const d of (await col(c).get()).docs) { await col('comande').doc(d.id).delete(); await d.ref.delete(); }
   const want = ['Tagliatelle al ragù', 'Gnocchi al pomodoro', 'Tiramisù', 'Acqua naturale'];
   for (const d of (await col('menuItems').get()).docs) await d.ref.update({ availableForAsporto: want.includes(d.data().name) });
