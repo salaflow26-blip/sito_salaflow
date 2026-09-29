@@ -41,6 +41,7 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 
 ## 6. Asporto 👁
 - Ordini da ritirare senza tavolo: **Nuovo asporto → Crea e componi ordine**, stessa interfaccia della comanda.
+- 🚧 **In sviluppo: asporto ordinabile dal sito.** Il cliente richiede l'asporto dalla pagina pubblica del locale e l'ordine arriva direttamente nell'app. Finché non è rilasciato, nelle demo va presentato come "in arrivo".
 
 ## 7. Menu / Piatti 👁 (`09-piatti`)
 - Categorie, piatti e prezzi. **Aggiunte e rimozioni standard** riutilizzabili.
@@ -84,7 +85,7 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 **Cose che il sito non dice e che l'app fa (sottovendute):**
 1. **Comande con stampante cucina** — il sito le cita solo di passaggio.
 2. **Cassa**: conto, preconto, dividi, abbuono, menù concordato, sospesi, contanti/POS, scontrino parlante/fattura. Assente dal sito.
-3. **Asporto**. Assente.
+3. **Asporto** (e presto ordinabile dal sito, direttamente in app). Assente.
 4. **Importa menu da PDF/foto**. Assente.
 5. **Allergeni all'accoglienza** e pulsanti di servizio personalizzabili.
 6. **Piantina diversa solo per oggi**, scambio tavoli / doppio turno, tavoli uniti, seggioloni.
