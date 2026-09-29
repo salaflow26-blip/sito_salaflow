@@ -13,7 +13,6 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 - **Dettaglio tavoli serata** con filtri: Tutti / Non arrivati / Arrivati / per sala, e filtri per **fascia oraria** (19:45, 20:00…).
 - Ogni prenotazione è una scheda: numero tavolo, nome, orario, persone, sala, **timer da quando sono seduti**, etichette (Compleanno, Passeggino, Cane, Occhio di riguardo), badge **PRIORITÀ**, stato **In ritardo**.
 - Ogni scheda si **trascina**: verso destra = **Arrivato**, verso sinistra = **Elimina**. Icone rapide: **Tavolo liberato · No show · Modifica**.
-- Quando ci sono tavoli già liberati, compare il **tempo medio al tavolo** della serata (da "arrivato" a "liberato"). 🔎
 
 ## 2. Nuova prenotazione / Non prenotato ✅ (`05-nuova-prenotazione`)
 - Il **+** in basso apre due scelte: **Prenotazione** oppure **Non prenotato** (walk-in, "Registra ingresso non prenotato").
@@ -36,6 +35,7 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 - **Promemoria "il tavolo si è alzato?"** 🔎: dopo **90 minuti** da "arrivato" l'app chiede conferma. Risposte: *Sì* (liberato), *No* (richiede fra 20 minuti), *Non lo so* (salta solo per quel cameriere, gli altri lo vedono ancora). Le **tavolate da 7 o più** vengono escluse, perché restano sedute più a lungo.
 
 ## 4. Comanda ✅ (`16-comanda-allergene-evidenziato`, `17-comanda-riepilogo`)
+- Nella lista piatti: **tocco = +1**, **pressione lunga = quantità esatta e ingredienti ±**, **scorrere a sinistra = −1**.
 - Dal tavolo in Servizio: **tocco breve su "Comanda"** = segna solo "comanda presa" (per chi scrive ancora a mano); **tenendo premuto** si apre la comanda vera.
 - Scegli **coperti**, **uscita** (1, 2, 3, 4, + — primi e secondi in uscite diverse), categoria, piatti con **+**; **Ingredienti +/-** per aggiunte/rimozioni.
 - **Se il tavolo ha dichiarato un allergene, i piatti che lo contengono sono evidenziati in rosso con ⚠** (es. "Tagliatelle al ragù · Glutine").
@@ -52,14 +52,14 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 - Pagamento **Contanti** o **Carta/POS**, **Segna saldato**, **Metti in sospeso** (paga più avanti).
 - **Scontrino parlante** (dati aziendali, "Nuova azienda") e **Fattura** — attivabili; **Scontrino fiscale: non attivo** (non è un registratore di cassa).
 
-## 6. Asporto 👁/🔎
-- Ordini da ritirare senza tavolo: **Nuovo asporto → Crea e componi ordine**, stessa interfaccia della comanda.
-- 🚧 **Asporto ordinabile dal sito (in sviluppo).** Nel codice pubblicato c'è già 🔎:
-  - sulla pagina pubblica compare lo switch **Prenota / Asporto**, ma solo se il locale ha attivato l'asporto e reso disponibile almeno un piatto;
-  - il cliente sceglie i piatti con le quantità e l'orario di ritiro;
-  - la richiesta arriva in **Richieste prenotazione** con **Accetta / Rifiuta**;
-  - *Accetta* crea l'asporto e apre la comanda già compilata con i piatti richiesti. Lo staff può cambiare quantità o orario prima di **Invia comanda**: niente va in cucina da solo.
-  - Finché non è rilasciato, nelle demo va presentato come "in arrivo".
+## 6. Asporto ✅
+- Ordini da ritirare senza tavolo: **Nuovo asporto → Crea e componi ordine**, stessa interfaccia della comanda. Stati: in preparazione → **Segna pronto** → **Segna ritirato**.
+- **Asporto ordinabile dal sito** (online dal 29/09):
+  - sulla pagina pubblica del locale compare lo switch **Prenota un tavolo / Ordina da asporto**, solo se almeno un piatto è segnato "Disponibile per l'asporto" (spunta sulla scheda del piatto);
+  - il cliente vede il menu asporto con prezzi e **allergeni**, può segnare le sue allergie e i piatti che le contengono si **evidenziano**; per alcuni piatti può chiedere aggiunte/rimozioni;
+  - nome, telefono o email, **orario di ritiro**, note → la richiesta arriva in **Richieste prenotazione** con piatti, totale e orario;
+  - **Accetta** crea l'asporto e apre la comanda già compilata: lo staff controlla e la invia in cucina;
+  - **Limiti di capacità** (Impostazioni › Asporto): ogni 15/30/60 minuti, un massimo di piatti per categoria; se è pieno il sito propone al cliente un altro orario.
 
 ## 7. Menu / Piatti ✅ (`09-piatti`, `20-scheda-piatto`, `21-categoria-destinazione`)
 - **Categorie** con destinazione (Cucina, Bar…), aggiunte a pagamento (es. "Mozzarella extra +€1") e rimozioni (es. "Cipolla") per categoria; **aggiunte/rimozioni standard** valide per tutto il menu.
@@ -83,7 +83,7 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 ## 11. Storico e Grafici ✅ (`13-grafici`, `14-storico`)
 - **Storico serate**: ogni giorno con tavoli prenotati, arrivati e coperti; tocchi e riapri la serata.
 - **Grafici**: *Andamento coperti* (storico serate) e *Picco arrivi per fascia oraria*; riepilogo per sala.
-- **Tempo medio al tavolo** della serata: nella schermata Tavoli, appena c'è almeno un tavolo liberato. 🔎
+- **Tempo medio di occupazione** della serata (da "arrivato" a "liberato"), nella schermata Grafici. ✅
 - **Esporta dati serata** in Excel/CSV.
 
 ## 12. Staff, profili, cronologia ✅ (`11-staff-profili`, `12-cronologia`)
@@ -113,7 +113,7 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 
 **Frasi del sito da correggere o verificare:**
 - "Le prenotazioni arrivano da sole … finiscono già sulla piantina": quelle online vanno **confermate** dal locale. Meglio: "arrivano in app, tu confermi con un tocco".
-- "Statistiche … tempo medio ai tavoli": ✔ esiste (nella schermata Tavoli, non nei Grafici). La frase può restare.
+- "Statistiche … tempo medio ai tavoli": ✔ esiste, nella schermata Grafici. La frase può restare.
 - "Promemoria tavolo intelligente" (tavolate più lunghe): ✔ confermato nel codice, 90 minuti con le tavolate da 7+ escluse. Si può essere più precisi: "dopo un'ora e mezza ti chiede se il tavolo si è alzato".
 - "Tavolo consigliato … sempre un tavolo libero, prima di proporti un doppio turno": ✔ esatto, anzi sceglie anche il più piccolo che basta.
 - Nessuna affermazione su scontrini fiscali: giusto così, l'app non li fa.
