@@ -1,8 +1,8 @@
 # SalaFlow — scheda completa delle funzioni
 
 Ricavata aprendo l'app web vera (salaflow-6d0f7.web.app) con l'account demo, schermata per schermata, il 29/09/2026.
-Le schermate sono in `schermate/`. Legenda: ✅ visto funzionare con dati · 👁 visto nell'interfaccia, non provato
-(l'account demo non ha piatti nel menu, quindi comande e cassa non si possono ancora provare fino in fondo).
+Le schermate sono in `schermate/`. Legenda: ✅ provato con dati veri nell'account demo · 🔎 verificato nel codice dell'app · 👁 visto nell'interfaccia, non provato.
+Per comanda e cassa ho creato un menu e un tavolo di prova, poi li ho cancellati (resta solo la loro traccia in Cronologia).
 
 Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 
@@ -12,40 +12,59 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 - In alto la **Serata attiva** con data selezionabile e 4 caselle: **Coperti · Arrivati · Prenotati · In arrivo**. Tocchi una casella e vedi il dettaglio.
 - **Dettaglio tavoli serata** con filtri: Tutti / Non arrivati / Arrivati / per sala, e filtri per **fascia oraria** (19:45, 20:00…).
 - Ogni prenotazione è una scheda: numero tavolo, nome, orario, persone, sala, **timer da quando sono seduti**, etichette (Compleanno, Passeggino, Cane, Occhio di riguardo), badge **PRIORITÀ**, stato **In ritardo**.
-- Da ogni scheda: segna arrivato, icone rapide (seggioloni, annulla, modifica) ed elimina.
+- Ogni scheda si **trascina**: verso destra = **Arrivato**, verso sinistra = **Elimina**. Icone rapide: **Tavolo liberato · No show · Modifica**.
+- Quando ci sono tavoli già liberati, compare il **tempo medio al tavolo** della serata (da "arrivato" a "liberato"). 🔎
 
 ## 2. Nuova prenotazione / Non prenotato ✅ (`05-nuova-prenotazione`)
 - Il **+** in basso apre due scelte: **Prenotazione** oppure **Non prenotato** (walk-in, "Registra ingresso non prenotato").
-- Campi: nome, **N° tavolo opzionale — se lo lasci vuoto usa il tavolo suggerito** (es. "Tavolo suggerito: 1"), **tavoli uniti** (es. 12, 13), persone, **seggioloni** (0–5), orario (ogni 15 min o "altro orario"), **priorità**, note/allergie/intolleranze, etichette rapide.
+- Campi: nome, **N° tavolo opzionale — se lo lasci vuoto usa il tavolo suggerito**, **tavoli uniti** (es. 12, 13), persone, **seggioloni** (0–5), orario (ogni 15 min o "altro orario"), **priorità**, note/allergie/intolleranze, etichette rapide.
+- **Come sceglie il tavolo suggerito** 🔎 (provato: 2 persone → tavolo 1, 3 persone → tavolo 3):
+  - scarta i tavoli troppo piccoli e quelli impegnati entro **1h30** dall'orario richiesto (un pasto dura almeno tanto);
+  - tra i validi prende **il più piccolo che basta**;
+  - preferisce i tavoli **non ancora usati stasera**; solo se non ce ne sono propone un **doppio turno**.
+- Le richieste online accettate diventano prenotazioni con lo stesso modulo; se il cliente ha lasciato l'email riceve la **conferma via email**. 🔎
 - Se il tavolo è già occupato l'app chiede: **Scambia i tavoli · Aggiungi (doppio turno) · Sostituisci prenotazione esistente**.
 
 ## 3. Servizio — la sala in diretta ✅ (`02-servizio`, `03-tavolo-in-servizio`)
 - "Stato del servizio" **LIVE**: tessere dei tavoli arrivati con nome e tempo seduti; colore diverso per i prioritari.
 - Tocchi un tavolo: **Tavolo liberato**, **Modifica prenotazione**, **Priorità**, **Avvisa**, **Accoglienza**, **Comanda**.
-- **Accoglienza/Benvenuto** apre il popup **allergeni** (disattivabile da Personalizza). 👁
+- **Accoglienza** apre il popup **allergeni** ✅ (`15-accoglienza-allergeni`): i 14 allergeni di legge + "Personalizzato", oppure "Nessuno". Il tavolo poi mostra "Allergeni: Glutine" e l'icona 🌾 sulla tessera. Disattivabile da Personalizza.
 - **Pulsanti di servizio personalizzabili**: fino a 5, etichetta ed emoji a scelta, riordinabili (es. aggiungere "Dolci presi"). 👁
+- **Avvisa** → il tavolo è **pronto per ordinare**: tutto lo staff riceve l'avviso "🛎️ Tavolo 3 è pronto per ordinare!". 🔎
 - **"Cosa ha preso il tavolo…"**: ricerca rapida di cosa ha ordinato un tavolo. 👁
-- Quando un tavolo si libera l'app può chiedere **"Sì, va riordinato"** (tavolo da risistemare). 👁
+- **Tavolo liberato** → l'app chiede se va **riordinato** (un tavolo che ha preso solo un caffè non sporca come una cena). Finché nessuno lo riordina resta in Servizio come promemoria e non viene proposto ai walk-in. 🔎
+- **Promemoria "il tavolo si è alzato?"** 🔎: dopo **90 minuti** da "arrivato" l'app chiede conferma. Risposte: *Sì* (liberato), *No* (richiede fra 20 minuti), *Non lo so* (salta solo per quel cameriere, gli altri lo vedono ancora). Le **tavolate da 7 o più** vengono escluse, perché restano sedute più a lungo.
 
-## 4. Comanda 👁
-- Dal tavolo in servizio: scegli piatti per categoria, quantità, **Ingredienti +/-** (aggiunte e rimozioni), **Vedi riepilogo → Invia comanda**.
+## 4. Comanda ✅ (`16-comanda-allergene-evidenziato`, `17-comanda-riepilogo`)
+- Dal tavolo in Servizio: **tocco breve su "Comanda"** = segna solo "comanda presa" (per chi scrive ancora a mano); **tenendo premuto** si apre la comanda vera.
+- Scegli **coperti**, **uscita** (1, 2, 3, 4, + — primi e secondi in uscite diverse), categoria, piatti con **+**; **Ingredienti +/-** per aggiunte/rimozioni.
+- **Se il tavolo ha dichiarato un allergene, i piatti che lo contengono sono evidenziati in rosso con ⚠** (es. "Tagliatelle al ragù · Glutine").
+- **Vedi riepilogo**: righe per categoria con quantità, uscita e prezzo, **totale** → **Invia comanda**. Si può riaprire per aggiungere piatti (riordini).
+- **Destinazioni** (es. Cucina, Bar): ogni categoria manda la comanda alla sua destinazione, con eccezioni per singolo piatto (es. il caffè tra i dolci → Bar).
+- I **pulsanti di servizio personalizzati** possono essere collegati a una categoria: "Dolci" apre la comanda già filtrata sui dolci. 🔎
 - **Stampa su stampante comande** (Epson di rete, protocollo ePOS-Print: basta l'IP). Stampa comande per la cucina e preconto, **non scontrini fiscali**.
 
-## 5. Cassa 👁 (`08-cassa`)
-- Digiti il numero del tavolo → conto aperto. Viste **Riepilogo** e **Sospesi**.
-- **Coperto automatico** (se nel menu c'è una voce "Coperto").
+## 5. Cassa ✅ (`08-cassa`, `18-conto-cassa`, `19-dividi-conto`)
+- Elenco **tavoli aperti** ("1 da pagare") oppure digiti il numero del tavolo → conto con tutte le righe della comanda. Viste **Riepilogo** e **Sospesi**.
+- **Coperto automatico** ✅: se nel menu c'è una voce "Coperto", viene aggiunta una per persona (3 × €2,50), modificabile con un tocco.
 - **Menù concordato** (prezzo fisso), **Abbuono** (riduci il conto), **Preconto** (stampabile).
-- **Dividi**: in parti uguali o per piatto, persona per persona.
+- **Dividi** ✅: **in parti uguali** (es. €55,50 in 2 = €27,75 a persona) o **per piatto**.
 - Pagamento **Contanti** o **Carta/POS**, **Segna saldato**, **Metti in sospeso** (paga più avanti).
 - **Scontrino parlante** (dati aziendali, "Nuova azienda") e **Fattura** — attivabili; **Scontrino fiscale: non attivo** (non è un registratore di cassa).
 
-## 6. Asporto 👁
+## 6. Asporto 👁/🔎
 - Ordini da ritirare senza tavolo: **Nuovo asporto → Crea e componi ordine**, stessa interfaccia della comanda.
-- 🚧 **In sviluppo: asporto ordinabile dal sito.** Il cliente richiede l'asporto dalla pagina pubblica del locale e l'ordine arriva direttamente nell'app. Finché non è rilasciato, nelle demo va presentato come "in arrivo".
+- 🚧 **Asporto ordinabile dal sito (in sviluppo).** Nel codice pubblicato c'è già 🔎:
+  - sulla pagina pubblica compare lo switch **Prenota / Asporto**, ma solo se il locale ha attivato l'asporto e reso disponibile almeno un piatto;
+  - il cliente sceglie i piatti con le quantità e l'orario di ritiro;
+  - la richiesta arriva in **Richieste prenotazione** con **Accetta / Rifiuta**;
+  - *Accetta* crea l'asporto e apre la comanda già compilata con i piatti richiesti. Lo staff può cambiare quantità o orario prima di **Invia comanda**: niente va in cucina da solo.
+  - Finché non è rilasciato, nelle demo va presentato come "in arrivo".
 
-## 7. Menu / Piatti 👁 (`09-piatti`)
-- Categorie, piatti e prezzi. **Aggiunte e rimozioni standard** riutilizzabili.
-- **Importa menu da PDF o foto**: carichi il menu e l'app crea le voci.
+## 7. Menu / Piatti ✅ (`09-piatti`, `20-scheda-piatto`, `21-categoria-destinazione`)
+- **Categorie** con destinazione (Cucina, Bar…), aggiunte a pagamento (es. "Mozzarella extra +€1") e rimozioni (es. "Cipolla") per categoria; **aggiunte/rimozioni standard** valide per tutto il menu.
+- **Piatto**: nome, prezzo, descrizione, eccezione di destinazione, **14 allergeni** da spuntare, aggiunte personalizzate per quel piatto.
+- **Importa menu da PDF o foto** 🔎: il file viene letto da una funzione cloud (`extractMenuFromPdf`) che crea categorie e piatti da rivedere.
 
 ## 8. Mappa — piantina ✅ (`04-piantina`)
 - Piantina per sala con colori **Libero / Prenotato / Arrivato** e il numero di persone sul tavolo.
@@ -64,16 +83,17 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 ## 11. Storico e Grafici ✅ (`13-grafici`, `14-storico`)
 - **Storico serate**: ogni giorno con tavoli prenotati, arrivati e coperti; tocchi e riapri la serata.
 - **Grafici**: *Andamento coperti* (storico serate) e *Picco arrivi per fascia oraria*; riepilogo per sala.
+- **Tempo medio al tavolo** della serata: nella schermata Tavoli, appena c'è almeno un tavolo liberato. 🔎
 - **Esporta dati serata** in Excel/CSV.
 
 ## 12. Staff, profili, cronologia ✅ (`11-staff-profili`, `12-cronologia`)
 - **Invita per email** con ruolo: **Sala** (solo prenotazioni) o **Gestione** (accesso completo).
-- **Profili** su dispositivo condiviso, senza account separati; **PIN per cambio profilo** opzionale.
+- **Profili** su dispositivo condiviso, senza account separati; **PIN per cambio profilo** opzionale. 👁
 - **Cronologia**: chi ha fatto cosa e quando ("Tavolo 5 segnato come arrivato — 25/09, 12:48").
 
 ## 13. Personalizzazione e impostazioni ✅ (`10-personalizza`)
 - Logo, nome, tagline, **orario di servizio** (apertura/chiusura), orari ogni 15 min o **turni fissi** (separati per app e sito pubblico).
-- Notifiche push (arrivi e comande pronte) con **diagnostica notifiche**, durata dei toast.
+- Notifiche push (arrivi, tavolo pronto per ordinare, priorità, nuove richieste) con **diagnostica notifiche** e invio di prova, durata dei toast.
 - **Modalità chiara/scura**, **Migliora prestazioni** (per tablet vecchi), feedback aptico, **lingua IT/EN**, tour guidato rivedibile.
 - Eliminazione account dall'app.
 - Piano attuale: **Beta gratuito**.
@@ -87,12 +107,13 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 2. **Cassa**: conto, preconto, dividi, abbuono, menù concordato, sospesi, contanti/POS, scontrino parlante/fattura. Assente dal sito.
 3. **Asporto** (e presto ordinabile dal sito, direttamente in app). Assente.
 4. **Importa menu da PDF/foto**. Assente.
-5. **Allergeni all'accoglienza** e pulsanti di servizio personalizzabili.
+5. **Allergeni all'accoglienza con piatti evidenziati in comanda**: è la funzione più forte da mostrare, e il sito non la cita. Poi i pulsanti di servizio personalizzabili, le uscite e le destinazioni Cucina/Bar.
 6. **Piantina diversa solo per oggi**, scambio tavoli / doppio turno, tavoli uniti, seggioloni.
 7. **Ruoli staff (Sala / Gestione)**, esportazione Excel/CSV, lingua inglese.
 
 **Frasi del sito da correggere o verificare:**
 - "Le prenotazioni arrivano da sole … finiscono già sulla piantina": quelle online vanno **confermate** dal locale. Meglio: "arrivano in app, tu confermi con un tocco".
-- "Statistiche … tempo medio ai tavoli": nei Grafici ci sono *andamento coperti* e *picco arrivi*; il tempo medio non l'ho trovato. Da verificare con Luca prima di lasciarlo.
-- "Promemoria tavolo intelligente" (tavolate più lunghe): non visibile senza una serata in corso, da verificare.
+- "Statistiche … tempo medio ai tavoli": ✔ esiste (nella schermata Tavoli, non nei Grafici). La frase può restare.
+- "Promemoria tavolo intelligente" (tavolate più lunghe): ✔ confermato nel codice, 90 minuti con le tavolate da 7+ escluse. Si può essere più precisi: "dopo un'ora e mezza ti chiede se il tavolo si è alzato".
+- "Tavolo consigliato … sempre un tavolo libero, prima di proporti un doppio turno": ✔ esatto, anzi sceglie anche il più piccolo che basta.
 - Nessuna affermazione su scontrini fiscali: giusto così, l'app non li fa.
