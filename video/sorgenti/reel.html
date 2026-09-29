@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — reel</title>
+<style>
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+:root{--g1:#22d3ee;--g2:#2dd4bf;--g3:#34d399;--ink:#020617}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;font-family:PJS;background:var(--ink)}
+#cam{position:absolute;inset:0}
+.grad{position:absolute;inset:-12%;background:linear-gradient(160deg,var(--g1) 0%,var(--g2) 50%,var(--g3) 100%)}
+.hl{position:absolute;left:0;top:0;width:820px;height:820px;border-radius:50%;filter:blur(90px);background:rgba(255,255,255,.32)}
+#dark{position:absolute;inset:0;background:radial-gradient(900px 900px at 50% 42%,rgba(45,212,191,.16),transparent 70%),var(--ink)}
+.txt{position:absolute;left:80px;top:230px;width:920px}
+.ln{display:block;font-weight:800;text-transform:uppercase;letter-spacing:-.04em;word-spacing:.12em;line-height:.9;white-space:nowrap;
+  transform-origin:0% 100%;color:var(--ink);will-change:transform}
+.gt{background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.wt{color:#fff}
+.ph{position:absolute;left:90px;top:0;width:900px;height:1800px;will-change:transform;filter:drop-shadow(0 50px 70px rgba(2,6,23,.45))}
+#paper{position:absolute;left:90px;top:0;width:900px;height:1800px}
+#logo{position:absolute;left:390px;top:560px;width:300px;height:300px;border-radius:22.5%;overflow:hidden;box-shadow:0 40px 90px -20px rgba(45,212,191,.55)}
+#logo img{width:100%;height:100%;display:block;transform:scale(1.025)}
+.word{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.04em;white-space:nowrap}
+.pill{position:absolute;left:50%;padding:34px 64px;border-radius:999px;font-weight:800;font-size:52px;color:var(--ink);white-space:nowrap;
+  background:linear-gradient(110deg,var(--g1),var(--g2) 50%,var(--g3));box-shadow:0 20px 60px -15px rgba(45,212,191,.7)}
+.small{position:absolute;left:0;right:0;text-align:center;font-weight:600;color:#cbd5e1}
+#grain{position:absolute;inset:-50%;opacity:.08;mix-blend-mode:overlay;pointer-events:none}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage"><div id="cam">
+  <div class="grad" id="grad"></div><div class="hl" id="hl1"></div><div class="hl" id="hl2"></div>
+  <div id="dark"></div>
+  <div id="layer"></div>
+</div>
+<canvas id="grain"></canvas><div id="flash"></div><div id="fade"></div></div>
+<script>
+/* Deterministic Reel: window.render(t). Music starts on the drop of the demo track, so every
+   bar (2.1413 s) is a scene and every beat (0.5353 s) a word. */
+const BAR = 2.1413, BEAT = BAR / 4, END = 9 * BAR + 4.31;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
+const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), inC = x => x * x * x;
+const outB = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+const $ = h => { const d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstElementChild; };
+const L = document.getElementById('layer');
+const show = (e, on) => { e.style.display = on ? '' : 'none'; return on; };
+
+// ---------- scenes ----------
+// lines: [text, beat, style]; img: phone screen; dir: side it leaves from
+const SC = [
+  { lines: [['Sabato', 0], ['sera.', 1], ['Sala', 2], ['piena.', 3, 'wt']] },
+  { lines: [['E il', 0], ['quaderno', 1], ['non basta', 2], ['più.', 3, 'wt']], paper: true },
+  { logo: true },
+  { lines: [['La sala,', 0], ['in diretta.', 1, 'wt']], img: 'map', dir: 1 },
+  { lines: [['Walk-in?', 0], ['Un tocco.', 1, 'wt']], img: 'walkin', dir: -1 },
+  { lines: [['Tutta', 0], ['la serata.', 1, 'wt']], img: 'grid', dir: 1 },
+  { lines: [['Allergie?', 0], ['Segnate.', 1, 'wt']], img: 'alg', dir: -1 },
+  { lines: [['Comanda?', 0], ['In cucina.', 1, 'wt']], img: 'comanda', dir: 1 },
+  { lines: [['Si è alzato?', 0], ['Te lo chiede.', 1, 'wt']], img: 'promemoria', dir: -1 },
+];
+SC.forEach((s, i) => {
+  s.t0 = i * BAR;
+  if (s.lines) {
+    s.box = $(`<div class="txt"></div>`); L.appendChild(s.box);
+    s.els = s.lines.map(([w, , st]) => { const e = $(`<span class="ln ${st || ''}">${w}</span>`); s.box.appendChild(e); return e; });
+  }
+  if (s.img) { s.ph = $(`<img class="ph" src="build/reel/${s.img}.png">`); L.appendChild(s.ph); }
+});
+const paper = $(`<img id="paper" src="build/reel/paper.png">`); L.appendChild(paper);
+const logo = $(`<div id="logo"><img src="../../logo.png"></div>`); L.appendChild(logo);
+const wm = $(`<div class="word" style="top:930px;font-size:150px"><span style="color:#fff">Sala</span><span class="gt">Flow</span></div>`); L.appendChild(wm);
+const tg = $(`<div class="small" style="top:1130px;font-size:50px;line-height:1.3">La tua sala,<br>finalmente sotto controllo.</div>`); L.appendChild(tg);
+// end card
+const e1 = $(`<div class="word" style="top:520px;font-size:150px;color:#fff">Presto</div>`);
+const e2 = $(`<div class="word gt" style="top:670px;font-size:150px">disponibile.</div>`);
+const eLogo = $(`<div id="logo" style="top:230px;left:465px;width:150px;height:150px"><img src="../../logo.png"></div>`);
+const ePill = $(`<div class="pill" style="top:960px">Prenota una visita</div>`);
+const eUrl = $(`<div class="small" style="top:1130px;font-size:56px;color:#fff;font-weight:700">salaflow.com</div>`);
+const eTeam = $(`<div class="small" style="top:1250px;font-size:34px;color:#7d8aa0;font-weight:500">Fatto da Luca, Filippo e Antonio</div>`);
+[e1, e2, eLogo, ePill, eUrl, eTeam].forEach(e => L.appendChild(e));
+
+// fit every line into 920px (big words shrink, short ones stay huge)
+function fit() {
+  SC.forEach(s => (s.els || []).forEach(e => {
+    let fs = 190; e.style.fontSize = fs + 'px'; s.box.style.display = '';
+    while (e.scrollWidth > 920 && fs > 60) { fs -= 4; e.style.fontSize = fs + 'px'; }
+  }));
+}
+
+// ---------- background ----------
+const grain = document.getElementById('grain'); grain.width = grain.height = 512;
+{ const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 99;
+  for (let i = 0; i < im.data.length; i += 4) { s = (s * 1103515245 + 12345) & 0x7fffffff; im.data[i] = im.data[i + 1] = im.data[i + 2] = s % 256; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); }
+grain.style.width = '2160px'; grain.style.height = '3840px';
+const grad = document.getElementById('grad'), hl1 = document.getElementById('hl1'), hl2 = document.getElementById('hl2'), dark = document.getElementById('dark');
+const cam = document.getElementById('cam'), flash = document.getElementById('flash'), fade = document.getElementById('fade');
+
+// ---------- render ----------
+window.render = function (t) {
+  const si = Math.min(Math.floor(t / BAR), 9);            // 0..8 scenes, 9 = end card
+  const lt = t - si * BAR;                                // time inside the bar
+  const darkOn = si === 2 || si >= 9;
+  op(dark, darkOn ? 1 : 0);
+  tf(grad, `rotate(${Math.sin(t * .4) * 6}deg) scale(1.05)`);
+  tf(hl1, `translate(${-200 + Math.sin(t * .7) * 260}px,${200 + Math.cos(t * .5) * 180}px)`);
+  tf(hl2, `translate(${500 + Math.cos(t * .6) * 220}px,${1200 + Math.sin(t * .8) * 200}px)`);
+  const f = Math.floor(t * 24); tf(grain, `translate(${-((f * 173) % 500)}px,${-((f * 97) % 500)}px)`);
+
+  // camera: a small kick on every word/slam, decaying fast
+  const beatAge = ((t % BEAT) + BEAT) % BEAT, kick = Math.exp(-beatAge * 16) * (t < END - 1.5 ? 1 : 0);
+  tf(cam, `translate(${Math.sin(t * 91) * 7 * kick}px,${Math.cos(t * 77) * 7 * kick}px) scale(${1 + .012 * kick})`);
+  op(flash, Math.max(0, .45 * (1 - lt / .12)) * (t > .1 ? 1 : 0));   // flash on every cut
+
+  SC.forEach((s, i) => {
+    const on = i === si;
+    if (s.box) {
+      show(s.box, on);
+      if (on) s.els.forEach((e, k) => {
+        const tb = s.lines[k][1] * BEAT, q = P(lt, tb, tb + .28, outB), a = P(lt, tb, tb + .06);
+        tf(e, `translateY(${(1 - q) * 40}px) scale(${lerp(1.35, 1, q)}) rotate(${(1 - q) * -4}deg)`);
+        e.style.filter = `blur(${(1 - a) * 10}px)`; op(e, a);
+      });
+    }
+    if (s.ph) {
+      if (show(s.ph, on)) {
+        const inn = P(lt, 0, .55, outB), out = P(lt, BAR - .3, BAR, inC), punch = Math.exp(-Math.max(0, lt - 2 * BEAT) * 9) * (lt > 2 * BEAT);
+        tf(s.ph, `translate(${out * s.dir * 1300}px,${820 + (1 - inn) * 900}px) rotate(${(1 - inn) * s.dir * -14 + out * s.dir * 18}deg) scale(${.98 + .04 * punch})`);
+      }
+    }
+  });
+  // paper (scene 1): drops in, shakes on "non basta", falls away
+  if (show(paper, si === 1)) {
+    const inn = P(lt, 0, .5, outB), out = P(lt, BAR - .35, BAR, inC), sh = Math.exp(-Math.max(0, lt - 2 * BEAT) * 10) * (lt > 2 * BEAT);
+    tf(paper, `translate(${Math.sin(lt * 80) * 18 * sh}px,${760 - (1 - inn) * 1100 + out * 1300}px) rotate(${-14 + inn * 10 + out * 25 + Math.sin(lt * 70) * 3 * sh}deg) scale(.95)`);
+  }
+  // logo scene
+  const lg = si === 2;
+  show(logo, lg); show(wm, lg); show(tg, lg);
+  if (lg) {
+    const a = P(lt, 0, .5, outB), b = P(lt, BEAT, BEAT + .35, outB), c = P(lt, 2 * BEAT, 2 * BEAT + .5, outX);
+    tf(logo, `scale(${a}) rotate(${(1 - a) * -20}deg)`); op(logo, cl(a * 2));
+    tf(wm, `scale(${lerp(1.4, 1, b)})`); op(wm, cl(b * 3)); wm.style.filter = `blur(${(1 - cl(b * 3)) * 10}px)`;
+    tf(tg, `translateY(${(1 - c) * 40}px)`); op(tg, c);
+  }
+  // end card
+  const en = si >= 9, et = t - 9 * BAR;
+  [e1, e2, eLogo, ePill, eUrl, eTeam].forEach(e => show(e, en));
+  if (en) {
+    const s1 = P(et, 0, .3, outB), s2 = P(et, BEAT, BEAT + .3, outB), lo = P(et, 0, .5, outB), pl = P(et, 2 * BEAT, 2 * BEAT + .45, outB), ur = P(et, 3 * BEAT, 3 * BEAT + .5, outX), tm = P(et, 5 * BEAT, 5 * BEAT + .8);
+    tf(e1, `scale(${lerp(1.35, 1, s1)})`); op(e1, cl(s1 * 3));
+    tf(e2, `scale(${lerp(1.35, 1, s2)})`); op(e2, cl(s2 * 3));
+    tf(eLogo, `scale(${lo})`); op(eLogo, cl(lo * 2));
+    tf(ePill, `translateX(-50%) scale(${lerp(.7, 1, pl)})`); op(ePill, cl(pl * 2));
+    tf(eUrl, `translateY(${(1 - ur) * 30}px)`); op(eUrl, ur); op(eTeam, tm);
+  }
+  op(fade, P(t, END - .7, END - .05));
+};
+function tf(e, s) { e.style.transform = s; }
+function op(e, v) { e.style.opacity = v; }
+window.DURATION = END;
+
+// motion probe for the renderer's adaptive motion blur
+const PROBE = () => [...L.querySelectorAll('.ln,.ph,#paper,#logo,.word,.pill,.small')];
+function rects() { return PROBE().map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects(); let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 99); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return m;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(fit);
+render(0);
+</script>
+</body>
+</html>
