@@ -1,0 +1,35 @@
+const { director } = require('./director');
+const ep = async d => {
+  const { p } = d; const plus = p.locator('[aria-label="Aggiungi prenotazione"]');
+  await d.shot({ b: 6, t: 'Squilla il *telefono*', s: 'Dalla schermata Tavoli tocchi il +' }); await d.tap(plus);
+  await d.shot({ b: 6, t: 'Prenotazione o *walk-in*', s: 'Due strade: chi prenota e chi entra senza prenotare' }); await d.tap(d.V('Prenotazione'));
+  await d.shot({ b: 6, t: 'Il *nome* del cliente', s: 'Basta un nome o un riferimento' });
+  const nm = p.locator('input[placeholder="es. Serena, Rossi"]'); await d.tap(nm, { after: 300 }); await d.type(nm, 'Marta Gallo');
+  await d.shot({ b: 6, t: 'Quante *persone*?', s: 'Aggiungi con + e −' });
+  const pl = p.locator('[aria-label="Aumenta persone"]:visible').first();
+  await d.tap(pl, { after: 350 }); await d.tap(pl, { silent: true, after: 900 });
+  const tb = p.locator('#input-table');
+  await d.shot({ b: 10, t: 'Il tavolo lo sceglie *SalaFlow*', s: 'Per 4 persone propone il più piccolo che basta, libero a quell’ora', zoom: await d.zoomOn(tb, 40) });
+  await d.shot({ b: 10, t: 'Orario, seggioloni, *note*', s: 'Allergie e richieste restano sulla prenotazione', zoom: await d.zoomUnion(p.locator('#input-chairs'), p.locator('#booking-form').getByText('Occhio di Riguardo', { exact: true }), 16) });
+  await d.tap(d.V('Compleanno'), { after: 600 });
+  await d.shot({ b: 6, t: 'Un tocco per le *etichette*', s: 'Compleanno, passeggino, cane, occhio di riguardo' });
+  await d.tap(d.R(/salva prenotazione/i), { after: 1400 });
+  await d.shot({ t: 'Salvata. *Per tutti.*', s: 'Compare subito sui telefoni di tutto lo staff', settle: 200 });
+  // conflict on an occupied table
+  await d.tap(plus, { silent: true }); await d.tap(d.V('Prenotazione'), { silent: true });
+  await d.type(nm, 'Nicola Serra'); await d.type(tb, '8');
+  await d.shot({ t: 'E se il tavolo è *già preso*?', s: 'Scrivo a mano il tavolo 8, dove c’è già Giulia Verdi' });
+  await d.tap(d.R(/salva prenotazione/i), { after: 1400 });
+  await d.shot({ settle: 1400, b: 10, t: 'Te lo dice *prima*', s: 'Scambi i tavoli, fai un doppio turno o sostituisci' });
+  await d.tap(d.V('Annulla'), { silent: true, after: 800 });
+  await p.evaluate(() => closeBookingModal()); await d.wait(800);
+  await d.shot({ b: 6, t: 'Entra qualcuno *senza prenotare*', s: 'Stesso +, poi “Non prenotato”' }); await d.tap(plus);
+  await d.tap(d.V('Non Prenotato'), { silent: true, after: 1000 });
+  await d.shot({ t: 'Walk-in in *tre secondi*', s: 'Ti mostra subito i tavoli liberi adesso' });
+  await d.tap(d.V('T10'), { after: 700 });
+  await d.shot({ b: 6, t: 'Scegli, e sono *seduti*', s: 'Un tocco sul tavolo libero e registri l’ingresso' });
+  await d.tap(d.R(/registra ingresso/i), { after: 1400 });
+  await d.shot({ t: 'Arrivati e *in sala*', s: 'Il walk-in parte già come arrivato', settle: 200 });
+};
+ep.pre = async () => { for (const d of (await col('bookings').get()).docs) if (['Marta Gallo', 'Nicola Serra'].includes(d.data().name) || (d.data().isWalkin && d.data().date === document.getElementById('current-date').value)) await d.ref.delete(); };
+director('prenota', ep);

@@ -1,0 +1,34 @@
+const { director } = require('./director');
+const ZONE = 'OQdv7cCAB2JPw3gk34c4';
+const ep = async d => {
+  const { p } = d;
+  await d.tap(d.V('Mappa'), { silent: true, after: 1500 });
+  await d.shot({ t: 'La tua sala, *dal vivo*', s: 'Verde libero, rosso prenotato, blu arrivato. Il numero sono le persone', zoom: await d.zoomOn(p.locator(`#map-${ZONE}-t1`).locator('xpath=ancestor::*[name()="svg"][1]'), 8) });
+  await d.tap(p.locator(`#map-${ZONE}-t8`), { after: 1300 });
+  await d.shot({ b: 8, t: 'Tocchi un *tavolo*', s: 'E vedi chi c’è seduto, da quanto e cosa manca' });
+  await p.keyboard.press('Escape'); await p.evaluate(() => document.querySelectorAll('[onclick*="close"]').forEach(e => { if (e.offsetParent && /modal/i.test(e.getAttribute('onclick'))) e.click(); })); await d.wait(800);
+  await d.shot({ b: 6, t: 'La piantina la *disegni tu*', s: 'Tocchi la matita della sala' });
+  await d.tap(p.locator(`[onclick="toggleFloorPlanEditMode('${ZONE}')"]`), { after: 1200 });
+  await d.shot({ t: 'Modalità *modifica*', s: 'Trascini i tavoli, cambi la forma della sala, aggiungi zone' });
+  await d.tap(p.locator('[onclick="openNewTableModal()"]'), { after: 1000 });
+  await d.shot({ t: 'Un tavolo *nuovo*', s: 'Piccolo, medio, grande, o i posti che vuoi' });
+  await p.locator('input[placeholder="Es. 12"]:visible').fill('15');
+  await d.tap(d.R(/^\s*Grande/), { after: 500 });
+  await d.shot({ b: 6, t: 'Tavolo *15*, da 8', s: 'Numero e dimensione, poi Aggiungi' });
+  await d.tap(d.R(/^\s*aggiungi\s*$/i), { after: 1300 });
+  const t15 = p.locator(`#map-${ZONE}-t15`);
+  await d.shot({ t: 'Eccolo in *sala*', s: 'Ora lo trascini dove sta davvero' });
+  await d.drag(t15, -72, -3, { after: 900 });
+  await d.shot({ b: 6, t: 'Al *posto giusto*', s: 'Come nel tuo locale, tavolo per tavolo' });
+  await d.tap(t15, { press: 900, after: 1100 });
+  await d.shot({ t: 'Ruota, cambia, elimina', s: 'Tieni premuto il tavolo per le opzioni' });
+  const fatto = d.R(/^\s*fatto\s*$/i); if (await fatto.count()) await d.tap(fatto, { silent: true, after: 800 }); else { await p.keyboard.press('Escape'); await d.wait(600); }
+  await d.shot({ b: 6, t: 'Salvi, ed è *per tutti*', s: 'La nuova piantina arriva su ogni telefono' });
+  await d.tap(p.locator('[onclick="saveAndExitFloorPlanEdit()"]'), { after: 1400 });
+  await d.shot({ b: 6, t: 'Piantina *aggiornata*', s: 'Il tavolo 15 è già prenotabile', settle: 300 });
+  await d.shot({ t: 'Stasera c’è una *tavolata*?', s: '“Piantina diversa solo per oggi”' });
+  await d.tap(p.locator('[onclick="openFloorPlanOverrideModal(\'activate\')"]').first(), { after: 1200 });
+  await d.shot({ b: 10, t: 'Solo per *stasera*', s: 'Unisci e sposti i tavoli per una data: domani torna quella di sempre' });
+};
+ep.pre = async () => { const B = [{"id": "OQdv7cCAB2JPw3gk34c4", "data": {"viewBoxW": 400, "name": "Sala Principale", "tables": [{"y": 12, "h": 40, "x": 12, "w": 58, "id": "1", "seats": 2}, {"seats": 2, "y": 12, "id": "2", "h": 40, "x": 82, "w": 58}, {"seats": 4, "w": 76, "x": 152, "id": "3", "y": 12, "h": 52}, {"id": "4", "h": 52, "seats": 4, "y": 12, "x": 240, "w": 76}, {"id": "5", "w": 76, "x": 12, "h": 52, "seats": 4, "y": 76}, {"w": 76, "x": 100, "seats": 4, "h": 52, "y": 76, "id": "6"}, {"id": "7", "h": 40, "y": 76, "seats": 2, "w": 58, "x": 188}, {"y": 76, "h": 64, "w": 94, "x": 258, "seats": 6, "id": "8"}, {"id": "9", "x": 12, "w": 76, "seats": 4, "h": 52, "y": 152}, {"h": 40, "id": "10", "y": 152, "seats": 2, "x": 100, "w": 58}, {"y": 152, "h": 52, "id": "11", "seats": 4, "x": 170, "w": 76}, {"seats": 6, "x": 258, "w": 94, "id": "12", "h": 64, "y": 152}, {"x": 12, "w": 76, "id": "13", "h": 52, "y": 228, "seats": 4}, {"seats": 2, "id": "14", "y": 228, "h": 40, "x": 100, "w": 58}], "hidden": false, "viewBoxH": 292, "order": 0}}]; for (const x of B) await col('floorPlan').doc(x.id).set(x.data); for (const d of (await col('floorPlanOverrides').get()).docs) await d.ref.delete(); };
+director('piantina', ep);

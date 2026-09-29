@@ -1,0 +1,63 @@
+const { director } = require('./director');
+const ep = async d => {
+  const { p } = d; const m = p.locator('#comanda-modal');
+  const cat = async (c, silent = true) => { const back = m.getByText('Categorie').first(); if (await back.isVisible().catch(() => 0)) await d.tap(back, { silent: true, after: 600 }); await d.tap(m.getByText(new RegExp('^\\s*' + c + '\\s*$', 'i')).first(), { silent, after: 900 }); };
+  const plus = name => m.locator('div', { hasText: name }).filter({ has: p.locator('button') }).last().locator('button').last();
+  await d.tap(d.V('Servizio'), { silent: true, after: 1400 });
+  const tile = p.locator('#arrived-list .btn-tap:visible', { hasText: 'Famiglia' }).first();
+  await d.shot({ b: 6, t: 'Il tavolo 5 è *pronto*', s: 'La campanella: hanno chiamato per ordinare', zoom: await d.zoomOn(tile, 20) });
+  await d.tap(tile, { after: 1200 });
+  await d.shot({ t: '*Tieni premuto* Comanda', s: 'Un tocco breve segna solo “comanda presa”; premuto apre la comanda vera' });
+  await d.tap(p.locator('#servizio-modal button:visible', { hasText: /comanda/i }).first(), { press: 900, after: 1500 });
+  await d.shot({ t: 'Coperti e *uscite*', s: 'Quanti sono e in che ordine escono i piatti', zoom: await d.zoomUnion(m.getByText(/^\s*coperti\s*$/i).first(), m.getByText(/^\s*uscita\s*$/i).first(), 60) });
+  await d.tap(m.getByText(/^\s*antipasti\s*$/i).first(), { after: 900 });
+  await d.shot({ b: 6, t: 'Uscita 1: *antipasti*', s: 'Tocchi + e il piatto è in comanda' });
+  await d.tap(plus('Tagliere di salumi'), { after: 700 });
+  await d.shot({ b: 6, t: 'Uscita *2*', s: 'Poi i primi, che escono dopo' });
+  await d.tap(m.getByText(/^\s*2\s*$/).first(), { after: 600 });
+  await cat('primi');
+  await d.shot({ b: 6, t: 'Un tocco, *+1*', s: 'Tocchi il piatto e lo aggiungi. Scorri a sinistra per toglierlo' });
+  const tag = m.getByText('Tagliatelle al ragù').first();
+  await d.tap(tag, { after: 800 });
+  await d.shot({ t: '*Tieni premuto* il piatto', s: 'Per quantità esatta e ingredienti' });
+  await d.tap(tag, { press: 900, after: 1000 });
+  const qty = p.locator('#comanda-qty-modal');
+  await d.shot({ t: 'Quante e *come*', s: 'Quantità, e “Ingredienti +/-” per le modifiche' });
+  await d.tap(p.locator('#comanda-qty-ingredienti-btn'), { after: 1000 });
+  await d.shot({ t: 'Senza cipolla, *parmigiano extra*', s: 'Aggiunte a pagamento e rimozioni, già pronte per categoria' });
+  const om = p.locator('#comanda-options-modal');
+  await d.tap(om.getByText('Parmigiano extra').first(), { after: 400 });
+  await d.tap(om.getByText('Senza Cipolla').first(), { after: 700 });
+  await d.shot({ b: 6, t: 'Il prezzo si *aggiorna*', s: 'Poi Aggiungi' });
+  await d.tap(om.getByText(/aggiungi/i).first(), { after: 1000 });
+  await d.shot({ b: 6, t: 'Uscita 3, i *secondi*', s: 'Stesso gesto, un’uscita dopo' });
+  await d.tap(m.getByText(/^\s*3\s*$/).first(), { after: 600 });
+  await cat('secondi');
+  await d.tap(m.getByText('Tagliata di manzo').first(), { silent: true, after: 500 });
+  await d.tap(m.getByText('Filetto di branzino').first(), { silent: true, after: 500 });
+  await cat('bevande');
+  await d.tap(m.getByText('Acqua naturale').first(), { silent: true, after: 400 });
+  await d.tap(m.getByText('Acqua naturale').first(), { silent: true, after: 400 });
+  await d.tap(m.getByText('Vino della casa ¼').first(), { silent: true, after: 700 });
+  await d.shot({ b: 6, t: 'Da bere: *al bar*', s: 'Le bevande vanno al Bar, i piatti in Cucina' });
+  await d.tap(m.getByText(/vedi riepilogo/i).first(), { after: 1200 });
+  await d.shot({ b: 10, t: 'Il *riepilogo*', s: 'Piatti divisi per uscita, modifiche, totale. Controlli e invii' });
+  await p.evaluate(() => document.querySelector('#comanda-modal .overflow-y-auto, #comanda-modal [class*="overflow-y"]')?.scrollBy(0, 400)); await d.wait(600);
+  await d.shot({ b: 6, t: 'Tutto *giusto*?', s: 'Invia comanda' });
+  await d.tap(m.getByText(/invia comanda/i).first(), { after: 1600 });
+  await d.shot({ b: 8, t: 'Comanda *inviata*', s: 'In cucina e al bar, stampata sulla stampante comande se ce l’hai', settle: 200 });
+  if (await p.locator('#servizio-modal:visible').count()) { await p.evaluate(() => closeServizioModal()); await d.wait(700); }
+  await d.shot({ b: 6, t: '“Cosa avevamo *ordinato*?”', s: 'Il cliente chiede: tocchi “Cosa ha preso il tavolo…”' });
+  await d.tap(p.getByText('Cosa ha preso il tavolo', { exact: false }).locator('visible=true').first(), { after: 900 });
+  await d.tap(p.locator('[onclick="tableLookupDigit(\'5\')"]'), { after: 500 });
+  await d.shot({ b: 6, t: 'Digiti il *tavolo*', s: 'Il 5, e confermi' });
+  await d.tap(p.locator('[onclick="confirmTableLookup()"]'), { after: 1500 });
+  await d.shot({ b: 10, t: 'Ecco *tutto*', s: 'Ogni piatto ordinato dal tavolo 5, uscita per uscita. E ne aggiungi altri' });
+};
+ep.pre = async () => {
+  for (const d of (await col('menuCategories').get()).docs) { const n = d.data().name;
+    if (n === 'Primi') await d.ref.update({ extras: [{ id: 'e1', name: 'Parmigiano extra', price: 1 }, { id: 'e2', name: 'Peperoncino', price: 0 }], removals: [{ id: 'r1', name: 'Cipolla' }, { id: 'r2', name: 'Aglio' }] });
+    if (n === 'Secondi') await d.ref.update({ extras: [{ id: 'e3', name: 'Patate al forno', price: 3 }], removals: [{ id: 'r3', name: 'Rucola' }] }); }
+  for (const d of (await col('bookings').get()).docs) if (d.data().name === 'Famiglia Bianchi') { await d.ref.update({ readyToOrder: true, ordered: false }); await col('comande').doc(d.id).delete(); }
+};
+director('comanda', ep);
