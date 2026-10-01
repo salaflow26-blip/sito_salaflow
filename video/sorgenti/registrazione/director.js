@@ -2,16 +2,16 @@
 const { open } = require('./lib');
 const fs = require('fs'), path = require('path');
 const OUT = '/home/user/sito_salaflow/video/sorgenti/build/ep';
-exports.director = async (ep, fn) => {
+exports.director = async (ep, fn, dev = {}) => {
   const dir = path.join(OUT, ep); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
-  const { ctx, p } = await open(430, 860);
+  const { ctx, p } = await open(dev.w || 430, dev.h || 860);
   p.on('dialog', d => { console.log('DIALOG', d.message()); d.accept(); });
   await p.goto('https://salaflow-6d0f7.web.app/', { waitUntil: 'load' }); await p.waitForTimeout(4000);
   const sk = p.locator('text=Salta il tour').first(); if (await sk.isVisible().catch(() => 0)) { await sk.click(); await p.waitForTimeout(600); }
   await p.addStyleTag({ content: '*{caret-color:transparent!important} ::-webkit-scrollbar{display:none}' });
   await p.locator('[aria-label="Apri menu"]').waitFor({ timeout: 30000 });
   for (let k = 0; k < 30; k++) { if (await p.evaluate(async () => { try { await col('bookings').limit(1).get(); return true; } catch (e) { return false; } })) break; await p.waitForTimeout(1000); }
-  if (fn.pre) { await p.evaluate(fn.pre); await p.waitForTimeout(1000); await p.reload({ waitUntil: 'load' }); await p.waitForTimeout(4000); const sk2 = p.locator('text=Salta il tour').first(); if (await sk2.isVisible().catch(() => 0)) await sk2.click(); await p.addStyleTag({ content: '*{caret-color:transparent!important} ::-webkit-scrollbar{display:none}' }); }
+  if (fn.pre) { await p.evaluate(fn.pre, fn.preArg); await p.waitForTimeout(1000); await p.reload({ waitUntil: 'load' }); await p.waitForTimeout(4000); const sk2 = p.locator('text=Salta il tour').first(); if (await sk2.isVisible().catch(() => 0)) await sk2.click(); await p.addStyleTag({ content: '*{caret-color:transparent!important} ::-webkit-scrollbar{display:none}' }); }
   await p.evaluate(() => { const o = document.getElementById('profile-picker-overlay'); if (o && !o.classList.contains('hidden') && typeof closeProfilePicker === 'function') closeProfilePicker(); });
   const steps = []; let last = null;
   const d = {

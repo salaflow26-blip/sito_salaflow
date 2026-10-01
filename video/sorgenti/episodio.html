@@ -43,7 +43,7 @@ html,body{background:#000;overflow:hidden}
 #phw{position:absolute;left:0;top:0;width:716px;height:1404px;transform-origin:0 0}
 #frame{position:absolute;inset:0;border-radius:78px;background:#0b1220;box-shadow:0 0 0 2px rgba(148,163,184,.28),0 60px 120px -30px rgba(0,0,0,.85),0 0 90px -10px rgba(45,212,191,.25)}
 #scr{position:absolute;left:14px;top:14px;width:688px;height:1376px;border-radius:64px;overflow:hidden;background:var(--ink)}
-#scr img{position:absolute;left:0;top:0;width:688px;height:1376px}
+#scr img{position:absolute;left:0;top:0;width:100%;height:100%}
 #notch{position:absolute;left:50%;top:26px;width:150px;height:38px;margin-left:-75px;border-radius:20px;background:#000}
 #taps{position:absolute;left:14px;top:14px;width:688px;height:1376px;pointer-events:none}
 .fing{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:rgba(255,255,255,.28);border:5px solid #fff;box-shadow:0 0 40px rgba(255,255,255,.6)}
@@ -100,11 +100,15 @@ const EPISODES = {
   online:    { n: 9,  file: 'prenotazioni-online', tag: 'PRENOTAZIONI ONLINE', title: ['Prenotano', 'da soli'],          sub: 'Il link del locale, il modulo del cliente, la richiesta in app: accetti con un tocco.' },
   staff:     { n: 10, file: 'staff',            tag: 'STAFF',               title: ['Tutto lo staff,', 'un solo tablet'],  sub: 'Inviti, ruoli, profili con PIN e la cronologia di chi ha fatto cosa.' },
   storico:   { n: 11, file: 'storico-grafici',  tag: 'STORICO E GRAFICI',   title: ['Ogni serata', 'resta scritta'],       sub: 'Storico, coperti nel tempo, picchi di arrivi, tempo medio al tavolo ed export Excel.' },
+  cucina:    { n: 13, file: 'schermo-cucina',   tag: 'SCHERMO CUCINA',      title: ['La cucina', 'vede tutto'],          sub: 'Le comande arrivano su un tablet in cucina e al bar: si spuntano i piatti e si manda in sala.', device: 'tablet' },
   asporto:   { n: 12, file: 'asporto',          tag: 'ASPORTO',             title: ['L’asporto,', 'anche dal sito'],       sub: 'Il cliente ordina dalla pagina del locale, l’ordine arriva in app e parte la comanda.' },
 };
 const ID = new URLSearchParams(location.search).get('f') || 'prenota', EP = EPISODES[ID];
 const BAR = 2.1413, BEAT = BAR / 4, INTRO = 8 * BEAT, OUTRO = 8 * BEAT;
-const S = 0.8, PW = 716, PH = 1404;               // screenshot 860x1720 shown at 0.8 in a 14px bezel
+// Device frame: phone = 430x860 css screenshots shown 688x1376; tablet = 768x1024 css shown 860x1147.
+// K converts the recorded css px (taps, zoom boxes) to px on the stage screen.
+const DEV = EP.device === 'tablet' ? { css: 768, sw: 860, sh: 1147, r: 40 } : { css: 430, sw: 688, sh: 1376, r: 64 };
+const K = DEV.sw / DEV.css, PW = DEV.sw + 28, PH = DEV.sh + 28;
 const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
 const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), inC = x => x * x * x, ioC = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -115,7 +119,9 @@ const show = (e, on) => { e.style.display = on ? '' : 'none'; return on; };
 const mkEl = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; parent.appendChild(e); return e; };
 
 let STEPS = [], T0 = [], DUR = [], END = 0;
-const PH_X = (1080 - PW) / 2, PH_Y = 505;
+const PH_X = (1080 - PW) / 2, PH_Y = EP.device === 'tablet' ? 560 : 505;
+for (const [id, w, h] of [['phw', PW, PH], ['scr', DEV.sw, DEV.sh], ['taps', DEV.sw, DEV.sh]]) Object.assign($id(id).style, { width: w + 'px', height: h + 'px' });
+$id('frame').style.borderRadius = DEV.r + 14 + 'px'; $id('scr').style.borderRadius = DEV.r + 'px'; if (EP.device === 'tablet') $id('notch').style.display = 'none';
 // caption markup: *word* -> gradient
 const md = s => s.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
@@ -135,7 +141,7 @@ async function load() {
       tp.at = T0[i] + DUR[i] - BEAT * (all.length - k) * (tp.kind === 'press' ? 2 : 1) - (tp.kind === 'press' ? 0 : 0);
       tp.f = mkEl('div', 'fing', taps); tp.r = mkEl('div', 'rip', taps);
       if (tp.kind === 'press') { tp.a = mkEl('div', 'arc', taps, '<svg viewBox="0 0 150 150" width="150" height="150"><circle cx="75" cy="75" r="68" fill="none" stroke="#2dd4bf" stroke-width="9" stroke-linecap="round" stroke-dasharray="427" stroke-dashoffset="427" transform="rotate(-90 75 75)"/></svg>'); }
-      const [x, y, w, h] = tp.b; tp.cx = (x + w / 2) * 2 * S; tp.cy = (y + h / 2) * 2 * S;
+      const [x, y, w, h] = tp.b; tp.cx = (x + w / 2) * K; tp.cy = (y + h / 2) * K;
       for (const e of [tp.f, tp.r, tp.a].filter(Boolean)) { e.style.left = tp.cx + 'px'; e.style.top = tp.cy + 'px'; }
       window.TIMELINE.taps.push({ t: tp.at, kind: tp.kind });
     });
@@ -190,15 +196,15 @@ window.render = function (t) {
     // zoom: the step's box grows to ~900px wide and moves to (540, 1180), from 1 beat in to 1.5 beats before the end
     let z = 0, k = 1, cx = 0, cy = 0;
     if (s.zoom) {
-      const [x, y, w, h] = s.zoom; k = Math.min(2.1, 920 / (w * 2 * S), 820 / (h * 2 * S));
+      const [x, y, w, h] = s.zoom; k = Math.min(2.1, 920 / (w * K), 820 / (h * K));
       z = P(t, T0[i] + BEAT, T0[i] + 2.2 * BEAT, ioC) * (1 - P(t, T0[i] + DUR[i] - 1.6 * BEAT, T0[i] + DUR[i] - .5 * BEAT, ioC));
-      cx = 14 + (x + w / 2) * 2 * S; cy = 14 + (y + h / 2) * 2 * S;
+      cx = 14 + (x + w / 2) * K; cy = 14 + (y + h / 2) * K;
       op(s.hb, P(t, T0[i] + 2 * BEAT, T0[i] + 2.4 * BEAT) * (1 - P(t, T0[i] + DUR[i] - 2 * BEAT, T0[i] + DUR[i] - 1.6 * BEAT)));
-      Object.assign(s.hb.style, { left: x * 2 * S - 6 + 'px', top: y * 2 * S - 6 + 'px', width: w * 2 * S + 12 + 'px', height: h * 2 * S + 12 + 'px' });
+      Object.assign(s.hb.style, { left: x * K - 6 + 'px', top: y * K - 6 + 'px', width: w * K + 12 + 'px', height: h * K + 12 + 'px' });
     }
     else {
       // no explicit zoom: a slow push-in towards the first tap (or the screen centre), released as the step ends
-      const tp = (s.taps || [])[0], fx = tp ? tp.cx : 344, fy = tp ? tp.cy : 640;
+      const tp = (s.taps || [])[0], fx = tp ? tp.cx : DEV.sw / 2, fy = tp ? tp.cy : DEV.sh * .46;
       z = P(t, T0[i] + .3, T0[i] + DUR[i] - .25, x => ioC(x)) * (1 - P(t, T0[i] + DUR[i] - .25, T0[i] + DUR[i] + .05, ioC)) * (i > 0 || t > INTRO ? 1 : 0);
       k = 1.1; cx = 14 + fx; cy = 14 + fy;
       const nx = 540 - PH_X - cx, ny = 1180 - PH_Y - cy;   // push drifts only a little towards the focus
@@ -227,7 +233,7 @@ window.render = function (t) {
       if (tp.kind === 'swipe') {   // finger lands, drags dx to the right in one beat, lets go
         const s0 = tp.at - 1.6 * BEAT, on = t > s0 && t < tp.at + .5 && k === i; show(tp.f, on); show(tp.r, false); if (!on) return;
         const app = P(t, s0, s0 + .3, outX), mv = P(t, tp.at - BEAT, tp.at, ioC), up = P(t, tp.at, tp.at + .3);
-        op(tp.f, app * (1 - up)); tf(tp.f, `translate(${mv * tp.dx * 2 * S}px,${mv * (tp.dy || 0) * 2 * S}px) scale(${lerp(1.5, 1, app) * (t > tp.at - BEAT - .08 ? .8 : 1)})`); return;
+        op(tp.f, app * (1 - up)); tf(tp.f, `translate(${mv * tp.dx * K}px,${mv * (tp.dy || 0) * K}px) scale(${lerp(1.5, 1, app) * (t > tp.at - BEAT - .08 ? .8 : 1)})`); return;
       }
       const press = tp.kind === 'press', a0 = tp.at - .45, hold = press ? 2 * BEAT : .12, t1 = tp.at + hold;
       const on = t > a0 && t < t1 + .45 && k === i;
