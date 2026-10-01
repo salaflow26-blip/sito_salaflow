@@ -23,6 +23,16 @@ body{background:#888;font-family:PJS}
 #front .word{position:absolute;left:0;right:0;top:385px;text-align:center;font-weight:800;font-size:104px;letter-spacing:-.045em;line-height:1}
 #front .tag{position:absolute;left:0;right:0;top:515px;text-align:center;font-weight:600;font-size:34px;color:#94a3b8;letter-spacing:-.005em}
 #front .line{position:absolute;left:50%;top:495px;width:90px;height:4px;margin-left:-45px;border-radius:2px;background:linear-gradient(90deg,#22d3ee,#34d399)}
+/* fronte personale (?n=Nome Cognome) */
+#front.person .logo{top:88px;width:170px;height:170px;margin-left:-85px;border-radius:38px}
+#front.person .word{top:290px;font-size:92px}
+#front.person .line{display:none}
+#front.person .tag{top:398px;font-size:30px}
+#front .who{display:none;position:absolute;left:0;right:0;top:478px;text-align:center}
+#front.person .who{display:block}
+#front .who .sep{width:80px;height:4px;margin:0 auto 30px;border-radius:2px;background:linear-gradient(90deg,#22d3ee,#34d399)}
+#front .who .nm{font-weight:800;font-size:50px;letter-spacing:-.025em;line-height:1}
+#front .who .rl{margin-top:14px;font-weight:700;font-size:26px;letter-spacing:.18em;text-transform:uppercase}
 /* retro */
 #back .nfc{position:absolute;left:110px;top:118px;width:124px;height:124px}
 #back .tap{position:absolute;left:110px;top:272px;font-weight:800;font-size:56px;letter-spacing:-.035em;line-height:1.05;width:520px}
@@ -44,6 +54,7 @@ body{background:#888;font-family:PJS}
   <div class="word">Sala<span class="gt">Flow</span></div>
   <div class="line"></div>
   <div class="tag">La tua sala, finalmente sotto controllo.</div>
+  <div class="who"><div class="sep"></div><div class="nm" id="nm"></div><div class="rl gt">Co-founder</div></div>
 </div>
 <div class="card dark" id="back">
   <div class="glow" style="width:620px;height:620px;right:-240px;top:-260px;background:#0e7490;opacity:.45"></div>
@@ -61,6 +72,7 @@ body{background:#888;font-family:PJS}
   <div class="qrcap">o inquadra il codice</div>
   <div class="foot"><span class="url">salaflow<span class="gt">.com</span></span><span class="cta">Prenota una visita</span></div>
 </div>
-<script>window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r))));</script>
+<script>{ const n = new URLSearchParams(location.search).get('n'); if (n) { document.getElementById('front').classList.add('person'); document.getElementById('nm').textContent = n; } }
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r))));</script>
 </body>
 </html>
