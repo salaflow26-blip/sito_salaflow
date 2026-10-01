@@ -44,6 +44,17 @@ Cartella interna: esclusa dal deploy del sito (`.vercelignore`).
 - I **pulsanti di servizio personalizzati** possono essere collegati a una categoria: "Dolci" apre la comanda già filtrata sui dolci. 🔎
 - **Stampa su stampante comande** (Epson di rete, protocollo ePOS-Print: basta l'IP). Stampa comande per la cucina e preconto, **non scontrini fiscali**.
 
+## 4-bis. Schermo cucina ✅ (nuovo, 01/10)
+- Vista **Cucina** dal menu, pensata per un tablet fisso in cucina e uno al bar.
+- Una colonna per comanda, dalla più vecchia, con tavolo, persone, piatti divisi per uscita, aggiunte/rimozioni.
+- **Tempo** su ogni comanda: gialla dopo 9 minuti, rossa dopo 15. Orologio in alto.
+- **"Da preparare ora"**: il totale dei piatti ancora da fare (es. Tagliatelle ×4).
+- **Allergie** del tavolo in una barra rossa in testa alla comanda.
+- Schede per **reparto** (Cucina, Bar…) con il numero di comande; i piatti degli altri reparti compaiono in piccolo (si può nascondere, per ogni tablet).
+- Si **spunta** ogni piatto pronto. Se il mio reparto ha finito e un altro no: "Fatto — in attesa di Bar" e un avviso.
+- Quando tutti i reparti hanno finito: **Manda in sala** e la comanda esce dallo schermo.
+- Le comande nuove compaiono subito, in fondo alla fila.
+
 ## 5. Cassa ✅ (`08-cassa`, `18-conto-cassa`, `19-dividi-conto`)
 - Elenco **tavoli aperti** ("1 da pagare") oppure digiti il numero del tavolo → conto con tutte le righe della comanda. Viste **Riepilogo** e **Sospesi**.
 - **Coperto automatico** ✅: se nel menu c'è una voce "Coperto", viene aggiunta una per persona (3 × €2,50), modificabile con un tocco.
