@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — biglietto NFC</title>
+<style>
+/* Biglietto 85×55 mm + 3 mm di abbondanza per lato = 91×61 mm → 1075×720 px a 300 dpi.
+   Zona sicura: tutto il testo sta almeno 6 mm (71 px) dentro il bordo esterno. */
+@font-face{font-family:PJS;font-weight:500;src:url(../../video/sorgenti/font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(../../video/sorgenti/font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(../../video/sorgenti/font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(../../video/sorgenti/font/PJS-800.ttf)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#888;font-family:PJS}
+.card{position:relative;width:1075px;height:720px;overflow:hidden;margin:0 0 40px}
+.dark{background:#020617;color:#fff}
+.glow{position:absolute;border-radius:50%;filter:blur(110px)}
+.gt{background:linear-gradient(110deg,#22d3ee,#2dd4bf 50%,#34d399);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grid{position:absolute;inset:0;opacity:.05;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:60px 60px}
+/* fronte */
+#front .logo{position:absolute;left:50%;top:150px;width:200px;height:200px;margin-left:-100px;border-radius:45px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(45,212,191,.6)}
+#front .logo img{width:100%;height:100%;display:block;transform:scale(1.025)}
+#front .word{position:absolute;left:0;right:0;top:385px;text-align:center;font-weight:800;font-size:104px;letter-spacing:-.045em;line-height:1}
+#front .tag{position:absolute;left:0;right:0;top:515px;text-align:center;font-weight:600;font-size:34px;color:#94a3b8;letter-spacing:-.005em}
+#front .line{position:absolute;left:50%;top:495px;width:90px;height:4px;margin-left:-45px;border-radius:2px;background:linear-gradient(90deg,#22d3ee,#34d399)}
+/* retro */
+#back .nfc{position:absolute;left:110px;top:118px;width:124px;height:124px}
+#back .tap{position:absolute;left:110px;top:272px;font-weight:800;font-size:56px;letter-spacing:-.035em;line-height:1.05;width:520px}
+#back .tapsub{position:absolute;left:110px;top:350px;font-weight:600;font-size:28px;color:#94a3b8;width:470px;line-height:1.35}
+#back .qrbox{position:absolute;right:110px;top:118px;width:270px;height:270px;padding:22px;border-radius:28px;background:#fff}
+#back .qrbox img{width:100%;height:100%;display:block}
+#back .qrcap{position:absolute;right:110px;top:404px;width:270px;text-align:center;font-weight:600;font-size:24px;color:#94a3b8}
+#back .foot{position:absolute;left:110px;right:110px;bottom:95px;display:flex;justify-content:space-between;align-items:center;border-top:2px solid rgba(148,163,184,.22);padding-top:26px}
+#back .url{font-weight:800;font-size:40px;letter-spacing:-.02em}
+#back .cta{font-weight:800;font-size:28px;color:#042f2e;padding:14px 30px;border-radius:999px;background:linear-gradient(110deg,#22d3ee,#2dd4bf 50%,#34d399)}
+</style>
+</head>
+<body>
+<div class="card dark" id="front">
+  <div class="glow" style="width:700px;height:700px;left:-260px;top:-300px;background:#0e7490;opacity:.55"></div>
+  <div class="glow" style="width:700px;height:700px;right:-280px;bottom:-330px;background:#047857;opacity:.5"></div>
+  <div class="grid"></div>
+  <div class="logo"><img src="logo.png"></div>
+  <div class="word">Sala<span class="gt">Flow</span></div>
+  <div class="line"></div>
+  <div class="tag">La tua sala, finalmente sotto controllo.</div>
+</div>
+<div class="card dark" id="back">
+  <div class="glow" style="width:620px;height:620px;right:-240px;top:-260px;background:#0e7490;opacity:.45"></div>
+  <div class="glow" style="width:620px;height:620px;left:-260px;bottom:-320px;background:#047857;opacity:.4"></div>
+  <svg class="nfc" viewBox="0 0 100 100" fill="none" stroke-linecap="round">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#2dd4bf"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs>
+    <rect x="3" y="3" width="94" height="94" rx="24" stroke="url(#g)" stroke-width="5"/>
+    <path d="M36 34c-6 9-6 23 0 32" stroke="url(#g)" stroke-width="6"/>
+    <path d="M48 26c-10 14-10 34 0 48" stroke="url(#g)" stroke-width="6"/>
+    <path d="M60 18c-14 19-14 45 0 64" stroke="url(#g)" stroke-width="6"/>
+  </svg>
+  <div class="tap">Avvicina il <span class="gt">telefono</span></div>
+  <div class="tapsub">Appoggialo al biglietto e scopri come SalaFlow organizza la tua sala.</div>
+  <div class="qrbox"><img src="qr.svg"></div>
+  <div class="qrcap">o inquadra il codice</div>
+  <div class="foot"><span class="url">salaflow<span class="gt">.com</span></span><span class="cta">Prenota una visita</span></div>
+</div>
+<script>window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r))));</script>
+</body>
+</html>
