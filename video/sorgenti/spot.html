@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — spot</title>
+<style>
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+:root{--g1:#22d3ee;--g2:#2dd4bf;--g3:#34d399;--ink:#0b1220;--paper:#f5f7f4}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;font-family:PJS;background:var(--paper)}
+.blob{position:absolute;border-radius:50%;filter:blur(140px)}
+#b1{width:1100px;height:1100px;background:#a5f3fc;opacity:.75}
+#b2{width:1000px;height:1000px;background:#a7f3d0;opacity:.8}
+#b3{width:700px;height:700px;background:#fef9c3;opacity:.7}
+#grain{position:absolute;inset:-50%;opacity:.05;mix-blend-mode:multiply;pointer-events:none}
+.txt{position:absolute;left:0;right:0;text-align:center;font-weight:800;letter-spacing:-.045em;color:var(--ink);white-space:nowrap;line-height:1}
+.txt .g{background:linear-gradient(110deg,#0891b2,#0d9488 50%,#059669);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{position:absolute;left:0;right:0;text-align:center;font-weight:600;font-size:44px;color:#334155;letter-spacing:-.01em}
+.dev{position:absolute;left:0;top:0;transform-origin:0 0}
+.dev .fr{position:absolute;inset:0;background:#0b1220;box-shadow:0 70px 120px -40px rgba(15,23,42,.45),0 30px 50px -30px rgba(15,23,42,.35)}
+.dev .sc{position:absolute;left:14px;top:14px;overflow:hidden;background:#020617}
+.dev .sc img{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:0 0}
+.strike{position:absolute;height:14px;border-radius:7px;background:var(--ink);transform-origin:0 50%}
+#logo{position:absolute;left:440px;top:560px;width:200px;height:200px;border-radius:22.5%;overflow:hidden;box-shadow:0 40px 80px -25px rgba(13,148,136,.55)}
+#logo img{width:100%;height:100%;display:block;transform:scale(1.025)}
+.pill{position:absolute;left:50%;padding:30px 60px;border-radius:999px;font-weight:800;font-size:48px;color:#fff;white-space:nowrap;background:var(--ink)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#fade{position:absolute;inset:0;background:var(--paper);opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div>
+  <div id="layer"></div>
+  <canvas id="grain"></canvas><div id="flash"></div><div id="fade"></div>
+</div>
+<script>
+/* Spot "tutta l'app" in 9:16, light kinetic typography with decoding letters, real app screens.
+   Timeline in bars of the demo track (112 BPM), music starts 4 bars before the drop. */
+const BAR = 2.1413, BEAT = BAR / 4;
+const FEAT = [   // one bar each from the drop: word, sub, screenshot, optional focus box (css px)
+  ['Prenotazioni', 'in tre tocchi', 'prenota/3.png'],
+  ['Tavolo consigliato', 'lo sceglie lui', 'prenota/4.png', 'prenota', 4],
+  ['Piantina dal vivo', 'libero, prenotato, arrivato', 'piantina/0.png'],
+  ['Sala in diretta', 'su ogni telefono', 'servizio/0.png'],
+  ['Allergeni in rosso', 'dall’accoglienza alla comanda', 'allergeni/9.png'],
+  ['Comanda dal tavolo', 'uscite, ingredienti, invio', 'comanda/12.png'],
+  ['Schermo cucina', 'comande in fila, piatti spuntati', 'cucina/6.png', null, null, 'tablet'],
+  ['Conto già pronto', 'coperto, dividi, sospesi', 'cassa/1.png'],
+  ['Prenotano da soli', 'dal link del locale', 'online/3.png'],
+  ['Asporto dal sito', 'arriva in app, parte la comanda', 'asporto/5.png'],
+];
+const T_FEAT = 4 * BAR, T_CLAIM = T_FEAT + FEAT.length * BAR, T_END = T_CLAIM + 2 * BAR, END = T_END + 2.5 * BAR;
+window.DURATION = END;
+window.TIMELINE = { cuts: [T_FEAT, ...FEAT.map((f, i) => T_FEAT + i * BAR), T_CLAIM, T_END] };
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
+const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), inC = x => x * x * x, ioC = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outB = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+const $id = i => document.getElementById(i), tf = (e, s) => e.style.transform = s, op = (e, v) => e.style.opacity = v;
+const mk = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; parent.appendChild(e); return e; };
+const L = $id('layer');
+
+// Decoding text: every letter shows random glyphs until its own moment, then locks in.
+const GLY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%&#@$*+=?';
+function decoder(text, cls, top, size, gradFrom = -1) {
+  const e = mk('div', 'txt ' + (cls || ''), L); e.style.top = top + 'px'; e.style.fontSize = size + 'px';
+  const chars = [...text]; e.innerHTML = chars.map((c, i) => `<span${gradFrom >= 0 && i >= gradFrom ? ' class="g"' : ''}>${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+  const spans = [...e.children];
+  return { e, set(t, t0, dur = .42) {
+    const f = Math.floor(t * 30);
+    spans.forEach((s, i) => { const lock = t0 + dur * (i / Math.max(1, chars.length - 1));
+      const c = chars[i]; if (c === ' ') return;
+      if (t >= lock) s.textContent = c; else { let h = (i * 7919 + f * 104729) % GLY.length; s.textContent = t < t0 - .05 ? '' : GLY[h]; }
+      s.style.opacity = t < t0 - .05 ? 0 : (t >= lock ? 1 : .55); }); } };
+}
+function device(src, kind) {
+  const tab = kind === 'tablet', sw = tab ? 780 : 620, sh = tab ? 1040 : 1240, r = tab ? 36 : 58;
+  const d = mk('div', 'dev', L); Object.assign(d.style, { width: sw + 28 + 'px', height: sh + 28 + 'px' });
+  const fr = mk('div', 'fr', d); fr.style.borderRadius = r + 14 + 'px';
+  const sc = mk('div', 'sc', d); Object.assign(sc.style, { width: sw + 'px', height: sh + 'px', borderRadius: r + 'px' });
+  const img = mk('img', '', sc); img.src = 'build/ep/' + src;
+  return { d, img, w: sw + 28, h: sh + 28, sw, sh, css: tab ? 768 : 430 };
+}
+
+// --- scene 0: "Da oggi / il quaderno / è solo un ricordo."
+const s0a = decoder('Da oggi', '', 640, 150), s0b = decoder('il quaderno', '', 800, 150), s0c = decoder('è solo un ricordo.', '', 990, 92, 9);
+const strike = mk('div', 'strike', L);
+// --- scene 1: "Tutta la tua sala, / in un’app."
+const s1a = decoder('Tutta la tua sala,', '', 720, 104), s1b = decoder('in un’app.', '', 860, 150, 3);
+// --- features
+const feats = FEAT.map(([w, sub, src, ep, idx, kind], i) => {
+  const dev = device(src, kind);
+  const W = decoder(w, '', 190, w.length > 14 ? 96 : 116);
+  const S = mk('div', 'sub', L, sub); S.style.top = '330px';
+  let focus = null;
+  if (ep) { try { /* zoom box recorded with the screenshot */ } catch (e) {} }
+  return { dev, W, S, t0: T_FEAT + i * BAR, i, focus };
+});
+// tavolo consigliato: focus on the suggested-table field (box from the recording)
+feats[1].focus = [4,173,245,122];
+// --- claim + end card
+const c1 = decoder('Fatta da chi', '', 700, 120), c2 = decoder('in sala', '', 850, 150, 0), c3 = decoder('ci ha lavorato.', '', 1030, 110);
+const logo = mk('div', '', L, '<img src="../../logo.png">'); logo.id = 'logo';
+const e0 = decoder('SalaFlow', '', 820, 130, 4);
+const e1 = mk('div', 'sub', L, 'Presto disponibile'); e1.style.top = '990px';
+const e2 = mk('div', 'pill', L, 'Prenota una visita'); e2.style.top = '1090px';
+const e3 = mk('div', 'sub', L, 'salaflow.com'); e3.style.top = '1260px'; e3.style.fontWeight = 700; e3.style.color = '#0b1220';
+
+const grain = $id('grain'); grain.width = grain.height = 512;
+{ const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 5;
+  for (let i = 0; i < im.data.length; i += 4) { s = (s * 1103515245 + 12345) & 0x7fffffff; im.data[i] = im.data[i + 1] = im.data[i + 2] = s % 256; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); }
+grain.style.width = '2160px'; grain.style.height = '3840px';
+const vis = (e, on) => { e.style.display = on ? '' : 'none'; return on; };
+
+window.render = function (t) {
+  tf($id('b1'), `translate(${-400 + Math.sin(t * .31) * 220}px,${-300 + Math.cos(t * .23) * 160}px)`);
+  tf($id('b2'), `translate(${350 + Math.cos(t * .27) * 200}px,${1150 + Math.sin(t * .21) * 200}px)`);
+  tf($id('b3'), `translate(${600 + Math.sin(t * .19) * 180}px,${300 + Math.cos(t * .29) * 160}px)`);
+  const f = Math.floor(t * 24); tf(grain, `translate(${-((f * 173) % 500)}px,${-((f * 97) % 500)}px)`);
+  // scene 0 (bars 0-2)
+  const on0 = t < 2 * BAR;
+  [s0a, s0b, s0c].forEach(o => vis(o.e, on0)); vis(strike, on0 && t > BEAT * 4);
+  if (on0) {
+    s0a.set(t, .15); s0b.set(t, BEAT * 2); s0c.set(t, BEAT * 5, .55);
+    const k = P(t, BEAT * 4, BEAT * 4 + .35, outX), w = s0b.e.firstChild ? s0b.e.scrollWidth : 0;
+    const r = s0b.e.getBoundingClientRect(), span = [...s0b.e.children], a = span[0].getBoundingClientRect(), b = span[span.length - 1].getBoundingClientRect();
+    Object.assign(strike.style, { left: a.left + 'px', top: (a.top + a.bottom) / 2 + 'px', width: (b.right - a.left) + 'px' }); tf(strike, `scaleX(${k})`);
+    const out = P(t, 2 * BAR - .3, 2 * BAR, inC); [s0a, s0b, s0c].forEach(o => { op(o.e, 1 - out); tf(o.e, `translateY(${-out * 60}px)`); }); op(strike, 1 - out);
+  }
+  // scene 1 (bars 2-4)
+  const on1 = t >= 2 * BAR - .05 && t < T_FEAT;
+  [s1a, s1b].forEach(o => vis(o.e, on1));
+  if (on1) { s1a.set(t, 2 * BAR); s1b.set(t, 2 * BAR + 2 * BEAT, .5);
+    const z = P(t, 2 * BAR, T_FEAT, x => x); [s1a, s1b].forEach(o => tf(o.e, `scale(${1 + z * .06})`));
+    const out = P(t, T_FEAT - .25, T_FEAT, inC); [s1a, s1b].forEach(o => op(o.e, 1 - out)); }
+  // features (one bar each)
+  feats.forEach(F => {
+    const on = t >= F.t0 - .1 && t < F.t0 + BAR + .25;
+    vis(F.dev.d, on); vis(F.W.e, on); vis(F.S, on);
+    if (!on) return;
+    const u = t - F.t0, side = F.i % 2 ? 1 : -1;
+    const inn = P(u, -.1, .32, outB), out = P(u, BAR - .1, BAR + .25, inC);
+    const X = 540 - F.dev.w / 2, Y = 450;
+    const rot = (1 - inn) * side * 9 + out * -side * 9 + Math.sin(u * 1.3) * .6;
+    tf(F.dev.d, `translate(${X + (1 - inn) * side * 900 + out * -side * 1000}px,${Y + (1 - inn) * 120}px) rotate(${rot}deg)`);
+    // push-in on the screenshot, towards the focus box if there is one
+    const k = F.dev.sw / F.dev.css, z = P(u, .15, BAR, x => ioC(x));
+    if (F.focus) { const [fx, fy, fw, fh] = F.focus, s = lerp(1, 1.9, z), cx = (fx + fw / 2) * k, cy = (fy + fh / 2) * k;
+      tf(F.dev.img, `translate(${cx - cx * s + (F.dev.sw / 2 - cx) * z * .9}px,${cy - cy * s + (F.dev.sh * .4 - cy) * z * .9}px) scale(${s})`); }
+    else tf(F.dev.img, `translate(${-F.dev.sw * .03 * z}px,${-F.dev.sh * .02 * z}px) scale(${1 + .06 * z})`);
+    const wo = P(u, BAR - .16, BAR - .02); vis(F.W.e, u >= -.02 && wo < 1); F.W.set(t, F.t0, .38); op(F.W.e, 1 - wo); tf(F.W.e, `translateY(${-wo * 30}px)`);
+    const sa = P(u, BEAT * 1.2, BEAT * 1.2 + .4, outX); vis(F.S, u >= 0 && wo < 1); op(F.S, sa * (1 - wo)); tf(F.S, `translateY(${(1 - sa) * 24}px)`);
+  });
+  // claim (2 bars)
+  const onC = t >= T_CLAIM - .05 && t < T_END;
+  [c1, c2, c3].forEach(o => vis(o.e, onC));
+  if (onC) { c1.set(t, T_CLAIM + .05); c2.set(t, T_CLAIM + 2 * BEAT); c3.set(t, T_CLAIM + 4 * BEAT, .5);
+    const out = P(t, T_END - .25, T_END, inC); [c1, c2, c3].forEach(o => { op(o.e, 1 - out); tf(o.e, `scale(${1 - out * .04})`); }); }
+  // end card
+  const onE = t >= T_END - .05;
+  [logo, e0.e, e1, e2, e3].forEach(e => vis(e, onE));
+  if (onE) { const et = t - T_END;
+    const lo = P(et, 0, .5, outB); tf(logo, `scale(${lo})`); op(logo, cl(lo * 2));
+    e0.set(t, T_END + BEAT, .45);
+    const a1 = P(et, 3 * BEAT, 3 * BEAT + .4, outX); op(e1, a1); tf(e1, `translateY(${(1 - a1) * 20}px)`);
+    const pl = P(et, 4 * BEAT, 4 * BEAT + .45, outB); tf(e2, `translateX(-50%) scale(${lerp(.7, 1, pl)})`); op(e2, cl(pl * 2));
+    const a3 = P(et, 5 * BEAT, 5 * BEAT + .4, outX); op(e3, a3); }
+  // white flash on the drop and on the end card
+  const fl = [T_FEAT, T_END].reduce((m, c) => Math.max(m, t >= c ? .55 * (1 - (t - c) / .18) : 0), 0);
+  op($id('flash'), cl(fl));
+  op($id('fade'), P(t, END - .7, END - .05));
+};
+const PROBE = () => [...document.querySelectorAll('.txt,.sub,.dev,.pill,#logo,.strike')];
+function rects() { return PROBE().map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects(); let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 99); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return Math.min(m, 30);   // letters flickering are not motion
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(() => render(0));
+</script>
+</body>
+</html>
