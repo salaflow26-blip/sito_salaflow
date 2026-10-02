@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — keynote</title>
+<style>
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;font-family:PJS;background:#000;color:#f5f5f7}
+.sec{position:absolute;inset:0;perspective:2200px}
+.gt{background:linear-gradient(100deg,#22d3ee 0%,#2dd4bf 45%,#34d399 70%,#a7f3d0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{font-weight:700;font-size:30px;letter-spacing:.01em}
+.h{font-weight:800;letter-spacing:-.045em;line-height:1.02}
+.body{font-weight:500;font-size:34px;line-height:1.35;color:#86868b;letter-spacing:-.01em}
+.body b{color:#f5f5f7;font-weight:600}
+/* devices: titanium frame, island, glare */
+.dev{position:absolute;transform-style:preserve-3d}
+.dev .frame{position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(145deg,#6b7280,#1f2937 18%,#0b0f17 50%,#374151 82%,#9ca3af);padding:var(--b);box-shadow:0 60px 120px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.08) inset}
+.dev .scr{position:relative;width:100%;height:100%;border-radius:calc(var(--r) - var(--b));overflow:hidden;background:#000}
+.dev .scr img{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:50% 0}
+.dev .island{position:absolute;left:50%;top:calc(var(--b) + 12px);width:96px;height:28px;margin-left:-48px;border-radius:14px;background:#000}
+.dev .glare{position:absolute;inset:var(--b);border-radius:calc(var(--r) - var(--b));background:linear-gradient(115deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 35%);pointer-events:none}
+.halo{position:absolute;border-radius:50%;filter:blur(120px);opacity:.0}
+.tile{position:absolute;border-radius:30px;background:#111214;border:1px solid #1f2023;padding:34px 36px;overflow:hidden}
+.tile .k{font-weight:800;font-size:64px;letter-spacing:-.04em;line-height:1}
+.tile .d{margin-top:14px;font-weight:600;font-size:26px;color:#a1a1a6;line-height:1.3}
+#logo{position:absolute;width:200px;height:200px;border-radius:45px;overflow:hidden}
+#logo img{width:100%;height:100%;display:block;transform:scale(1.025)}
+#sweep{position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);mix-blend-mode:overlay}
+.pill{display:inline-block;padding:22px 46px;border-radius:999px;font-weight:700;font-size:34px;background:#f5f5f7;color:#000}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+/* Keynote-style film (16:9). Bars of the demo track at 112 BPM; music from bar 5 so the drop lands on the hero.
+   Sections: intro 0-4, hero 4-6, 8 features x 1.5 bars, bento 18-21, devices 21-23, end 23-26. */
+const BAR = 2.1413, BEAT = BAR / 4;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
+const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), outC = x => 1 - Math.pow(1 - x, 3), inC = x => x * x * x, ioC = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2, ioS = x => -(Math.cos(Math.PI * x) - 1) / 2;
+const lerp = (a, b, x) => a + (b - a) * x;
+const ST = document.getElementById('stage');
+const el = (tag, cls, parent, html, css) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (css) Object.assign(e.style, css); (parent || ST).appendChild(e); return e; };
+const tf = (e, s) => e.style.transform = s, op = (e, v) => e.style.opacity = v, show = (e, on) => (e.style.display = on ? '' : 'none', on);
+function device(parent, src, kind = 'phone', h = 820) {
+  const tab = kind === 'tablet', w = tab ? h * .75 : h * .5 + 22, r = tab ? 44 : 64, b = tab ? 16 : 13;
+  const d = el('div', 'dev', parent, null, { width: w + 'px', height: h + 'px', '--r': r + 'px', '--b': b + 'px' });
+  const fr = el('div', 'frame', d); const sc = el('div', 'scr', fr); const img = el('img', '', sc); img.src = 'build/ep/' + src;
+  if (!tab) el('div', 'island', d); el('div', 'glare', d);
+  return { d, img, w, h };
+}
+const sections = [];
+const SEC = (t0, t1, build, draw) => { const root = el('div', 'sec'); const s = { t0, t1, root, ...build(root) }; s.draw = draw; sections.push(s); return s; };
+
+// 1 — intro: "Ti presentiamo" → logo + SalaFlow with a light sweep
+SEC(0, 4 * BAR, root => {
+  const pre = el('div', 'h', root, 'Ti presentiamo', { position: 'absolute', left: 0, right: 0, top: '470px', textAlign: 'center', fontSize: '64px', color: '#86868b', fontWeight: 700 });
+  const logo = el('div', '', root, '<img src="../../logo.png"><div id="sweep"></div>'); logo.id = 'logo'; Object.assign(logo.style, { left: '860px', top: '300px' });
+  const word = el('div', 'h', root, 'Sala<span class="gt">Flow</span>', { position: 'absolute', left: 0, right: 0, top: '560px', textAlign: 'center', fontSize: '170px' });
+  const glow = el('div', 'halo', root, null, { width: '900px', height: '900px', left: '510px', top: '100px', background: 'radial-gradient(circle,#0e7490,transparent 60%)' });
+  root.insertBefore(glow, root.firstChild);
+  return { pre, logo, word, glow };
+}, (s, t) => {
+  const a = P(t, .2, 1.2, outC) * (1 - P(t, 2.6, 3.2, inC)); op(s.pre, a); tf(s.pre, `translateY(${(1 - a) * 20}px)`); s.pre.style.filter = `blur(${(1 - a) * 8}px)`;
+  const L = P(t, 3.4, 4.6, outC); op(s.logo, L); tf(s.logo, `scale(${lerp(.85, 1, L)})`);
+  s.logo.querySelector('#sweep').style.transform = `translateX(${lerp(-260, 260, P(t, 4.4, 5.6, ioS))}px)`;
+  const W = P(t, 4.2, 5.4, outC); op(s.word, W); tf(s.word, `translateY(${(1 - W) * 30}px) scale(${lerp(1.04, 1, W)})`); s.word.style.letterSpacing = `${lerp(-.02, -.045, W)}em`;
+  op(s.glow, .5 * P(t, 3.6, 6, outC));
+  const out = P(t, 4 * BAR - .6, 4 * BAR, inC); s.root.style.opacity = 1 - out;
+});
+
+// 2 — hero: phone turning in 3D, headline
+SEC(4 * BAR, 6 * BAR, root => {
+  const halo = el('div', 'halo', root, null, { width: '1100px', height: '1100px', left: '410px', top: '120px', background: 'radial-gradient(circle,rgba(45,212,191,.55),transparent 60%)' });
+  const h1 = el('div', 'h', root, 'La tua sala.<br><span class="gt">Finalmente sotto controllo.</span>', { position: 'absolute', left: 0, right: 0, top: '70px', textAlign: 'center', fontSize: '88px' });
+  const ph = device(root, 'serata/0.png', 'phone', 760);
+  return { halo, h1, ph };
+}, (s, t, u) => {
+  const a = P(u, 0, .9, outC); op(s.h1, a); tf(s.h1, `translateY(${(1 - a) * 30}px)`);
+  const p = P(u, 0, 2 * BAR, x => x);
+  tf(s.ph.d, `translate(${960 - s.ph.w / 2}px,${lerp(440, 290, P(u, 0, 1.4, outC))}px) rotateX(${lerp(24, 6, p)}deg) rotateY(${lerp(-28, 12, ioS(p))}deg)`);
+  op(s.halo, .7 * P(u, .2, 1.4, outC));
+  s.root.style.opacity = 1 - P(u, 2 * BAR - .45, 2 * BAR, inC);
+});
+
+// 3 — features
+const FEATS = [
+  ['Piantina', 'La sala,<br>dal vivo.', 'Libero, prenotato, arrivato: <b>ogni tavolo cambia colore</b> mentre lavori.', ['piantina/0.png']],
+  ['Tavolo consigliato', 'Il tavolo giusto.<br>Lo sceglie lui.', 'Il più piccolo che basta, libero a quell’ora. <b>Il doppio turno solo se serve.</b>', ['prenota/4.png']],
+  ['Servizio', 'Chi è seduto.<br>Chi è pronto.', 'La sala in diretta su <b>ogni telefono dello staff</b>, con il promemoria dopo un’ora e mezza.', ['servizio/0.png']],
+  ['Allergeni', 'Le allergie arrivano<br>fino al piatto.', 'Segnate all’accoglienza, <b>i piatti a rischio escono in rosso</b> in comanda.', ['allergeni/9.png']],
+  ['Comanda', 'La comanda<br>parte dal tavolo.', 'Uscite, ingredienti in più o in meno, <b>cucina e bar separati</b>.', ['comanda/12.png']],
+  ['Schermo cucina', 'La cucina<br>vede tutto.', 'Comande in fila, <b>il tempo che passa a colori</b>, “Manda in sala” quando è pronto.', ['cucina/1.png'], 'tablet'],
+  ['Cassa', 'Il conto<br>è già pronto.', 'Coperto automatico, <b>dividi alla romana</b>, abbuono, sospesi, chiusura serata.', ['cassa/1.png']],
+  ['Online e asporto', 'Prenotano e ordinano.<br>Da soli.', 'Dal link del locale: <b>arriva in app, accetti con un tocco</b>.', ['online/3.png', 'asporto/5.png']],
+];
+const FL = 1.5 * BAR, F0 = 6 * BAR;
+FEATS.forEach(([eb, head, body, srcs, kind], i) => {
+  const left = i % 2 === 0;   // text left, device right (and vice versa)
+  SEC(F0 + i * FL, F0 + (i + 1) * FL, root => {
+    const halo = el('div', 'halo', root, null, { width: '900px', height: '900px', left: (left ? 1000 : 20) + 'px', top: '90px', background: `radial-gradient(circle,${i % 3 === 0 ? 'rgba(34,211,238,.45)' : i % 3 === 1 ? 'rgba(45,212,191,.45)' : 'rgba(52,211,153,.42)'},transparent 60%)` });
+    const box = el('div', '', root, null, { position: 'absolute', left: left ? '150px' : '1000px', top: '330px', width: '780px' });
+    const e1 = el('div', 'eyebrow gt', box, eb), e2 = el('div', 'h', box, head, { fontSize: '96px', marginTop: '18px' }), e3 = el('div', 'body', box, body, { marginTop: '34px', width: '700px' });
+    const devs = srcs.map(s => device(root, s, kind || 'phone', kind === 'tablet' ? 860 : 900));
+    return { halo, e1, e2, e3, devs, left };
+  }, (s, t, u) => {
+    const inn = P(u, 0, .7, outC), out = P(u, FL - .4, FL, inC);
+    [s.e1, s.e2, s.e3].forEach((e, k) => { const a = P(u, .08 + k * .12, .7 + k * .12, outC); op(e, a * (1 - out)); tf(e, `translateY(${(1 - a) * 36 - out * 20}px)`); });
+    const cx = s.left ? 1430 : 490;
+    s.devs.forEach((D, k) => {
+      const n = s.devs.length, off = (k - (n - 1) / 2) * 300, ry = (s.left ? -1 : 1) * lerp(22, 8, P(u, 0, FL, x => x)) + (n > 1 ? (k ? -6 : 6) : 0);
+      const x = cx - D.w / 2 + off, y = 1080 / 2 - D.h / 2 + 30 + (n > 1 ? k * 40 - 20 : 0);
+      tf(D.d, `translate(${x + (1 - inn) * (s.left ? 220 : -220)}px,${y + (1 - inn) * 60 - P(u, 0, FL) * 30}px) rotateY(${ry}deg) rotateX(${lerp(8, 2, inn)}deg)`);
+      op(D.d, inn * (1 - out));
+      D.img.style.transform = `scale(${1 + .05 * P(u, .3, FL, ioS)})`;
+    });
+    op(s.halo, .65 * inn * (1 - out));
+  });
+});
+
+// 4 — bento grid
+const TILES = [
+  ['Walk-in', 'Seduti in tre secondi.'], ['90′', 'Ti chiede se il tavolo si è alzato.'], ['14', 'allergeni, su ogni piatto.'], ['No show', 'Il tavolo torna libero.'],
+  ['PIN', 'Un tablet, tutto lo staff.'], ['PDF → Menu', 'Importi il menu con l’IA.'], ['Cucina + Bar', 'Ogni piatto al suo reparto.'], ['Cronologia', 'Chi ha fatto cosa.'],
+  ['Solo per oggi', 'La piantina della tavolata.'], ['Doppio turno', 'Te lo dice prima.'], ['Excel', 'Esporti la serata.'], ['IT · EN', 'Anche in inglese.'],
+];
+const B0 = F0 + FEATS.length * FL;
+SEC(B0, B0 + 3 * BAR, root => {
+  const title = el('div', 'h', root, 'E poi, <span class="gt">tutto il resto.</span>', { position: 'absolute', left: 0, right: 0, top: '70px', textAlign: 'center', fontSize: '76px' });
+  const W = 390, H = 220, G = 26, X0 = (1920 - (4 * W + 3 * G)) / 2, Y0 = 230;
+  const tiles = TILES.map(([k, d], i) => { const tl = el('div', 'tile', root, `<div class="k ${i % 3 === 0 ? 'gt' : ''}">${k}</div><div class="d">${d}</div>`, { width: W + 'px', height: H + 'px', left: X0 + (i % 4) * (W + G) + 'px', top: Y0 + Math.floor(i / 4) * (H + G) + 'px' }); return tl; });
+  return { title, tiles };
+}, (s, t, u) => {
+  const a = P(u, 0, .6, outC); op(s.title, a); tf(s.title, `translateY(${(1 - a) * 24}px)`);
+  const out = P(u, 3 * BAR - .4, 3 * BAR, inC);
+  s.tiles.forEach((tl, i) => { const d = .25 + ((i % 4) + Math.floor(i / 4)) * .09, k = P(u, d, d + .7, outC); op(tl, k * (1 - out)); tf(tl, `translateY(${(1 - k) * 50}px) scale(${lerp(.94, 1, k) * (1 - out * .03)})`); });
+});
+
+// 5 — every device, in real time
+const D0 = B0 + 3 * BAR;
+SEC(D0, D0 + 2 * BAR, root => {
+  const halo = el('div', 'halo', root, null, { width: '1500px', height: '900px', left: '210px', top: '250px', background: 'radial-gradient(ellipse,rgba(45,212,191,.4),transparent 60%)' });
+  const title = el('div', 'h', root, 'Su ogni dispositivo.<br><span class="gt">Nello stesso istante.</span>', { position: 'absolute', left: 0, right: 0, top: '60px', textAlign: 'center', fontSize: '72px' });
+  const devs = [device(root, 'servizio/0.png', 'phone', 640), device(root, 'cucina/1.png', 'tablet', 700), device(root, 'comanda/12.png', 'phone', 640), device(root, 'serata/0.png', 'phone', 640)];
+  return { halo, title, devs };
+}, (s, t, u) => {
+  const a = P(u, 0, .6, outC); op(s.title, a);
+  const xs = [270, 740, 1250, 1650], rys = [18, 0, -10, -22];
+  s.devs.forEach((D, i) => { const k = P(u, .1 + i * .12, .9 + i * .12, outC); const out = P(u, 2 * BAR - .45, 2 * BAR, inC);
+    tf(D.d, `translate(${xs[i] - D.w / 2}px,${330 + (1 - k) * 120 + (i === 1 ? -20 : 20)}px) rotateY(${rys[i] * lerp(1.4, 1, k)}deg)`); op(D.d, k * (1 - out)); });
+  op(s.halo, .7 * a); op(s.title, a * (1 - P(u, 2 * BAR - .45, 2 * BAR, inC)));
+});
+
+// 6 — end
+const E0 = D0 + 2 * BAR, END = E0 + 3 * BAR;
+SEC(E0, END, root => {
+  const halo = el('div', 'halo', root, null, { width: '900px', height: '900px', left: '510px', top: '60px', background: 'radial-gradient(circle,rgba(14,116,144,.7),transparent 60%)' });
+  const logo = el('div', '', root, '<img src="../../logo.png" style="width:100%;height:100%;display:block">', { position: 'absolute', left: '880px', top: '200px', width: '160px', height: '160px', borderRadius: '36px', overflow: 'hidden' });
+  const word = el('div', 'h', root, 'Sala<span class="gt">Flow</span>', { position: 'absolute', left: 0, right: 0, top: '395px', textAlign: 'center', fontSize: '140px' });
+  const tag = el('div', 'h', root, 'Dalla sala, per la sala.', { position: 'absolute', left: 0, right: 0, top: '570px', textAlign: 'center', fontSize: '52px', color: '#86868b', fontWeight: 700 });
+  const soon = el('div', 'eyebrow gt', root, 'Presto disponibile', { position: 'absolute', left: 0, right: 0, top: '665px', textAlign: 'center', fontSize: '34px' });
+  const cta = el('div', '', root, '<span class="pill">Prenota una visita</span>', { position: 'absolute', left: 0, right: 0, top: '760px', textAlign: 'center' });
+  const url = el('div', 'h', root, 'salaflow.com', { position: 'absolute', left: 0, right: 0, top: '900px', textAlign: 'center', fontSize: '38px', fontWeight: 700 });
+  return { halo, logo, word, tag, soon, cta, url };
+}, (s, t, u) => {
+  const st = (e, d, dy = 26) => { const a = P(u, d, d + .8, outC); op(e, a); tf(e, `translateY(${(1 - a) * dy}px)`); };
+  st(s.logo, 0, 0); tf(s.logo, `scale(${lerp(.9, 1, P(u, 0, .8, outC))})`); st(s.word, .2); st(s.tag, .7); st(s.soon, 1.1); st(s.cta, 1.4); st(s.url, 1.7);
+  op(s.halo, .6 * P(u, 0, 1.2, outC));
+});
+const fade = el('div', '', ST); fade.id = 'fade';
+window.DURATION = END;
+
+window.render = function (t) {
+  sections.forEach(s => { const on = show(s.root, t >= s.t0 - .02 && t < s.t1 + .02); if (on) s.draw(s, t, t - s.t0); });
+  op(fade, P(t, END - .8, END - .05) + (1 - P(t, 0, .4)));
+};
+const PROBE = () => [...document.querySelectorAll('.dev,.h,.tile,.body,.eyebrow,#logo')];
+function rects() { return PROBE().map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects(); let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 4); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return m;
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(() => render(0));
+</script>
+</body>
+</html>
