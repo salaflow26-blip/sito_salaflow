@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>SalaFlow — spot "sabato sera"</title>
+<style>
+@font-face{font-family:PJS;font-weight:400;src:url(font/PJS-400.ttf)}
+@font-face{font-family:PJS;font-weight:500;src:url(font/PJS-500.ttf)}
+@font-face{font-family:PJS;font-weight:600;src:url(font/PJS-600.ttf)}
+@font-face{font-family:PJS;font-weight:700;src:url(font/PJS-700.ttf)}
+@font-face{font-family:PJS;font-weight:800;src:url(font/PJS-800.ttf)}
+@font-face{font-family:Hand;src:url(font/Caveat.ttf)}
+:root{--ink:#0b1220;--mint:#2dd4bf;--mint2:#5eead4;--sea:#14b8a6;--paper:#f3f1f8;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;font-family:PJS;color:var(--ink);background:var(--paper)}
+.bg{position:absolute;inset:0}
+.blob{position:absolute;border-radius:50%;filter:blur(120px)}
+.sc{position:absolute;inset:0;perspective:2400px}
+.full{position:absolute;inset:0;background:linear-gradient(160deg,#5eead4,#2dd4bf 45%,#34d399)}
+.card{position:absolute;background:#fff;border-radius:44px;box-shadow:0 50px 100px -40px rgba(15,23,42,.35),0 0 0 1px rgba(15,23,42,.05)}
+.lbl{position:absolute;font-weight:700;font-size:52px;letter-spacing:-.03em}
+.tag{position:absolute;display:flex;align-items:center;gap:14px;padding:16px 30px 16px 18px;border-radius:999px;background:var(--ink);color:#fff;font-weight:700;font-size:34px;white-space:nowrap}
+.tag i{display:block;width:40px;height:40px;border-radius:50%;background:var(--mint2);font-style:normal;color:var(--ink);text-align:center;line-height:40px;font-size:26px}
+.cap{position:absolute;left:50%;display:flex;align-items:center;gap:12px;padding:16px 30px;border-radius:999px;background:#fff;font-weight:700;font-size:32px;white-space:nowrap;box-shadow:0 20px 40px -20px rgba(15,23,42,.3)}
+.cap b{display:block;width:30px;height:30px;border-radius:50%;background:var(--mint)}
+.big{font-weight:800;letter-spacing:-.05em;line-height:1}
+.row{display:flex;align-items:center;gap:18px;padding:18px 0;border-bottom:1px solid #eef0f4;font-size:32px;font-weight:600}
+.row .t{font-family:ui-monospace,monospace;font-size:26px;font-weight:700;background:#f1f5f9;border-radius:10px;padding:6px 12px}
+.row .s{margin-left:auto;font-size:24px;font-weight:700;padding:6px 14px;border-radius:999px}
+.hl{background:linear-gradient(transparent 55%,var(--mint2) 55%);background-size:0% 100%;background-repeat:no-repeat}
+.chip{position:absolute;padding:14px 26px;border-radius:16px;background:#fff;font-family:ui-monospace,monospace;font-weight:700;font-size:38px;box-shadow:0 14px 30px -14px rgba(15,23,42,.35)}
+.pillw{position:absolute;left:50%;padding:22px 46px;border-radius:999px;background:#fff;font-weight:800;font-size:64px;letter-spacing:-.03em;white-space:nowrap}
+.pillk{position:absolute;left:50%;padding:20px 42px;border-radius:999px;background:var(--ink);color:#fff;font-weight:800;font-size:60px;letter-spacing:-.03em;white-space:nowrap}
+.dev{position:absolute;border-radius:96px;background:#0b1220;padding:18px;box-shadow:0 60px 120px -40px rgba(15,23,42,.6)}
+.dev .scr{width:100%;height:100%;border-radius:80px;overflow:hidden;position:relative;background:#020617}
+.dev img{position:absolute;left:0;top:0;width:100%;height:100%}
+#fade{position:absolute;inset:0;background:#000;opacity:0}
+#grain{position:absolute;inset:-50%;opacity:.05;mix-blend-mode:multiply;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
+  <canvas id="grain"></canvas><div id="fade"></div>
+</div>
+<script>
+/* Spot nello stile del Reel di riferimento: problema → "è solo un ricordo" → logo → schede dell'app → chiusura.
+   9:16, tempi in battute della traccia (112 BPM). */
+const BAR = 2.1413, BEAT = BAR / 4;
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b, e = x => x) => e(cl((t - a) / (b - a)));
+const outX = x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x), outC = x => 1 - Math.pow(1 - x, 3), inC = x => x * x * x, ioC = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outB = x => { const c = 1.5; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+const ST = document.getElementById('stage');
+const el = (tag, cls, parent, html, css) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (css) Object.assign(e.style, css); parent.appendChild(e); return e; };
+const tf = (e, s) => e.style.transform = s, op = (e, v) => e.style.opacity = v, show = (e, on) => (e.style.display = on ? '' : 'none', on);
+const blur = (e, px) => e.style.filter = px > .05 ? `blur(${px}px)` : 'none';
+// scrambled text: letters show random glyphs until they lock in
+const GLY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@$';
+function scr(e, text, t, t0, dur = .45) {
+  const f = Math.floor(t * 30); let s = '';
+  [...text].forEach((c, i) => { const lock = t0 + dur * i / Math.max(1, text.length - 1);
+    s += (c === ' ' || c === ':' || t >= lock) ? c : (t < t0 ? '' : GLY[(i * 7919 + f * 104729) % GLY.length]); });
+  e.textContent = s;
+}
+const scenes = [];
+const SC = (t0, t1, build, draw) => { const root = el('div', 'sc', ST); ST.insertBefore(root, document.getElementById('grain')); scenes.push({ t0, t1, root, d: build(root), draw }); };
+// common in/out: focus pull (blur) + slight 3D tilt
+const enter = (e, u, d = .45, dy = 60) => { const k = P(u, 0, d, outC); op(e, k); blur(e, (1 - k) * 18); return k; };
+
+// timings
+const T = { prob: 0, ricordo: 3 * BAR, logo: 4.25 * BAR, sala: 5.5 * BAR, mappa: 7 * BAR, avvisa: 8 * BAR, comanda: 9.5 * BAR, tutto: 11 * BAR, arrivi: 12 * BAR, chiusura: 13.25 * BAR };
+const END = 16 * BAR;
+window.DURATION = END;
+
+// 1 — "Il sabato sera." + old-world objects with tags
+SC(T.prob, T.ricordo, root => {
+  const lbl = el('div', 'lbl', root, 'Il sabato sera.', { left: '90px', top: '220px' });
+  // a) notebook page
+  const nb = el('div', 'card', root, `<div style="padding:50px 56px;font-family:Hand;font-size:60px;line-height:1.25;color:#1e293b">
+    <div>20:00 &nbsp;Rossi x4</div><div style="text-decoration:line-through;text-decoration-color:#e11d48">20:30 &nbsp;Bianchi 6</div>
+    <div>20:30 &nbsp;<span style="color:#e11d48">Bianchi?? tav 8</span></div><div>21:00 &nbsp;Verdi — celiaca</div><div style="opacity:.7">21:15 &nbsp;... ?</div></div>`,
+    { left: '150px', top: '640px', width: '780px', height: '560px', background: '#fffdf3', backgroundImage: 'repeating-linear-gradient(transparent 0 74px,#dbeafe 74px 76px)' });
+  const tg1 = el('div', 'tag', root, '<i>✎</i>Quaderno', { left: '640px', top: '590px' });
+  // b) incoming call
+  const call = el('div', 'card', root, `<div style="padding:56px;text-align:center"><div style="font-size:30px;font-weight:600;color:#64748b">Chiamata in arrivo</div>
+    <div class="big" id="cnum" style="font-size:96px;margin-top:20px;font-family:ui-monospace,monospace;letter-spacing:-.02em">333 •••</div>
+    <div style="margin-top:34px;display:flex;justify-content:center;gap:60px"><span style="width:110px;height:110px;border-radius:50%;background:#e11d48;display:block"></span><span style="width:110px;height:110px;border-radius:50%;background:#22c55e;display:block"></span></div>
+    <div style="margin-top:26px;font-size:28px;font-weight:700;color:#e11d48">3 chiamate perse</div></div>`, { left: '180px', top: '660px', width: '720px', height: '520px' });
+  const tg2 = el('div', 'tag', root, '<i>☎</i>Telefono', { left: '650px', top: '610px' });
+  // c) post-it
+  const pi = el('div', '', root, `<div style="font-family:Hand;font-size:96px;line-height:1.1;padding:60px 50px;color:#1e293b">Tav 8 →<br>alle 20:30?<br><span style="font-size:70px">chiedi a Marco</span></div>`,
+    { position: 'absolute', left: '240px', top: '640px', width: '600px', height: '560px', background: '#fde68a', boxShadow: '0 40px 80px -30px rgba(15,23,42,.45)', borderRadius: '6px' });
+  const tg3 = el('div', 'tag', root, '<i>!</i>Post-it', { left: '600px', top: '600px' });
+  // d) clock card
+  const ck = el('div', 'card', root, `<div style="padding:52px 60px"><div style="font-size:28px;font-weight:700;color:#64748b">SALA PIENA · IN ATTESA</div>
+    <div class="big" id="clock" style="font-size:150px;margin-top:22px;color:#e11d48;font-family:ui-monospace,monospace;letter-spacing:-.04em">21:47</div>
+    <div style="margin-top:26px;display:flex;gap:12px">${'<span style="width:36px;height:36px;border-radius:50%;background:#e2e8f0;display:block"></span>'.repeat(12)}</div></div>`,
+    { left: '150px', top: '680px', width: '780px', height: '480px' });
+  const tg4 = el('div', 'tag', root, '<i>⏱</i>Servizio', { left: '650px', top: '630px' });
+  return { lbl, items: [[nb, tg1], [call, tg2], [pi, tg3], [ck, tg4]] };
+}, (d, t, u) => {
+  enter(d.lbl, u, .5); tf(d.lbl, `translateY(${(1 - P(u, 0, .5, outC)) * 30}px)`);
+  const L = 3 * BAR / 4;
+  d.items.forEach(([c, g], i) => {
+    const a = i * L, k = P(u, a - .1, a + .35, outC), o = i < 3 ? P(u, a + L - .2, a + L + .15, inC) : P(u, 3 * BAR - .3, 3 * BAR, inC);
+    const on = show(c, u > a - .12 && o < 1); show(g, on); if (!on) return;
+    op(c, k * (1 - o)); blur(c, (1 - k) * 22 + o * 26);
+    tf(c, `translateY(${(1 - k) * 80 - o * 40}px) rotateX(${(1 - k) * 14}deg) rotateZ(${(i % 2 ? 1 : -1) * (2 + (1 - k) * 4)}deg) scale(${lerp(.92, 1, k) + P(u, a, a + L) * .03})`);
+    const gk = P(u, a + .15, a + .45, outB); op(g, gk * (1 - o)); tf(g, `scale(${lerp(.6, 1, gk)})`);
+  });
+  const cn = document.getElementById('cnum'); scr(cn, '333 812 4407', t, T.prob + L + .1, .6);
+  const ckk = document.getElementById('clock'); const m = 47 + Math.floor(P(u, 3 * L, 4 * L) * 12); scr(ckk, '21:' + String(m).padStart(2, '0'), t, T.prob + 3 * L, .3);
+});
+
+// 2 — "Da oggi, è solo un ricordo."
+SC(T.ricordo, T.logo, root => {
+  const box = el('div', 'big', root, '<span id="r1">Da oggi,</span> <span id="r2">è solo</span><br><span id="r3">un <span class="hl" id="rk">ricordo.</span></span>', { position: 'absolute', left: 0, right: 0, top: '800px', textAlign: 'center', fontSize: '104px', lineHeight: 1.15 });
+  return { box };
+}, (d, t, u) => {
+  ['r1', 'r2', 'r3'].forEach((id, i) => { const e = document.getElementById(id), k = P(u, i * BEAT * .9, i * BEAT * .9 + .35, outC); op(e, k); blur(e, (1 - k) * 14); });
+  document.getElementById('rk').style.backgroundSize = `${P(u, 3 * BEAT, 3 * BEAT + .45, ioC) * 100}% 100%`;
+  const o = P(u, 1.25 * BAR - .3, 1.25 * BAR, inC); op(d.box, 1 - o); blur(d.box, o * 20); tf(d.box, `scale(${1 + P(u, 0, 1.25 * BAR) * .05})`);
+});
+
+// 3 — mint blob morphs into a check, then the logo
+SC(T.logo, T.sala, root => {
+  const svg = el('div', '', root, `<svg width="700" height="700" viewBox="-350 -350 700 700"><defs><radialGradient id="bg" cx="40%" cy="35%"><stop offset="0" stop-color="#99f6e4"/><stop offset=".6" stop-color="#2dd4bf"/><stop offset="1" stop-color="#14b8a6"/></radialGradient></defs><path id="blobp" fill="url(#bg)"/></svg>`, { position: 'absolute', left: '190px', top: '610px' });
+  const check = el('div', '', root, `<svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="68" fill="none" stroke="#0b1220" stroke-width="9"/><path id="ckp" d="M44 77l22 22 42-46" fill="none" stroke="#0b1220" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="110" stroke-dashoffset="110"/></svg>`, { position: 'absolute', left: '195px', top: '885px' });
+  const word = el('div', 'big', root, '', { position: 'absolute', left: '380px', top: '900px', fontSize: '128px' });
+  return { svg, check, word };
+}, (d, t, u) => {
+  const L = 1.25 * BAR;
+  // 4-lobed blob: r = R(1 + a cos 4θ), lobes shrink into a circle
+  const lob = lerp(.38, 0, P(u, .55, 1.05, ioC)), R = lerp(40, 250, P(u, 0, .5, outB)) * lerp(1, .28, P(u, .75, 1.15, ioC)), rot = u * 70;
+  let path = ''; for (let i = 0; i <= 96; i++) { const th = i / 96 * Math.PI * 2, r = R * (1 + lob * Math.cos(4 * th)); const x = Math.cos(th + rot * Math.PI / 180) * r, y = Math.sin(th + rot * Math.PI / 180) * r; path += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }
+  document.getElementById('blobp').setAttribute('d', path + 'Z');
+  const mv = P(u, .75, 1.15, ioC); tf(d.svg, `translate(${-mv * 265}px,${0}px)`); op(d.svg, 1 - P(u, 1.1, 1.3));
+  const ck = P(u, 1.1, 1.45, outC); op(d.check, ck); document.getElementById('ckp').setAttribute('stroke-dashoffset', 110 * (1 - P(u, 1.2, 1.55, outC)));
+  op(d.word, P(u, 1.25, 1.4)); d.word.innerHTML = ''; const w = el('span', '', d.word); scr(w, 'SalaFlow', t, T.logo + 1.25, .55);
+  if (t > T.logo + 1.8) d.word.innerHTML = 'Sala<span style="color:#0d9488">Flow</span>';
+  const o = P(u, L - .3, L, inC); [d.check, d.word].forEach(e => { op(e, (e === d.word ? P(u, 1.25, 1.4) : ck) * (1 - o)); blur(e, o * 16); });
+});
+
+// helper: white UI card scene with a caption pill at the bottom
+function uiScene(t0, t1, buildCard, drawCard, caption) {
+  SC(t0, t1, root => {
+    const card = el('div', 'card', root, null, { left: '90px', top: '520px', width: '900px', height: '900px', padding: '56px', overflow: 'hidden' });
+    const parts = buildCard(card, root);
+    const cap = el('div', 'cap', root, `<b></b>${caption}`, { top: '1560px' });
+    return { card, cap, parts };
+  }, (d, t, u) => {
+    const L = t1 - t0, k = P(u, 0, .45, outC), o = P(u, L - .28, L, inC);
+    op(d.card, k * (1 - o)); blur(d.card, (1 - k) * 22 + o * 22);
+    tf(d.card, `translateY(${(1 - k) * 90}px) rotateX(${(1 - k) * 18 + Math.sin(u * .8) * 1.5}deg) rotateY(${Math.sin(u * .6) * 3}deg) scale(${1 + P(u, 0, L) * .04})`);
+    const c = P(u, .25, .6, outB); op(d.cap, c * (1 - o)); tf(d.cap, `translateX(-50%) scale(${lerp(.7, 1, c)})`);
+    drawCard(d.parts, t, u, L);
+  });
+}
+
+// 4 — the evening at a glance: counter going up, tables arriving
+uiScene(T.sala, T.mappa, card => {
+  el('div', '', card, '<span style="color:#e11d48">●</span> Serata attiva · sabato', { fontSize: '30px', fontWeight: 700, color: '#475569' });
+  const n = el('div', 'big', card, '0', { fontSize: '230px', marginTop: '30px' });
+  el('div', '', card, 'COPERTI STASERA', { fontSize: '26px', fontWeight: 800, letterSpacing: '.12em', color: '#64748b', marginTop: '6px' });
+  const list = el('div', '', card, null, { marginTop: '36px' });
+  const R = [['T8', 'Giulia V. · 6'], ['T2', 'Marco R. · 2'], ['T5', 'Fam. Bianchi · 4'], ['T11', 'Andrea C. · 3']].map(([tb, nm]) => {
+    const r = el('div', 'row', list, `<span class="t">${tb}</span>${nm}<span class="s">in arrivo</span>`); return r; });
+  return { n, R };
+}, (p, t, u) => {
+  p.n.textContent = Math.round(lerp(12, 37, P(u, .3, 2.2, outC)));
+  p.R.forEach((r, i) => { const on = u > .6 + i * .35, s = r.querySelector('.s'); s.textContent = on ? 'arrivato' : 'in arrivo';
+    s.style.background = on ? '#ccfbf1' : '#f1f5f9'; s.style.color = on ? '#0f766e' : '#64748b'; });
+}, 'La sala in un colpo d’occhio');
+
+// 5 — floor plan changing colour
+uiScene(T.mappa, T.avvisa, card => {
+  el('div', '', card, 'Sala principale', { fontSize: '40px', fontWeight: 800 });
+  const g = el('div', '', card, null, { position: 'relative', marginTop: '40px', height: '680px' });
+  const L = [[0, 0, 220, 150], [250, 0, 220, 150], [500, 0, 290, 200], [0, 190, 290, 200], [320, 190, 220, 150], [570, 230, 220, 260], [0, 430, 220, 150], [250, 400, 290, 200]];
+  const tbs = L.map(([x, y, w, h], i) => el('div', '', g, String(i + 1), { position: 'absolute', left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '46px', fontWeight: 800, border: '5px solid' }));
+  return { tbs };
+}, (p, t, u) => {
+  const C = [['#dcfce7', '#22c55e'], ['#fee2e2', '#ef4444'], ['#dbeafe', '#3b82f6']];
+  const seq = [[0, 2, 2], [1, 1, 2], [0, 0, 1], [2, 2, 2], [0, 1, 1], [1, 2, 2], [0, 0, 0], [0, 1, 2]];
+  p.tbs.forEach((e, i) => { const st = seq[i][Math.min(2, Math.floor(P(u, .35, 1.9) * 3))]; e.style.background = C[st][0]; e.style.borderColor = C[st][1]; e.style.color = C[st][1]; });
+}, 'Piantina dal vivo');
+
+// 6 — mint full screen: phone with notification + typed line
+SC(T.avvisa, T.comanda, root => {
+  const full = el('div', 'full', root);
+  const txt = el('div', 'big', root, '', { position: 'absolute', left: '90px', top: '300px', width: '900px', fontSize: '96px', lineHeight: 1.08 });
+  const dev = el('div', 'dev', root, '<div class="scr"><img src="build/ep/servizio/0.png"></div>', { left: '230px', top: '700px', width: '620px', height: '1240px' });
+  const note = el('div', '', root, `<div style="display:flex;gap:18px;align-items:center"><span style="width:64px;height:64px;border-radius:16px;background:#0b1220;color:#5eead4;display:flex;align-items:center;justify-content:center;font-size:36px">🛎</span>
+    <div><div style="font-size:24px;font-weight:700;color:#64748b">SALAFLOW · ora</div><div style="font-size:32px;font-weight:800;margin-top:4px">Tavolo 5 è pronto per ordinare</div></div></div>`,
+    { position: 'absolute', left: '170px', top: '790px', width: '740px', padding: '28px 32px', borderRadius: '34px', background: 'rgba(255,255,255,.95)', boxShadow: '0 30px 60px -20px rgba(15,23,42,.45)' });
+  return { full, txt, dev, note };
+}, (d, t, u) => {
+  const L = 1.5 * BAR, k = P(u, 0, .4, outC), o = P(u, L - .25, L, inC);
+  op(d.full, P(u, 0, .25)); const s = 'Ti avvisa quando il tavolo è pronto.', n = Math.floor(P(u, .3, 1.5) * s.length);
+  d.txt.textContent = s.slice(0, n); op(d.txt, 1 - o);
+  tf(d.dev, `translateY(${(1 - k) * 500 + o * 300}px) rotate(${(1 - k) * 6}deg)`); op(d.dev, 1 - o);
+  const nk = P(u, 1.2, 1.55, outB); op(d.note, nk * (1 - o)); tf(d.note, `translateY(${(1 - nk) * -60}px) scale(${lerp(.9, 1, nk)})`);
+});
+
+// 7 — order with an allergen in red, then the stamp
+uiScene(T.comanda, T.tutto, card => {
+  el('div', '', card, 'Comanda · Tavolo 9', { fontSize: '40px', fontWeight: 800 });
+  el('div', '', card, '⚠ Allergeni: Glutine', { display: 'inline-block', marginTop: '22px', padding: '10px 22px', borderRadius: '14px', background: '#fee2e2', color: '#be123c', fontSize: '28px', fontWeight: 800 });
+  const list = el('div', '', card, null, { marginTop: '24px' });
+  const rows = [['2×', 'Risotto ai porcini'], ['1×', 'Tagliatelle al ragù', 1], ['1×', 'Tagliata di manzo'], ['2×', 'Acqua naturale']].map(([q, nm, bad]) =>
+    el('div', 'row', list, `<span class="t">${q}</span>${nm}${bad ? '<span class="s" style="background:#fee2e2;color:#be123c">⚠ glutine</span>' : ''}`));
+  const stamp = el('div', '', card, 'IN CUCINA', { position: 'absolute', right: '70px', bottom: '90px', padding: '16px 34px', border: '8px solid #0d9488', color: '#0d9488', borderRadius: '18px', fontWeight: 800, fontSize: '56px', letterSpacing: '.06em' });
+  return { rows, stamp };
+}, (p, t, u) => {
+  p.rows.forEach((r, i) => { const k = P(u, .3 + i * .18, .6 + i * .18, outC); op(r, k); tf(r, `translateX(${(1 - k) * 40}px)`); if (i === 1) r.style.background = `rgba(254,226,226,${P(u, 1, 1.3)})`; });
+  const s = P(u, 1.7, 1.95, outB); op(p.stamp, s); tf(p.stamp, `rotate(-9deg) scale(${lerp(2.2, 1, s)})`);
+}, 'Allergeni fino in cucina');
+
+// 8 — "Tutto in una schermata." on mint, tablet with the kitchen screen
+SC(T.tutto, T.arrivi, root => {
+  const full = el('div', 'full', root);
+  const txt = el('div', 'big', root, '', { position: 'absolute', left: 0, right: 0, top: '330px', textAlign: 'center', fontSize: '100px' });
+  const dev = el('div', 'dev', root, '<div class="scr"><img src="build/ep/cucina/1.png"></div>', { left: '120px', top: '620px', width: '840px', height: '1120px', borderRadius: '60px' });
+  dev.querySelector('.scr').style.borderRadius = '44px';
+  return { full, txt, dev };
+}, (d, t, u) => {
+  const L = BAR, k = P(u, 0, .45, outC), o = P(u, L - .25, L, inC);
+  op(d.full, 1); scr(d.txt, 'Tutto in una schermata.', t, T.tutto + .05, .5); op(d.txt, 1 - o);
+  tf(d.dev, `translateY(${(1 - k) * 300}px) rotateX(${(1 - k) * 20}deg) scale(${1 + P(u, 0, L) * .04})`); op(d.dev, k * (1 - o)); blur(d.dev, (1 - k) * 16);
+});
+
+// 9 — arrivals per time slot
+uiScene(T.arrivi, T.chiusura, card => {
+  el('div', '', card, 'Picco degli arrivi', { fontSize: '40px', fontWeight: 800 });
+  el('div', '', card, 'stasera, per fascia oraria', { fontSize: '28px', fontWeight: 600, color: '#64748b', marginTop: '8px' });
+  const g = el('div', '', card, null, { position: 'absolute', left: '56px', right: '56px', bottom: '110px', height: '520px', display: 'flex', alignItems: 'flex-end', gap: '22px' });
+  const H = [.25, .3, .62, .45, .95, .7, .5, .3, .2];
+  const bars = H.map((h, i) => el('div', '', g, null, { flex: 1, height: h * 100 + '%', borderRadius: '16px 16px 6px 6px', background: i === 4 ? 'linear-gradient(#5eead4,#14b8a6)' : '#e2e8f0', transformOrigin: '50% 100%' }));
+  const lab = el('div', '', card, '20:00', { position: 'absolute', left: '470px', bottom: '650px', padding: '10px 22px', borderRadius: '999px', background: '#0b1220', color: '#fff', fontWeight: 800, fontSize: '30px' });
+  return { bars, lab };
+}, (p, t, u) => {
+  p.bars.forEach((b, i) => tf(b, `scaleY(${P(u, .25 + i * .06, .65 + i * .06, outB)})`));
+  const k = P(u, 1.1, 1.4, outB); op(p.lab, k); tf(p.lab, `scale(${lerp(.6, 1, k)})`);
+}, 'Sai quando serve una mano in più');
+
+// 10 — close: chips, "Niente più quaderno / telefonate", white flower with the logo, CTA
+SC(T.chiusura, END, root => {
+  const full = el('div', 'full', root);
+  const chips = [['T8', 120, 420], ['20:30', 700, 360], ['Tav. 12', 160, 1380], ['4 pers.', 720, 1460], ['Celiaca', 600, 640], ['21:15', 140, 760], ['T3', 820, 1130], ['Rossi x4', 200, 1080]].map(([s, x, y]) => el('div', 'chip', root, s, { left: x + 'px', top: y + 'px' }));
+  const p1 = el('div', 'pillw', root, 'Niente più', { top: '820px' });
+  const p2 = el('div', 'pillk', root, '', { top: '960px' });
+  const flower = el('div', '', root, `<svg width="900" height="900" viewBox="-450 -450 900 900"><path id="flp" fill="#fff"/></svg>`, { position: 'absolute', left: '90px', top: '470px' });
+  const logo = el('div', '', root, `<div style="display:flex;align-items:center;gap:26px;justify-content:center"><img src="../../logo.png" style="width:118px;height:118px;border-radius:28px"><div class="big" style="font-size:100px">Sala<span style="color:#0d9488">Flow</span></div></div>`, { position: 'absolute', left: 0, right: 0, top: '830px' });
+  const cta = el('div', '', root, `<div style="text-align:center"><div style="font-weight:700;font-size:40px;color:#0b1220">Presto disponibile</div><div style="display:inline-block;margin-top:34px;padding:26px 54px;border-radius:999px;background:#0b1220;color:#fff;font-weight:800;font-size:46px">Prenota una visita</div><div style="margin-top:30px;font-weight:800;font-size:44px">salaflow.com</div></div>`, { position: 'absolute', left: 0, right: 0, top: '1420px' });
+  return { full, chips, p1, p2, flower, logo, cta };
+}, (d, t, u) => {
+  op(d.full, P(u, 0, .2));
+  d.chips.forEach((c, i) => { const k = P(u, .1 + i * .06, .5 + i * .06, outB), o = P(u, 2.3, 2.6, inC); op(c, k * (1 - o)); tf(c, `translateY(${Math.sin(u * 1.4 + i) * 10}px) rotate(${(i % 2 ? 1 : -1) * 6}deg) scale(${lerp(.5, 1, k)})`); blur(c, (i % 3 === 0 ? 3 : 0) + o * 10); });
+  const a = P(u, .2, .5, outB), o12 = P(u, 2.2, 2.5, inC); op(d.p1, a * (1 - o12)); tf(d.p1, `translateX(-50%) scale(${lerp(.6, 1, a)})`);
+  const second = u < 1.35 ? ['quaderno.', .55] : ['telefonate.', 1.35];
+  scr(d.p2, second[0], t, T.chiusura + second[1], .4); const b = P(u, .55, .8, outB); op(d.p2, b * (1 - o12)); tf(d.p2, `translateX(-50%) scale(${lerp(.6, 1, b)})`);
+  // flower: 8 soft petals growing out of the centre
+  const g = P(u, 2.3, 2.9, outB), R = 410 * g; let path = '';
+  for (let i = 0; i <= 160; i++) { const th = i / 160 * Math.PI * 2, r = R * (1 + .12 * Math.cos(8 * th + u * .8)); path += (i ? 'L' : 'M') + (Math.cos(th) * r).toFixed(1) + ' ' + (Math.sin(th) * r).toFixed(1); }
+  document.getElementById('flp').setAttribute('d', path + 'Z'); op(d.flower, g > 0 ? 1 : 0);
+  const lk = P(u, 2.6, 3.0, outC); op(d.logo, lk); tf(d.logo, `scale(${lerp(.85, 1, lk)})`);
+  const ck = P(u, 3.1, 3.6, outC); op(d.cta, ck); tf(d.cta, `translateY(${(1 - ck) * 30}px)`);
+});
+
+// background blobs + grain
+const B = ['b1', 'b2', 'b3'].map(i => document.getElementById(i));
+Object.assign(B[0].style, { width: '1100px', height: '1100px', background: '#99f6e4', opacity: .7 });
+Object.assign(B[1].style, { width: '900px', height: '900px', background: '#e9d5ff', opacity: .7 });
+Object.assign(B[2].style, { width: '800px', height: '800px', background: '#a5f3fc', opacity: .6 });
+const grain = document.getElementById('grain'); grain.width = grain.height = 512;
+{ const g = grain.getContext('2d'), im = g.createImageData(512, 512); let s = 9; for (let i = 0; i < im.data.length; i += 4) { s = (s * 1103515245 + 12345) & 0x7fffffff; im.data[i] = im.data[i + 1] = im.data[i + 2] = s % 256; im.data[i + 3] = 255; } g.putImageData(im, 0, 0); }
+grain.style.width = '2160px'; grain.style.height = '3840px';
+
+window.render = function (t) {
+  tf(B[0], `translate(${-300 + Math.sin(t * .3) * 200}px,${-250 + Math.cos(t * .23) * 160}px)`);
+  tf(B[1], `translate(${400 + Math.cos(t * .27) * 200}px,${1100 + Math.sin(t * .21) * 200}px)`);
+  tf(B[2], `translate(${500 + Math.sin(t * .19) * 180}px,${300 + Math.cos(t * .29) * 160}px)`);
+  const f = Math.floor(t * 24); tf(grain, `translate(${-((f * 173) % 500)}px,${-((f * 97) % 500)}px)`);
+  scenes.forEach(s => { const on = show(s.root, t >= s.t0 - .02 && t < s.t1 + .02); if (on) s.draw(s.d, t, t - s.t0); });
+  op(document.getElementById('fade'), P(t, END - .6, END - .05) + (1 - P(t, 0, .3)));
+};
+const PROBE = () => [...document.querySelectorAll('.card,.tag,.lbl,.big,.dev,.cap,.chip,.pillw,.pillk')];
+function rects() { return PROBE().map(e => { const r = e.getClientRects().length ? e.getBoundingClientRect() : null; return r && r.width ? [r.left, r.top, r.right, r.bottom] : null; }); }
+window.motionAt = function (t, dt) {
+  render(t - dt); const a = rects(); render(t + dt); const b = rects(); let m = 0;
+  a.forEach((r, i) => { const q = b[i]; if (!r && !q) return; if (!r || !q) { m = Math.max(m, 4); return; } for (let k = 0; k < 4; k++) m = Math.max(m, Math.abs(r[k] - q[k])); });
+  return Math.min(m, 30);
+};
+window.ready = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = i.onerror = r)))).then(() => render(0));
+</script>
+</body>
+</html>
