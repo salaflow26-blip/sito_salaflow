@@ -275,25 +275,6 @@ if (!prefersReducedMotion) {
 }
 
 // ---------------------------------------------------------
-// Mockup della piantina nell'hero: fa cambiare a rotazione lo
-// stato di un tavolo, per dare l'idea di "sincronizzazione in
-// tempo reale" a colpo d'occhio, senza dover leggere nulla.
-// ---------------------------------------------------------
-const mockTables = document.querySelectorAll('.mock-table');
-if (mockTables.length) {
-    const states = ['free', 'occ', 'res'];
-    setInterval(() => {
-        const table = mockTables[Math.floor(Math.random() * mockTables.length)];
-        const current = states.find(s => table.classList.contains(s));
-        const next = states[(states.indexOf(current) + 1) % states.length];
-        table.classList.remove(current);
-        table.classList.add(next);
-        table.classList.add('mock-table-flip');
-        setTimeout(() => table.classList.remove('mock-table-flip'), 350);
-    }, 1800);
-}
-
-// ---------------------------------------------------------
 // Form richiesta demo, collegato a Formspree (https://formspree.io):
 // al submit i dati vengono inviati via POST come JSON e Formspree
 // li gira per email all'indirizzo configurato sul suo sito, senza
