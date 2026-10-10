@@ -59,7 +59,7 @@ export const HookScene: React.FC = () => {
               color="#dc2626"
               strokeWidth={14}
               iterations={2}
-              progress={interpolate(frame, [70, 88], [0, 1], clamp)}
+              progress={interpolate(frame, [64, 82], [0, 1], clamp)}
               style={{ fontFamily: HAND, fontWeight: 400, fontSize: 230, color: "#1d4ed8", letterSpacing: 0 }}
             >
               quaderno?

@@ -22,9 +22,12 @@ export const Device: React.FC<{
   readonly src: string;
   readonly width: number;
   readonly scroll?: number;
+  // a second screenshot cross-fading in (the screen after a tap)
+  readonly next?: string;
+  readonly nextOpacity?: number;
   readonly style?: React.CSSProperties;
   readonly children?: React.ReactNode;
-}> = ({ kind = "phone", src, width, scroll = 0, style, children }) => {
+}> = ({ kind = "phone", src, width, scroll = 0, next, nextOpacity = 0, style, children }) => {
   const d = DEVICE[kind];
   const g = screenGeometry(kind, width);
   return (
@@ -52,6 +55,7 @@ export const Device: React.FC<{
         }}
       >
         <Img src={staticFile(src)} style={{ position: "absolute", left: 0, top: g.status - scroll * g.scale, width: g.sw }} />
+        {next ? <Img src={staticFile(next)} style={{ position: "absolute", left: 0, top: g.status - scroll * g.scale, width: g.sw, opacity: nextOpacity }} /> : null}
         {children}
         {kind === "phone" ? <StatusBar w={g.sw} h={g.status} /> : null}
       </div>
