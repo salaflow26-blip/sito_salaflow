@@ -1,0 +1,17 @@
+const { start2 } = require('./common2');
+(async () => { const { ctx, p } = await start2();
+  await p.snap('00_home', false); console.log(await p.txt());
+  await p.menu('Gestione'); await p.waitForTimeout(800); await p.snap('01_hub', true);
+  const go = async (view, name, wait = 2500) => { await p.evaluate(v => gestGo(v), view); await p.waitForTimeout(wait); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300); await p.snap(name, true); console.log('---', name, '\n' + await p.txt()); };
+  await go('andamento', '02_andamento', 4000);
+  await go('piatti', '03_piatti', 4000);
+  await go('fatture', '04_fatture');
+  await go('magazzino', '05_magazzino');
+  await go('spesa', '06_spesa');
+  await go('utile', '07_utile', 4000);
+  await go('personale', '08_personale', 4000);
+  await go('spese', '09_spese');
+  await go('sim', '10_sim', 4000);
+  await p.menu('Turni'); await p.waitForTimeout(1500); await p.snap('11_turni', true); console.log('--- turni\n' + await p.txt());
+  await p.menu('Checklist'); await p.waitForTimeout(1500); await p.snap('12_checklist', true); console.log('--- checklist\n' + await p.txt());
+  await ctx.close(); })();

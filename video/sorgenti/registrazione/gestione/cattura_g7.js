@@ -1,0 +1,15 @@
+const { start2 } = require('./common2');
+(async () => { const { ctx, p } = await start2();
+  await p.menu('Gestione'); await p.waitForTimeout(800);
+  const go = async (view, name, wait = 2500) => { await p.evaluate(v => gestGo(v), view); await p.waitForTimeout(wait); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300); await p.snap(name, true); console.log('---', name, '\n' + (await p.txt()).slice(0, 700)); };
+  await go('andamento', '02_andamento', 4000);
+  await go('piatti', '03_piatti', 4000);
+  await go('utile', '07_utile', 4000);
+  await go('sim', '10_sim', 4000);
+  await go('personale', '08_personale', 4000);
+  await p.evaluate(() => finShiftMonth(-1)); await p.waitForTimeout(3500); await p.snap('08_personale_sett', true); console.log('--- pers sett\n' + (await p.txt()).slice(0, 700));
+  await go('fatture', '04_fatture');
+  await p.setInputFiles('#gest-file-doc', __dirname + '/fattura-ortofrutta-demo.xml'); await p.waitForTimeout(3000);
+  await p.evaluate(() => scrollTo(0, 0)); await p.snap('13_fattura_review', true); console.log('--- review\n' + await p.txt());
+  console.log('BUTTONS', await p.evaluate(() => [...document.querySelectorAll('#gest-root button')].filter(b => b.offsetParent).map(b => b.innerText.trim().replace(/\s+/g, ' ')).join(' | ')));
+  await ctx.close(); })();
