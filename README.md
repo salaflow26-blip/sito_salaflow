@@ -5,9 +5,12 @@ Sito vetrina statico (HTML/CSS/JS puro, nessun framework) per presentare SalaFlo
 ## Struttura
 
 ```
-index.html     tutto il contenuto e le sezioni della pagina
-styles.css     stile grafico (palette ambra/oro coerente col prodotto)
-script.js      menu mobile, animazioni allo scroll, gestione dei form
+index.html     la pagina (generata da brand/site-shots/build-landing.py nel repo del prodotto: si modifica lì)
+styles.css     stile grafico (marchio S, Notte/Menta/Legno, come l'app)
+script.js      il giro del locale (scroll → storia), schermate in mano ai personaggi, menu, modulo Formspree
+tour3d.js      la scena 3D (Three.js, stile cartone animato morbido; ?style=clay per la versione "plastico d'architetto"): ristorante, Marco, Elena, Giulia, camera da fuori e in prima persona. Si carica solo se c'è WebGL
+vendor/        three.module.min.js (Three.js 0.160.1, licenza MIT) + licenza
+img/           12 schermate reali dell'app con dati dimostrativi (webp)
 ```
 
 Nessuna build richiesta: è un sito statico, pronto così com'è.

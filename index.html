@@ -3,13 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Sotto i ~60 caratteri: oltre quella soglia Google tronca il title tag
-     nei risultati di ricerca (il titolo precedente ne aveva 65). -->
 <title>SalaFlow — Gestione Sala e Prenotazioni Ristorante</title>
-<meta name="description" content="SalaFlow organizza tavoli e prenotazioni in tempo reale, dal telefono. Addio quaderno, doppie prenotazioni e nomi illeggibili — solo un tocco.">
+<meta name="description" content="SalaFlow organizza prenotazioni, tavoli, comande, cassa, turni, checklist e conti del tuo ristorante. Dal telefono o dal tablet, in tempo reale.">
 
 <meta property="og:title" content="SalaFlow — La sala del tuo ristorante, finalmente sotto controllo">
-<meta property="og:description" content="La piantina digitale che organizza tavoli e prenotazioni in tempo reale, per ristoranti che non hanno tempo da perdere.">
+<meta property="og:description" content="Prenotazioni, piantina, comande, cassa, turni, checklist e conti: tutta la serata in un'app, per ristoranti che non hanno tempo da perdere.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://salaflow.com/">
 <meta property="og:image" content="https://salaflow.com/og-image.png">
@@ -18,13 +16,12 @@
 <meta property="og:image:alt" content="SalaFlow: la tua sala, finalmente sotto controllo. Marchio SalaFlow e schermata dell'app con la piantina dei tavoli.">
 <meta property="og:locale" content="it_IT">
 <link rel="canonical" href="https://salaflow.com/">
-<!-- Se in futuro si passa a un dominio custom, aggiornare i tre URL
-     sopra (og:url, og:image, canonical): i lettori di anteprima social
-     (WhatsApp, LinkedIn, ecc.) spesso non risolvono percorsi relativi. -->
+<!-- Se in futuro si passa a un dominio custom, aggiornare i tre URL sopra (og:url, og:image, canonical):
+     i lettori di anteprima social (WhatsApp, LinkedIn, ecc.) spesso non risolvono percorsi relativi. -->
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SalaFlow — La sala del tuo ristorante, finalmente sotto controllo">
-<meta name="twitter:description" content="SalaFlow organizza tavoli e prenotazioni in tempo reale, dal telefono. Addio quaderno, doppie prenotazioni e nomi illeggibili — solo un tocco.">
+<meta name="twitter:description" content="Prenotazioni, piantina, comande, cassa, turni, checklist e conti: tutta la serata in un'app, dal telefono o dal tablet.">
 <meta name="twitter:image" content="https://salaflow.com/og-image.png">
 <meta name="twitter:image:alt" content="SalaFlow: la tua sala, finalmente sotto controllo. Marchio SalaFlow e schermata dell'app con la piantina dei tavoli.">
 
@@ -32,64 +29,63 @@
 {
   "@context": "https://schema.org",
   "@graph": [
+    { "@type": "Organization", "@id": "https://salaflow.com/#organization", "name": "SalaFlow", "url": "https://salaflow.com/", "logo": "https://salaflow.com/logo.png" },
+    { "@type": "WebSite", "@id": "https://salaflow.com/#website", "url": "https://salaflow.com/", "name": "SalaFlow", "inLanguage": "it", "publisher": { "@id": "https://salaflow.com/#organization" } },
+    { "@type": "SoftwareApplication", "name": "SalaFlow", "applicationCategory": "BusinessApplication", "operatingSystem": "iOS, Web",
+      "description": "SalaFlow organizza prenotazioni, tavoli, comande, cassa, turni, checklist e conti di un ristorante, dal telefono o dal tablet, in tempo reale.", "inLanguage": "it" },
     {
-      "@type": "Organization",
-      "@id": "https://salaflow.com/#organization",
-      "name": "SalaFlow",
-      "url": "https://salaflow.com/",
-      "logo": "https://salaflow.com/logo.png"
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cos’è SalaFlow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SalaFlow è il gestionale della sala, fatto da chi in sala ci ha lavorato: piantina dei tavoli in tempo reale, prenotazioni, comande, cassa, turni, checklist e conti. Sostituisce quaderno, WhatsApp e fogli Excel con un unico strumento sincronizzato su tutti i dispositivi dello staff."
+      }
     },
     {
-      "@type": "WebSite",
-      "@id": "https://salaflow.com/#website",
-      "url": "https://salaflow.com/",
-      "name": "SalaFlow",
-      "inLanguage": "it",
-      "publisher": { "@id": "https://salaflow.com/#organization" }
+      "@type": "Question",
+      "name": "Cosa c’è nella versione base e cosa nel Pacchetto Comande?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La versione base è la sala: piantina, prenotazioni, richieste online, stato del servizio, profili dello staff e notifiche. Il Pacchetto Comande aggiunge menù e comande con la vista cucina, cassa e asporto, e gli strumenti di gestione: andamento, magazzino, fatture, finanza, turni, presenze e checklist."
+      }
     },
     {
-      "@type": "SoftwareApplication",
-      "name": "SalaFlow",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "description": "SalaFlow organizza tavoli e prenotazioni in tempo reale per ristoranti, dal telefono: piantina digitale, prenotazioni online e sincronizzazione istantanea su tutti i dispositivi.",
-      "inLanguage": "it"
+      "@type": "Question",
+      "name": "Chi vede gli incassi, i costi e l’utile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Solo chi gestisce: il proprietario e chi ha un accesso «gestione». Lo staff di sala vede la piantina, le prenotazioni, i propri turni e le proprie mansioni, ma non gli importi."
+      }
     },
     {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Cos'è SalaFlow?",
-          "acceptedAnswer": { "@type": "Answer", "text": "SalaFlow è la piantina digitale che organizza tavoli e prenotazioni in tempo reale per ristoranti, dal telefono. Sostituisce quaderno, WhatsApp e fogli Excel con un unico strumento sincronizzato su tutti i dispositivi dello staff." }
-        },
-        {
-          "@type": "Question",
-          "name": "SalaFlow sostituisce il quaderno, WhatsApp e i fogli Excel per le prenotazioni?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sì. Ogni prenotazione — presa di persona, al telefono o arrivata dal modulo online — finisce direttamente sulla piantina digitale, visibile in tempo reale a tutto lo staff, senza bisogno di tenere aperti più strumenti scollegati tra loro." }
-        },
-        {
-          "@type": "Question",
-          "name": "Serve installare qualcosa nel locale?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. SalaFlow funziona da browser come un sito, su qualsiasi tablet o telefono già in uso nel locale — nessuna installazione, nessun hardware dedicato." }
-        },
-        {
-          "@type": "Question",
-          "name": "Come vedono la prenotazione i miei clienti?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Ogni locale su SalaFlow ha una pagina pubblica dedicata per le richieste di prenotazione, da condividere su Instagram, Google o il proprio sito: il cliente compila un modulo in pochi secondi e riceve conferma quando il locale accetta." }
-        },
-        {
-          "@type": "Question",
-          "name": "SalaFlow è già usato da un ristorante vero?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sì: gestisce già, ogni giorno, le prenotazioni reali di un ristorante in Italia." }
-        },
-        {
-          "@type": "Question",
-          "name": "Quanto costa SalaFlow?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Il prezzo si adatta al locale: prenota una visita senza impegno e te lo mostriamo insieme, sui tuoi tavoli veri." }
-        }
-      ]
+      "@type": "Question",
+      "name": "Fatture e utile: quanto mi posso fidare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La lettura delle fatture è automatica e può sbagliare: controlli e correggi tu prima di salvare, e finché non confermi non viene salvato niente. L’utile è una stima di lavoro, prima delle tasse: se mancano dei dati l’app te lo dice invece di far sembrare l’utile più alto. Non è un bilancio e non sostituisce il commercialista."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "SalaFlow emette scontrini fiscali?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Il conto e il riepilogo della serata di SalaFlow sono documenti interni, non fiscali: lo scontrino continui a batterlo sul tuo registratore."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto costa SalaFlow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Il prezzo si adatta al locale: prenota una visita senza impegno e te lo mostriamo insieme, sui tuoi tavoli veri."
+      }
     }
+  ]
+}
   ]
 }
 </script>
@@ -101,502 +97,236 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="styles.css">
+<link rel="modulepreload" href="vendor/three.module.min.js">
+<link rel="modulepreload" href="tour3d.js">
+<script>document.documentElement.classList.add('js')</script>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 </head>
 <body>
-
-<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
-<!-- ============================================= -->
-<!-- NAV -->
-<!-- ============================================= -->
 <header class="nav" id="nav">
-    <div class="wrap nav-inner">
-        <a href="#top" class="brand">
-            <span class="brand-mark" aria-hidden="true">
-                <img src="s-mark.svg" alt="" width="21" height="32">
-            </span>
-            <span>Sala<span class="accent-text">Flow</span></span>
-        </a>
-
+    <div class="nav-inner">
+        <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"><img src="s-mark.svg" alt="" width="21" height="32"></span><span>Sala<span class="accent-text">Flow</span></span></a>
         <nav class="nav-links" aria-label="Navigazione principale">
-            <a href="#funzionalita">Funzionalità</a>
-            <a href="#confronto">Confronto</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contatti">Contatti</a>
+            <a href="#sala" data-beat-go="1">Sala</a>
+            <a href="#cucina" data-beat-go="4">Cucina</a>
+            <a href="#gestione" data-beat-go="6">Ufficio</a>
+            <a href="#faq">Domande</a>
         </nav>
-
-        <a href="#demo" class="btn btn-primary btn-sm">Prenota una Visita</a>
-
-        <button class="nav-toggle" id="navToggle" aria-label="Apri il menu" aria-expanded="false" aria-controls="navMobile">
-            <span></span><span></span><span></span>
-        </button>
+        <a href="#demo" class="btn btn-solid btn-sm">Prenota una visita</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Apri il menu" aria-expanded="false" aria-controls="navMobile"><span></span><span></span><span></span></button>
     </div>
     <div class="nav-mobile" id="navMobile">
-        <div class="nav-mobile-inner">
-            <a href="#funzionalita">Funzionalità</a>
-            <a href="#confronto">Confronto</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contatti">Contatti</a>
-            <a href="#demo" class="btn btn-primary">Prenota una Visita</a>
-        </div>
+        <a href="#sala" data-beat-go="1">Sala</a>
+        <a href="#cucina" data-beat-go="4">Cucina</a>
+        <a href="#gestione" data-beat-go="6">Ufficio</a>
+        <a href="#faq">Domande</a>
+        <a href="#demo" class="btn btn-solid">Prenota una visita</a>
     </div>
 </header>
-
-<main id="top">
-
-<!-- ============================================= -->
-<!-- HERO -->
-<!-- ============================================= -->
-<section class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="wrap hero-inner">
-        <div class="hero-copy">
-            <p class="pill-badge reveal"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 1l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg> Piantina, prenotazioni e staff in un'unica app</p>
-            <!-- Titolo + sottotitolo con "texts reveal" (transitions-dev):
-                 stagger + blur invece del fade generico, per l'ingresso più
-                 curato dell'headline principale. Attivato via IntersectionObserver
-                 in script.js (#heroStagger), non da scroll: essendo above-the-fold
-                 parte già al caricamento della pagina. -->
-            <div class="t-stagger" id="heroStagger">
-                <h1 class="t-stagger-line t-stagger-line--1">La tua sala, <span class="accent-text">finalmente</span><br>sotto controllo.</h1>
-                <p class="lead t-stagger-line t-stagger-line--2">
-                    SalaFlow è la piantina digitale che tiene tavoli e prenotazioni sempre sotto controllo,
-                    in tempo reale. Via il quaderno pieno di cancellature, i nomi scritti di corsa e le
-                    doppie prenotazioni: resta solo un tocco, zero equivoci, molto più tempo per i tuoi clienti.
-                </p>
+<main>
+<section class="story" id="top" style="--n:8" data-n="8">
+    <div class="story-pin">
+        <canvas id="stage3d" aria-hidden="true"></canvas>
+        <div class="labels3d" id="labels3d" aria-hidden="true"></div>
+        <div class="story-copy" id="storyCopy">
+    <article class="beat is-active" id="intro" data-beat="0">
+        <div class="beat-copy">
+            <h1>La tua sala, <em>finalmente</em> sotto controllo.</h1>
+            <p class="lead">Prenotazioni, comande, turni e conti in un’app sola, sul tablet o sul telefono che hai già. Vieni con noi a vedere una serata, dall’ingresso alla cucina fino all’ufficio.</p>
+            <div class="hero-cta">
+                <a href="#demo" class="btn btn-flusso btn-lg">Prenota una visita</a>
+                <a href="#sala" class="link-arrow" data-beat-go="1">Inizia il giro <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg></a>
             </div>
-            <div class="hero-cta reveal">
-                <a href="#demo" class="btn btn-primary btn-lg">Prenota una Visita</a>
-                <a href="#video-demo" class="btn btn-ghost btn-lg"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4l11 6-11 6V4z"/></svg> Guarda la Demo</a>
-            </div>
-            <p class="hero-note reveal">Nessun impegno · Ti rispondiamo entro un giorno lavorativo</p>
+            <p class="hero-note">Nessun impegno · In uso ogni sera in un ristorante vero · iPhone e iPad, anche dal browser · Android in arrivo</p>
         </div>
-
-        <div class="hero-visual reveal">
-            <figure class="phone-frame">
-                <span class="phone-island" aria-hidden="true"></span>
-                <img src="app-piantina.jpg" width="860" height="1864" fetchpriority="high" decoding="async" alt="Schermata reale di SalaFlow: la piantina di una sala con 23 tavoli di forme diverse, colorati in base allo stato (libero, prenotato, arrivato).">
-            </figure>
-            <p class="shot-note">Schermata dell'app, con dati dimostrativi.</p>
+    </article>
+    <article class="beat" id="sala" data-beat="1">
+        <div class="beat-copy">
+            <p class="eyebrow"><span>20:30</span> Sala</p>
+            <h2>Entra la famiglia Lombardi.</h2>
+            <p class="who">Marco, cameriere</p>
+            <p>Marco apre SalaFlow, cerca il nome e tocca «Segnala come arrivato». Il tavolo 8 si accende, per tutti, nello stesso istante.</p>
+            
+            
         </div>
+        <figure class="beat-fig"><img src="img/st_cerca.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La ricerca rapida di SalaFlow con la prenotazione Lombardi e il pulsante Segnala come arrivato"></figure>
+    </article>
+    <article class="beat" id="tavolo" data-beat="2">
+        <div class="beat-copy">
+            <p class="eyebrow"><span>20:33</span> Sala</p>
+            <h2>Li porta al tavolo.</h2>
+            <p class="who">Marco, cameriere</p>
+            <p>La piantina è quella vera della sua sala: libero, prenotato, occupato. Marco sa sempre dove mandare chi arriva.</p>
+            
+            
+        </div>
+        <figure class="beat-fig"><img src="img/st_piantina.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La piantina della sala in SalaFlow, con i tavoli colorati in base allo stato"></figure>
+    </article>
+    <article class="beat" id="ordine" data-beat="3">
+        <div class="beat-copy">
+            <p class="eyebrow"><span>20:41</span> Sala</p>
+            <h2>Prende l’ordine.</h2>
+            <p class="who">Marco, cameriere</p>
+            <p>Antipasti, primi, secondi, dolci: ogni uscita al suo momento. Un tocco su «Invia comanda» e parte.</p>
+            
+            
+        </div>
+        <figure class="beat-fig"><img src="img/st_comanda_invia.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La comanda del tavolo 8 pronta da inviare, con le uscite"></figure>
+    </article>
+    <article class="beat" id="cucina" data-beat="4">
+        <div class="beat-copy">
+            <p class="eyebrow"><span>20:42</span> Cucina</p>
+            <h2>La comanda è già in cucina.</h2>
+            <p class="who">Elena, cuoca</p>
+            <p>Elena la vede sul tablet, divisa per uscita e con le allergie ben visibili. Prepara e spunta i piatti.</p>
+            
+            
+        </div>
+        <figure class="beat-fig"><img class="wide" src="img/st_cucina_nuova.webp" width="2360" height="1520" loading="lazy" decoding="async" alt="Lo schermo cucina con la comanda del tavolo 8 appena arrivata"></figure>
+    </article>
+    <article class="beat" id="pronto" data-beat="5">
+        <div class="beat-copy">
+            <p class="eyebrow"><span>20:54</span> Cucina</p>
+            <h2>Pronto: manda in sala.</h2>
+            <p class="who">Elena, cuoca</p>
+            <p>Un tocco su «Manda in sala» e Marco lo vede subito sul suo telefono. Il piatto esce caldo, senza urlare da una stanza all’altra.</p>
+            
+            
+        </div>
+        <figure class="beat-fig"><img src="img/st_comanda_stato.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La comanda sul telefono del cameriere, con i piatti segnati Mandato in sala"></figure>
+    </article>
+    <article class="beat" id="gestione" data-beat="6">
+        <div class="beat-copy">
+            <p class="eyebrow"><span>Fine serata</span> Ufficio</p>
+            <h2>E a fine serata i numeri sono già lì.</h2>
+            <p class="who">Giulia, titolare</p>
+            <p>Coperti, incasso, utile stimato, fatture da una foto, turni della settimana. Senza aver scritto niente a mano.</p>
+            <p class="beat-note">L’utile è una stima di lavoro e la lettura delle fatture può sbagliare: l’ultima parola è tua. Non sostituisce il commercialista.</p>
+            
+        </div>
+        <figure class="beat-fig"><img src="img/andamento.webp" width="860" height="1864" loading="lazy" decoding="async" alt="Andamento: coperti, incasso e incasso per giorno"><img src="img/utile.webp" width="860" height="1864" loading="lazy" decoding="async" alt="Utile stimato del mese e dove vanno i soldi"></figure>
+    </article>
+    <article class="beat" id="fine" data-beat="7">
+        <div class="beat-copy">
+            
+            <h2>Ti va di vederlo nel tuo locale?</h2>
+            
+            <p>Veniamo noi di persona, senza impegno, e te lo mostriamo sui tuoi tavoli veri.</p>
+            
+            <div class="hero-cta"><a href="#demo" class="btn btn-flusso btn-lg">Prenota una visita</a></div>
+        </div>
+        
+    </article>
+        </div>
+        <aside class="hud" id="hud" aria-hidden="true" data-hud='{"steps": [{"pos": 0.0, "device": null}, {"pos": 0.55, "device": "phone", "img": "st_cerca"}, {"pos": 0.98, "tap": {"x": 0.5, "y": 0.492, "device": "phone"}}, {"pos": 1.08, "device": "phone", "img": "st_cerca_ok"}, {"pos": 1.5, "device": "phone", "img": "st_piantina"}, {"pos": 2.55, "device": "phone", "img": "st_comanda"}, {"pos": 2.95, "device": "phone", "img": "st_comanda_invia"}, {"pos": 3.26, "tap": {"x": 0.641, "y": 0.954, "device": "phone"}}, {"pos": 3.7, "device": "tablet", "img": "st_cucina_nuova"}, {"pos": 4.5, "device": "tablet", "img": "st_cucina_pronto"}, {"pos": 4.72, "tap": {"x": 0.379, "y": 0.926, "device": "tablet"}}, {"pos": 4.95, "device": "phone", "img": "st_comanda_stato"}, {"pos": 5.55, "device": "phone", "img": "andamento"}, {"pos": 5.95, "device": "phone", "img": "utile"}, {"pos": 6.3, "device": "phone", "img": "fattura"}, {"pos": 6.62, "device": "phone", "img": "turni"}, {"pos": 6.95, "device": null}], "chips": [["Andamento", 5.7], ["Utile", 6.1], ["Fatture", 6.42], ["Turni", 6.78]]}'>
+        <div class="hud-frame hud-phone" data-kind="phone"><div class="screens"><img data-img="st_cerca" src="img/st_cerca.webp" width="860" height="1864" alt="" decoding="async"><img data-img="st_cerca_ok" src="img/st_cerca_ok.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_piantina" src="img/st_piantina.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda" src="img/st_comanda.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda_invia" src="img/st_comanda_invia.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda_stato" src="img/st_comanda_stato.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="andamento" src="img/andamento.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="utile" src="img/utile.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="fattura" src="img/fattura.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="turni" src="img/turni.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><span class="tap"></span></div></div>
+        <div class="hud-frame hud-tablet" data-kind="tablet"><div class="screens"><img data-img="st_cucina_nuova" src="img/st_cucina_nuova.webp" width="2360" height="1520" alt="" decoding="async"><img data-img="st_cucina_pronto" src="img/st_cucina_pronto.webp" width="2360" height="1520" alt="" decoding="async" loading="lazy"><span class="tap"></span></div></div>
+        <div class="hud-chips" id="hudChips"><button type="button" data-pos="5.7">Andamento</button><button type="button" data-pos="6.1">Utile</button><button type="button" data-pos="6.42">Fatture</button><button type="button" data-pos="6.78">Turni</button></div>
+    </aside>
+        <nav class="story-nav" id="storyNav" aria-label="Il giro del locale"><button type="button" data-pos="0">Ingresso</button><button type="button" data-pos="1">Sala</button><button type="button" data-pos="4">Cucina</button><button type="button" data-pos="6">Gestione</button><span class="story-track" aria-hidden="true"><i></i></span></nav>
+        <div class="view-toggle" id="viewToggle" role="group" aria-label="Punto di vista">
+            <button type="button" data-view="outside" class="is-on" aria-pressed="true">Dall’esterno</button>
+            <button type="button" data-view="fp" aria-pressed="false">In prima persona</button>
+        </div>
+        <p class="story-loading" id="storyLoading" hidden>Sto preparando il locale…</p>
     </div>
 </section>
-
-<!-- ============================================= -->
-<!-- COME FUNZIONA -->
-<!-- ============================================= -->
-<section class="steps">
+<section class="band" id="confronto">
     <div class="wrap">
-        <div class="section-head section-head-center reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4l11 6-11 6V4z"/></svg> Come funziona</p>
-            <h2>Da quaderno a piantina digitale, in tre mosse.</h2>
-        </div>
-
-        <div class="steps-grid">
-            <div class="step-card reveal">
-                <span class="step-number">01</span>
-                <h3>Disegni la tua piantina</h3>
-                <p>In pochi minuti ricrei la disposizione reale delle tue sale, tavolo per tavolo — esattamente com'è il tuo locale.</p>
-            </div>
-            <div class="step-card reveal">
-                <span class="step-number">02</span>
-                <h3>Le prenotazioni arrivano da sole</h3>
-                <p>Dal telefono, dal sito o dalla tua pagina online: ogni prenotazione finisce già sulla piantina, al posto giusto.</p>
-            </div>
-            <div class="step-card reveal">
-                <span class="step-number">03</span>
-                <h3>Gestisci tutto da un tablet</h3>
-                <p>Stato dei tavoli, arrivi, comande: tutto lo staff vede la stessa cosa, nello stesso istante.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================= -->
-<!-- DEMO VIDEO (inline, parte da sola in muto quando -->
-<!-- entra in vista scorrendo; il pulsante in basso a destra accende la musica) -->
-<!-- ============================================= -->
-<section class="demo-video" id="video-demo">
-    <div class="wrap">
-        <div class="section-head section-head-center reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4l11 6-11 6V4z"/></svg> Come funziona, in video</p>
-            <h2>Un giro completo nell'app, passo per passo.</h2>
-        </div>
-
-        <!--
-            salaflow-tour.mp4 ha la musica, ma i browser fanno partire da soli
-            solo i video in muto: per questo il <video> ha "muted" e il pulsante
-            #demoVideoSound la accende su richiesta (vedi script.js).
-            Su schermi stretti lo stile ritaglia il centro del riquadro (vedi
-            .demo-video-frame in styles.css): il video è montato apposta per
-            quel ritaglio. Sorgenti e istruzioni in video/sorgenti/.
-
-            Niente copertina (attributo "poster") né classe "reveal" su questo
-            riquadro, di proposito: su Safari per iPhone il poster può restare
-            fermo sopra il video anche quando sta girando, e un'animazione di
-            comparsa sul contenitore può impedirgli di disegnarsi. Finché il
-            video non parte si vede lo sfondo scuro del riquadro.
-        -->
-        <div class="demo-video-frame" id="demoVideoFrame">
-            <video muted loop playsinline preload="metadata" aria-label="Video dell'app SalaFlow: piantina in tempo reale, walk-in, ricerca, stato del servizio, allergeni, promemoria dei tavoli, comande e sincronizzazione tra telefono e tablet">
-                <source src="salaflow-tour.mp4" type="video/mp4">
-            </video>
-            <button type="button" class="demo-video-sound" id="demoVideoSound" aria-pressed="false" aria-label="Attiva l'audio">
-                <svg class="icon-muted" viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.75h2.75L10.5 4.5v11l-4.25-3.25H3.5z"/><path d="M13.5 8l3.5 4M17 8l-3.5 4"/></svg>
-                <svg class="icon-sound" viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.75h2.75L10.5 4.5v11l-4.25-3.25H3.5z"/><path d="M13.25 7.5a3.5 3.5 0 010 5M15.5 5.5a6.5 6.5 0 010 9"/></svg>
-            </button>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================= -->
-<!-- CONFRONTO -->
-<!-- ============================================= -->
-<section class="trust-strip" id="confronto">
-    <div class="wrap">
-        <div class="section-head section-head-center reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3.5 2"/></svg> Il confronto, tutto in una volta</p>
-            <h2>Quaderno, gestionale complicato — o un solo strumento fatto per la sala.</h2>
-            <p class="lead">Non solo più veloce: cosa succede davvero quando un tavolo cambia stato, e quanto ti costa ogni alternativa.</p>
-        </div>
-
-        <div class="compare-table-wrap reveal">
-            <table class="compare-table">
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">Carta o WhatsApp</th>
-                        <th scope="col">Gestionale tradizionale</th>
-                        <th scope="col" class="compare-table-winner">Con SalaFlow</th>
-                    </tr>
-                </thead>
+        <p class="eyebrow">Il confronto</p>
+        <h2>Un solo strumento, invece di tre o quattro.</h2>
+        <div class="compare-wrap">
+            <table class="compare">
+                <thead><tr><th scope="col"></th><th scope="col">Carta o WhatsApp</th><th scope="col">Gestionale tradizionale</th><th scope="col" class="win">Con SalaFlow</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">Aggiornare un tavolo</th>
-                        <td class="bad" data-label="Carta o WhatsApp">Leggi il messaggio, scrivi sul quaderno, avvisa lo staff a voce</td>
-                        <td class="mid" data-label="Gestionale tradizionale">Apri il gestionale, cerca la prenotazione, aggiorna lo stato</td>
-                        <td class="good" data-label="Con SalaFlow">Un tocco sulla piantina, visibile subito a tutti</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Piantina reale della sala</th>
-                        <td class="bad" data-label="Carta o WhatsApp">Disegnata a mano, da rifare ogni sera</td>
-                        <td class="mid" data-label="Gestionale tradizionale">Di solito non prevista: solo un elenco di prenotazioni</td>
-                        <td class="good" data-label="Con SalaFlow">Identica alla tua sala vera, aggiornata in tempo reale</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Prezzo e hardware</th>
-                        <td class="bad" data-label="Carta o WhatsApp">0€ di software — ma il costo è in tempo perso ed errori</td>
-                        <td class="mid" data-label="Gestionale tradizionale">Canone mensile, spesso una commissione per prenotazione, a volte un terminale dedicato</td>
-                        <td class="good" data-label="Con SalaFlow">Un prezzo su misura per il locale, sul tablet o telefono che hai già</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Doppie prenotazioni</th>
-                        <td class="bad" data-label="Carta o WhatsApp">Scoperte a serata iniziata</td>
-                        <td class="mid" data-label="Gestionale tradizionale">Ridotte su chi prenota online, non su chi arriva senza prenotare</td>
-                        <td class="good" data-label="Con SalaFlow">Segnalate prima che succedano, online e in sala</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Aggiornamento tra lo staff</th>
-                        <td class="bad" data-label="Carta o WhatsApp">Manuale, spesso in ritardo</td>
-                        <td class="mid" data-label="Gestionale tradizionale">Automatico sulle prenotazioni, non sulla piantina reale dei tavoli</td>
-                        <td class="good" data-label="Con SalaFlow">Automatico su tutto — piantina inclusa — in tempo reale</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Strumenti da tenere aperti</th>
-                        <td class="bad" data-label="Carta o WhatsApp"><span class="count-num" data-count-to="3" data-suffix="+">0+</span> scollegati tra loro</td>
-                        <td class="mid" data-label="Gestionale tradizionale"><span class="count-num" data-count-to="2" data-suffix="+">0+</span> — il gestionale, più WhatsApp per il resto</td>
-                        <td class="good" data-label="Con SalaFlow"><span class="count-num" data-count-to="1">0</span> solo</td>
-                    </tr>
+                    <tr><th scope="row">Aggiornare un tavolo</th><td data-label="Carta o WhatsApp">Leggi il messaggio, scrivi sul quaderno, avvisa lo staff a voce</td><td data-label="Gestionale tradizionale">Apri il gestionale, cerca la prenotazione, aggiorna lo stato</td><td data-label="Con SalaFlow" class="win">Un tocco sulla piantina, visibile subito a tutti</td></tr>
+                    <tr><th scope="row">Turni, presenze e ore</th><td data-label="Carta o WhatsApp">Un foglio, i messaggi e le ore contate a mano a fine mese</td><td data-label="Gestionale tradizionale">Spesso un altro programma, a parte</td><td data-label="Con SalaFlow" class="win">Calendario, presenze e ore nello stesso strumento</td></tr>
+                    <tr><th scope="row">Fatture e costi</th><td data-label="Carta o WhatsApp">Una cartellina e foto sparse: i conti si fanno a fine mese</td><td data-label="Gestionale tradizionale">Di solito fuori dal gestionale di sala</td><td data-label="Con SalaFlow" class="win">Foto della fattura, scadenze e un utile stimato sempre a portata</td></tr>
+                    <tr><th scope="row">Strumenti da tenere aperti</th><td data-label="Carta o WhatsApp">3 o più, scollegati tra loro</td><td data-label="Gestionale tradizionale">2 o più: il gestionale, più WhatsApp per il resto</td><td data-label="Con SalaFlow" class="win">1 solo</td></tr>
                 </tbody>
             </table>
-            <p class="compare-table-note">Confronto basato su come funzionano tipicamente i gestionali da ristorante con modulo prenotazioni/sala — non su un fornitore specifico.</p>
         </div>
+        <p class="fine">Confronto basato su come funzionano tipicamente i gestionali da ristorante con modulo prenotazioni/sala, non su un fornitore specifico.</p>
     </div>
 </section>
-
-<!-- ============================================= -->
-<!-- FEATURES -->
-<!-- ============================================= -->
-<section class="features" id="funzionalita">
+<section class="origin" id="storia">
     <div class="wrap">
-        <div class="section-head reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 1l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg> Tutto sotto controllo, a portata di tap</p>
-            <h2>Tutto quello che serve in sala.<br>Niente di quello che non serve.</h2>
-        </div>
-
-        <div class="features-grid">
-            <article class="feature-card reveal">
-                <div class="feature-card-inner">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-                    </div>
-                    <h3>Piantina in tempo reale</h3>
-                    <p>Un colpo d'occhio e sai già tutto: libero, prenotato, arrivato. La piantina la disegni tu, identica alla tua sala vera.</p>
-                    <div class="feature-card-glare" aria-hidden="true"></div>
-                </div>
-            </article>
-
-            <article class="feature-card reveal">
-                <div class="feature-card-inner">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11"/></svg>
-                    </div>
-                    <h3>Tavolo consigliato in automatico</h3>
-                    <p>In base a persone e orario, SalaFlow ti suggerisce subito il tavolo giusto — sempre un tavolo libero, prima di proporti un doppio turno.</p>
-                    <div class="feature-card-glare" aria-hidden="true"></div>
-                </div>
-            </article>
-
-            <article class="feature-card reveal">
-                <div class="feature-card-inner">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
-                    </div>
-                    <h3>Promemoria tavolo intelligente</h3>
-                    <p>Un avviso ti ricorda di controllare i tavoli occupati da troppo tempo — e riconosce le tavolate numerose, che restano sedute più a lungo per natura, senza disturbarti a vuoto.</p>
-                    <div class="feature-card-glare" aria-hidden="true"></div>
-                </div>
-            </article>
-
-            <article class="feature-card reveal">
-                <div class="feature-card-inner">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.3 6.4M3 12a9 9 0 0 1 15.3-6.4"/><path d="M3 5v5h5M21 19v-5h-5"/></svg>
-                    </div>
-                    <h3>Sincronizzazione istantanea</h3>
-                    <p>Tutto lo staff vede gli stessi dati, in tempo reale, da qualsiasi tablet o telefono — con notifiche push per arrivi e nuove richieste, nel momento in cui succedono.</p>
-                    <div class="feature-card-glare" aria-hidden="true"></div>
-                </div>
-            </article>
-
-            <article class="feature-card reveal">
-                <div class="feature-card-inner">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6.5 6.5-6.5S15.5 16 15.5 20"/><circle cx="17.5" cy="9.5" r="2.7"/><path d="M15.5 13.2c2.8.5 4.8 2.7 4.8 6.3"/></svg>
-                    </div>
-                    <h3>Un dispositivo, tutto lo staff</h3>
-                    <p>Su un unico tablet condiviso, ogni cameriere sceglie il proprio profilo, con PIN se lo vuoi — sai sempre chi ha fatto cosa, senza un account da creare per ciascuno.</p>
-                    <div class="feature-card-glare" aria-hidden="true"></div>
-                </div>
-            </article>
-
-            <article class="feature-card reveal">
-                <div class="feature-card-inner">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M12 19V5M20 19v-6"/></svg>
-                    </div>
-                    <h3>Statistiche sempre a portata</h3>
-                    <p>Coperti della serata, tempo medio ai tavoli, chi ha fatto cosa: tutto tracciato da solo, pronto ogni volta che ti serve.</p>
-                    <div class="feature-card-glare" aria-hidden="true"></div>
-                </div>
-            </article>
-        </div>
+        <p class="eyebrow">Dalla sala, per la sala</p>
+        <blockquote>Fatta da chi in sala ci ha lavorato davvero.</blockquote>
+        <p class="lead">Nasce da anni passati tra comande, tavoli e quaderni pieni di cancellature. Ogni funzione la testiamo per prima nel nostro locale, a servizio in corso, e la miglioriamo in base a quello che succede davvero una sera piena.</p>
     </div>
 </section>
-
-<!-- ============================================= -->
-<!-- SITO PRENOTAZIONI PUBBLICO -->
-<!-- ============================================= -->
-<section class="booking-site">
-    <div class="wrap booking-site-inner">
-        <div class="booking-site-visual reveal">
-            <figure class="phone-frame">
-                <span class="phone-island" aria-hidden="true"></span>
-                <img src="app-prenota.jpg" width="860" height="1864" loading="lazy" decoding="async" alt="Schermata reale della pagina pubblica di prenotazione di un locale: nome, telefono, data, orario e numero di persone.">
-            </figure>
-            <p class="shot-note">Pagina di prenotazione di un locale dimostrativo.</p>
-        </div>
-        <div class="booking-site-copy reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="14" height="12.5" rx="1.5"/><line x1="3" y1="8.5" x2="17" y2="8.5"/></svg> Modulo prenotazioni online</p>
-            <h2>Le prenotazioni arrivano da sole, il telefono non squilla più.</h2>
-            <p class="lead">
-                Ogni locale su SalaFlow ha una pagina pubblica tutta sua per le richieste di
-                prenotazione, da condividere su Instagram, Google o il tuo sito. Il cliente
-                compila un modulo in pochi secondi, a te arriva una notifica istantanea:
-                confermi in un tocco e la prenotazione è già pronta nella tua piantina.
-            </p>
-        </div>
+<section class="where" id="dove">
+    <div class="wrap where-row">
+        <p class="eyebrow">Dove la usi</p>
+        <ul>
+            <li><b>iPhone e iPad</b> <a href="https://apps.apple.com/it/app/salaflow/id6815325143" rel="noopener">Dall’App Store</a></li>
+            <li><b>Android</b> <span>In arrivo</span></li>
+            <li><b>Browser</b> <span>Senza installare niente</span></li>
+        </ul>
     </div>
 </section>
-
-<!-- ============================================= -->
-<!-- SOTTO IL COFANO -->
-<!-- ============================================= -->
-<section class="engine" id="sotto-il-cofano">
-    <div class="wrap engine-inner">
-        <div class="engine-copy reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8a5 5 0 0 1 10 0c0 4 1.5 5.5 1.5 5.5h-13S5 12 5 8z"/></svg> Sotto il cofano</p>
-            <h2>Costruita per non fermarsi mai, nemmeno il sabato sera.</h2>
-            <p class="lead lead-light">
-                SalaFlow gira su un'infrastruttura cloud Firebase, la stessa che regge applicazioni
-                usate ogni giorno da milioni di persone. I tuoi dati restano sempre sincronizzati,
-                sempre al sicuro, sempre disponibili — anche quando la sala è piena e non c'è
-                un secondo da perdere.
-            </p>
-            <ul class="engine-list">
-                <li>Dati aggiornati in tempo reale su tutti i dispositivi</li>
-                <li>Nessuna installazione: funziona da browser, come un sito</li>
-                <li>Infrastruttura cloud sicura e sempre online</li>
-            </ul>
-        </div>
-        <div class="engine-visual reveal" aria-hidden="true">
-            <div class="engine-node engine-node-1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 000-8 5.5 5.5 0 00-10.6-1.7A4.2 4.2 0 007 18z"/></svg></div>
-            <div class="engine-node engine-node-2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div>
-            <div class="engine-node engine-node-3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div>
-            <div class="engine-node engine-node-4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 14H11l-1 8 8.5-12H12l1-8z"/></svg></div>
-            <svg class="engine-lines" viewBox="0 0 300 300" fill="none">
-                <circle class="engine-ring-outer" cx="150" cy="150" r="90" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6" opacity="0.35"/>
-                <circle cx="150" cy="150" r="55" stroke="currentColor" stroke-width="1" opacity="0.25"/>
-            </svg>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================= -->
-<!-- DALLA SALA, PER LA SALA -->
-<!-- ============================================= -->
-<section class="origin-story">
-    <div class="wrap">
-        <div class="section-head section-head-center reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 17s-6-3.6-6-8.2C4 6 5.8 4.2 8 4.2c1 0 1.9.5 2 1.3.1-.8 1-1.3 2-1.3 2.2 0 4 1.8 4 4.6 0 4.6-6 8.2-6 8.2z"/></svg> Dalla sala, per la sala</p>
-            <h2 class="voce">Fatta da chi in sala ci ha lavorato davvero.</h2>
-            <p class="lead">SalaFlow non nasce da un ufficio prodotto lontano dai tavoli: nasce da anni passati in sala, tra comande, tavoli e quaderni pieni di cancellature. Ogni funzione la testiamo per prima nel nostro locale, a servizio in corso — e la miglioriamo in base a quello che succede davvero una sera piena, non a come pensiamo che vada.</p>
-        </div>
-
-        <div class="origin-points reveal">
-            <div class="origin-point">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M6 21V9a2 2 0 012-2h8a2 2 0 012 2v12M10 21v-5h4v5"/></svg>
-                Costruita da chi la sala la vive ogni sera
-            </div>
-            <div class="origin-point">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h11"/></svg>
-                Testata sul campo, non solo sulla carta
-            </div>
-            <div class="origin-point">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-15.3 6.4M3 12a9 9 0 0115.3-6.4"/><path d="M3 5v5h5M21 19v-5h-5"/></svg>
-                Aggiornata in base al servizio reale, settimana dopo settimana
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================================= -->
-<!-- FAQ (contenuto identico allo schema FAQPage nel -->
-<!-- <head>: i motori penalizzano uno schema che non -->
-<!-- corrisponde al testo visibile in pagina) -->
-<!-- ============================================= -->
-<section class="faq" id="faq">
-    <div class="wrap">
-        <div class="section-head section-head-center reveal">
-            <p class="pill-badge"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 13.5v.01M10 6.5a2 2 0 0 1 2 2c0 1.3-2 1.7-2 3.3"/></svg> Domande frequenti</p>
+<section class="band" id="faq">
+    <div class="wrap faq-grid">
+        <div>
+            <p class="eyebrow">Domande frequenti</p>
             <h2>Le domande che ci fanno più spesso.</h2>
         </div>
-        <div class="faq-list reveal">
-            <details class="faq-item">
-                <summary>Cos'è SalaFlow?</summary>
-                <p>SalaFlow è la piantina digitale che organizza tavoli e prenotazioni in tempo reale per ristoranti, dal telefono. Sostituisce quaderno, WhatsApp e fogli Excel con un unico strumento sincronizzato su tutti i dispositivi dello staff.</p>
-            </details>
-            <details class="faq-item">
-                <summary>SalaFlow sostituisce il quaderno, WhatsApp e i fogli Excel per le prenotazioni?</summary>
-                <p>Sì. Ogni prenotazione — presa di persona, al telefono o arrivata dal modulo online — finisce direttamente sulla piantina digitale, visibile in tempo reale a tutto lo staff, senza bisogno di tenere aperti più strumenti scollegati tra loro.</p>
-            </details>
-            <details class="faq-item">
-                <summary>Serve installare qualcosa nel locale?</summary>
-                <p>No. SalaFlow funziona da browser come un sito, su qualsiasi tablet o telefono già in uso nel locale — nessuna installazione, nessun hardware dedicato.</p>
-            </details>
-            <details class="faq-item">
-                <summary>Come vedono la prenotazione i miei clienti?</summary>
-                <p>Ogni locale su SalaFlow ha una pagina pubblica dedicata per le richieste di prenotazione, da condividere su Instagram, Google o il proprio sito: il cliente compila un modulo in pochi secondi e riceve conferma quando il locale accetta.</p>
-            </details>
-            <details class="faq-item">
-                <summary>SalaFlow è già usato da un ristorante vero?</summary>
-                <p>Sì: gestisce già, ogni giorno, le prenotazioni reali di un ristorante in Italia.</p>
-            </details>
-            <details class="faq-item">
-                <summary>Quanto costa SalaFlow?</summary>
-                <p>Il prezzo si adatta al locale: prenota una visita senza impegno e te lo mostriamo insieme, sui tuoi tavoli veri.</p>
-            </details>
+        <div class="faq-list">
+<details class="faq-item"><summary>Cos’è SalaFlow?</summary><p>SalaFlow è il gestionale della sala, fatto da chi in sala ci ha lavorato: piantina dei tavoli in tempo reale, prenotazioni, comande, cassa, turni, checklist e conti. Sostituisce quaderno, WhatsApp e fogli Excel con un unico strumento sincronizzato su tutti i dispositivi dello staff.</p></details>
+<details class="faq-item"><summary>Cosa c’è nella versione base e cosa nel Pacchetto Comande?</summary><p>La versione base è la sala: piantina, prenotazioni, richieste online, stato del servizio, profili dello staff e notifiche. Il Pacchetto Comande aggiunge menù e comande con la vista cucina, cassa e asporto, e gli strumenti di gestione: andamento, magazzino, fatture, finanza, turni, presenze e checklist.</p></details>
+<details class="faq-item"><summary>Chi vede gli incassi, i costi e l’utile?</summary><p>Solo chi gestisce: il proprietario e chi ha un accesso «gestione». Lo staff di sala vede la piantina, le prenotazioni, i propri turni e le proprie mansioni, ma non gli importi.</p></details>
+<details class="faq-item"><summary>Fatture e utile: quanto mi posso fidare?</summary><p>La lettura delle fatture è automatica e può sbagliare: controlli e correggi tu prima di salvare, e finché non confermi non viene salvato niente. L’utile è una stima di lavoro, prima delle tasse: se mancano dei dati l’app te lo dice invece di far sembrare l’utile più alto. Non è un bilancio e non sostituisce il commercialista.</p></details>
+<details class="faq-item"><summary>SalaFlow emette scontrini fiscali?</summary><p>No. Il conto e il riepilogo della serata di SalaFlow sono documenti interni, non fiscali: lo scontrino continui a batterlo sul tuo registratore.</p></details>
+<details class="faq-item"><summary>Quanto costa SalaFlow?</summary><p>Il prezzo si adatta al locale: prenota una visita senza impegno e te lo mostriamo insieme, sui tuoi tavoli veri.</p></details>
         </div>
     </div>
 </section>
-
-<!-- ============================================= -->
-<!-- CTA FINALE -->
-<!-- ============================================= -->
 <section class="cta-final" id="demo">
     <div class="wrap">
-        <div class="cta-final-block reveal">
-            <h2>Pronto a semplificarti la serata?</h2>
-            <p>Prenota una visita nel tuo locale, senza impegno: veniamo noi di persona a mostrarti SalaFlow al lavoro, sui tuoi tavoli veri.</p>
+        <div class="cta-block">
+            <h2>Vieni a vederla nel tuo locale.</h2>
+            <p>Prenota una visita, senza impegno: veniamo noi di persona a mostrarti SalaFlow al lavoro, sui tuoi tavoli veri.</p>
             <form class="demo-form" id="demoForm">
                 <input type="text" name="nome" placeholder="Il tuo nome" required aria-label="Il tuo nome">
                 <input type="text" name="locale" placeholder="Nome del locale" required aria-label="Nome del locale">
                 <input type="email" name="email" placeholder="La tua email" required aria-label="La tua email">
-                <!-- Facoltativo: oggi è l'unico modo per sapere da dove nasce
-                     una richiesta (nessuna analytics/UTM installata sul sito).
-                     "how_heard" finisce nell'email che Formspree inoltra, non
-                     richiede altro codice. -->
-                <select name="how_heard" aria-label="Come hai saputo di SalaFlow?" class="how-heard-select">
-                    <option value="">Come hai saputo di SalaFlow? (facoltativo)</option>
+                <!-- Facoltativo: oggi è l'unico modo per sapere da dove nasce una richiesta (nessuna analytics/UTM sul sito).
+                     "how_heard" finisce nell'email che Formspree inoltra, non richiede altro codice. -->
+                <select name="how_heard" aria-label="Come ci hai conosciuto?">
+                    <option value="">Come ci hai conosciuto? (facoltativo)</option>
                     <option value="passaparola">Passaparola tra ristoratori</option>
                     <option value="altro_locale">Ho visto il link su un altro locale</option>
                     <option value="instagram">Instagram</option>
                     <option value="google">Ricerca Google</option>
                     <option value="altro">Altro</option>
                 </select>
-                <button type="submit" class="btn btn-dark btn-lg">Prenota la tua Visita</button>
+                <button type="submit" class="btn btn-dark btn-lg">Prenota la tua visita</button>
                 <p class="form-error" id="demoFormError" hidden></p>
             </form>
             <p class="form-feedback" id="demoFeedback" hidden>
-                <span class="t-success-check" data-state="out" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
+                <span class="t-success-check" data-state="out" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 <span id="demoFeedbackText"></span>
             </p>
-            <p class="data-trust-note"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l6.5 2.8v4.7c0 4.3-2.8 8-6.5 9.5-3.7-1.5-6.5-5.2-6.5-9.5V4.8L10 2z"/></svg> I tuoi dati restano su infrastruttura Google Cloud e non vengono mai condivisi con terzi.</p>
+            <p class="data-trust-note">I tuoi dati restano su infrastruttura Google Cloud e non vengono mai venduti.</p>
         </div>
     </div>
 </section>
-
 </main>
-
-<!-- ============================================= -->
-<!-- FOOTER -->
-<!-- ============================================= -->
 <footer class="footer" id="contatti">
     <div class="wrap footer-inner">
         <div class="footer-brand">
-            <a href="#top" class="brand brand-footer">
-                <span class="brand-mark" aria-hidden="true">
-                    <img src="s-mark.svg" alt="" width="21" height="32">
-                </span>
-                <span>Sala<span class="accent-text">Flow</span></span>
-            </a>
+            <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"><img src="s-mark.svg" alt="" width="21" height="32"></span><span>Sala<span class="accent-text">Flow</span></span></a>
             <p class="voce footer-sig">Dalla sala, per la sala.</p>
         </div>
-
-        <div class="footer-col">
-            <h4>Prodotto</h4>
-            <a href="#funzionalita">Funzionalità</a>
-            <a href="#sotto-il-cofano">Tecnologia</a>
-            <a href="#demo">Prenota una visita</a>
-        </div>
-
-        <div class="footer-col">
-            <h4>Contatti</h4>
-            <a href="mailto:info@salaflow.com">info@salaflow.com</a>
-            <a href="#demo">Parliamone</a>
-        </div>
+        <div class="footer-col"><h4>Contatti</h4><a href="mailto:info@salaflow.com">info@salaflow.com</a><a href="#demo">Prenota una visita</a></div>
+        <div class="footer-col"><h4>Il locale</h4><a href="#sala" data-beat-go="1">Sala</a><a href="#cucina" data-beat-go="4">Cucina</a><a href="#gestione" data-beat-go="6">Ufficio</a></div>
     </div>
-    <div class="wrap footer-bottom">
-        <p>© <span id="year"></span> SalaFlow. Tutti i diritti riservati.</p>
-        <a href="privacy.html">Privacy</a>
-    </div>
+    <div class="wrap footer-bottom"><p>© <span id="year"></span> SalaFlow. Tutti i diritti riservati.</p><a href="privacy.html">Privacy</a></div>
 </footer>
 
-<a href="#demo" class="sticky-cta" id="stickyCta">Prenota una Visita</a>
+<a href="#demo" class="sticky-cta" id="stickyCta">Prenota una visita</a>
 
 <script src="script.js"></script>
 </body>

@@ -1,17 +1,34 @@
 # SalaFlow
 
-> Gestionale per la sala di un ristorante: piantina tavoli in tempo reale, prenotazioni online e sincronizzazione istantanea su tutti i dispositivi dello staff.
+> Gestionale per la sala di un ristorante: piantina dei tavoli in tempo reale, prenotazioni online, comande, cassa, turni, checklist e conti, sincronizzati su tutti i dispositivi dello staff.
 
-SalaFlow è pensato per ristoranti con servizio al tavolo che oggi gestiscono prenotazioni e piantina a mano (quaderno, WhatsApp, fogli Excel). Funziona da browser, senza installazione, su qualsiasi tablet o telefono già in uso nel locale.
+SalaFlow è pensato per ristoranti indipendenti con servizio al tavolo che oggi gestiscono prenotazioni, turni e conti con quaderno, WhatsApp e fogli Excel. Funziona dal browser senza installare niente, su qualsiasi tablet, telefono o computer già in uso nel locale; esiste anche l'app per iPhone e iPad.
 
-Stadio attuale (onesto, aggiornato periodicamente): il prodotto è in fase di test chiuso sugli store per app mobile (Google Play, Apple App Store); è già in uso reale, ogni giorno, per la gestione di un ristorante in Italia.
+Stadio attuale (onesto, aggiornato periodicamente): l'app per iPhone e iPad è sull'App Store; l'app per Android è in arrivo (nel frattempo funziona dal browser). È già in uso reale, ogni giorno, per la gestione di un ristorante in Italia.
+
+## Cosa fa
+
+Versione base (la sala):
+- Piantina dei tavoli in tempo reale, disegnata come la sala vera, con un colore per ogni stato.
+- Prenotazioni della serata, arrivi, ritardi, note e allergie; pagina pubblica di prenotazione per ogni locale.
+- Richieste online da accettare o rifiutare con uno swipe, con il tavolo suggerito.
+- Stato del servizio, promemoria dei tavoli occupati da troppo tempo, notifiche push.
+- Profili dello staff su un tablet condiviso, con PIN facoltativo.
+
+Pacchetto Comande (aggiunge):
+- Prima del servizio: turni della settimana (bozza e «pubblica e avvisa»), giorni liberi e scambi di turno, disponibilità, checklist di apertura e chiusura, mansioni da sistemare, presenze effettive.
+- Durante il servizio: comande a cucina e bar divise per uscita, cassa e conto (preconto, divisione, abbuoni, conti in sospeso), asporto.
+- Dopo il servizio: fine serata, magazzino e lista della spesa, fatture da una foto o da PDF/XML (con controllo finale dell'utente), andamento, piatti più e meno venduti, ore e file per il consulente.
+- Per chi gestisce (importi visibili solo a proprietario e accessi «gestione»): utile stimato, costo del personale, spese fisse, simulatore «un cameriere in più».
+
+Limiti dichiarati: l'utile è una stima di lavoro, non un bilancio e non sostituisce il commercialista; il conto di SalaFlow è un riepilogo interno, non un documento fiscale (lo scontrino si batte sul registratore di cassa).
 
 ## Pagine
 
-- [Home](https://salaflow.com/): panoramica del prodotto, come funziona, confronto con i metodi manuali, FAQ.
+- [Home](https://salaflow.com/): un tour in 3D di una serata (sala, cucina, ufficio) con le schermate vere dell'app, confronto con i metodi manuali, domande frequenti.
 - [Privacy](https://salaflow.com/privacy.html): informativa privacy e istruzioni per l'eliminazione dell'account.
 
 ## Contatti
 
-- Richiesta demo: modulo in home, sezione "Prenota una Visita".
+- Richiesta visita: modulo in home, sezione «Prenota una visita».
 - Email: info@salaflow.com
