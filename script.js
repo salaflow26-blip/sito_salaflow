@@ -17,6 +17,28 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const stickyCtaEl = document.getElementById('stickyCta');
 const demoSectionEl = document.getElementById('demo');
 let ticking = false;
+let lbClosedAt = -1000;       // quando si è chiuso l'ingrandimento (serve contro i tocchi fantasma)
+
+// ---------------------------------------------------------
+// Statistiche di visita anonime (Vercel Web Analytics): niente cookie, nessun dato personale.
+// Si caricano solo sul sito vero, non in locale. Oltre alla pagina vista, segnano come "pagine
+// virtuali" i punti chiave del percorso (/giro/cucina, /ingrandisci, /modulo-inviato...) per
+// capire dove la gente si ferma, senza raccogliere altro.
+// ---------------------------------------------------------
+const ANALYTICS_HOSTS = /(^|\.)salaflow\.com$|\.vercel\.app$/;
+const tracked = new Set();
+if (ANALYTICS_HOSTS.test(location.hostname)) {
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    const sc = document.createElement('script');
+    sc.defer = true;
+    sc.src = '/_vercel/insights/script.js';
+    document.head.appendChild(sc);
+}
+function track(path) {
+    if (tracked.has(path)) return;
+    tracked.add(path);
+    try { if (typeof window.va === 'function') window.va('pageview', { route: null, path }); } catch (e) { /* le statistiche non devono mai rompere il sito */ }
+}
 
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -37,6 +59,7 @@ function closeMobileNav(returnFocus) {
 }
 if (navToggle && navMobile) {
     navToggle.addEventListener('click', () => {
+        if (performance.now() - lbClosedAt < 450) return;      // tocco fantasma dopo la chiusura dell'ingrandimento
         const isOpen = navMobile.classList.toggle('is-open');
         navToggle.setAttribute('aria-expanded', String(isOpen));
         navToggle.setAttribute('aria-label', isOpen ? 'Chiudi il menu' : 'Apri il menu');
@@ -68,7 +91,10 @@ const hudChips = hud ? [...hud.querySelectorAll('.hud-chips button')] : [];
 const storyNav = document.getElementById('storyNav');
 const navLinks = [...document.querySelectorAll('.nav-links a[data-beat-go]')];
 const loadingEl = document.getElementById('storyLoading');
-const N = beats.length;
+const PMAX = story ? Number(story.dataset.n) - 1 : 0;         // posizioni della scena 3D: 0..PMAX
+const FROMS = beats.map(b => Number(b.dataset.from));          // da che posizione si accende ogni didascalia
+const beatIndexAt = (pos) => { let i = 0; FROMS.forEach((f, k) => { if (pos >= f - 1e-6) i = k; }); return i; };
+const BEAT_PATH = { sala: '/giro/sala', cucina: '/giro/cucina', gestione: '/giro/ufficio', fine: '/giro/fine' };
 const CHIP_IMGS = ['andamento', 'utile', 'fattura', 'turni'];
 
 let live = false;
@@ -86,7 +112,18 @@ function webglOK() {
     } catch (e) { return false; }
 }
 function wantLive() {
-    return !!story && N > 1 && !reduceMotion.matches && window.innerHeight >= 480 && webglOK();
+    return !!story && beats.length > 1 && !reduceMotion.matches && window.innerHeight >= 480 && webglOK() && !wantBlocks();
+}
+// ?3d=off forza la versione a blocchi, ?3d=force impedisce il passaggio automatico (utile per i test)
+const MODE_3D = new URLSearchParams(location.search).get('3d');
+function wantBlocks() {
+    if (MODE_3D === 'off') return true;
+    if (MODE_3D === 'force') return false;
+    try { if (sessionStorage.getItem('salaflow_3d') === 'off') return true; } catch (e) { /* ok */ }
+    const c = navigator.connection;
+    if (c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))) return true;      // risparmio dati o rete molto lenta
+    if (navigator.deviceMemory && navigator.deviceMemory <= 1) return true;
+    return false;
 }
 function isLowPower() {
     return window.matchMedia('(pointer: coarse)').matches || (navigator.hardwareConcurrency || 8) <= 4;
@@ -107,11 +144,34 @@ function readScroll(snap) {
     if (!live) return;
     const r = story.getBoundingClientRect();
     const p = clamp(-r.top / span(), 0, 1);
-    targetPos = p * (N - 1);
+    targetPos = p * PMAX;
     if (snap) curPos = targetPos;
     schedule();
 }
 
+// Dopo il riscaldamento (compilazione, texture) misura la durata dei fotogrammi: se la mediana
+// supera ~38 ms (sotto i 26 fps) il telefono fa fatica e si passa alla versione a blocchi.
+const fpsSamples = [];
+let fpsFrames = 0, fpsDone = false;
+function sampleFps(dt) {
+    if (fpsDone || MODE_3D === 'force') return;
+    fpsFrames++;
+    if (fpsFrames <= 30 || dt > 0.3) return;            // scarta il riscaldamento e le pause (scheda in background)
+    fpsSamples.push(dt);
+    const n = fpsSamples.length;
+    // molto lento: bastano ~45 fotogrammi; lento al limite: ne servono ~90
+    if (n !== 45 && n < 90) return;
+    const sorted = fpsSamples.slice().sort((a, b) => a - b);
+    const median = sorted[Math.floor(n / 2)];
+    const slow = n >= 90 ? median > 0.038 : median > 0.055;
+    if (n >= 90) fpsDone = true;
+    if (slow) {
+        fpsDone = true;
+        try { sessionStorage.setItem('salaflow_3d', 'off'); } catch (e) { /* ok */ }
+        track('/giro/lento');
+        setLive(false);
+    }
+}
 function schedule() {
     if (!live || !ready || raf || !visible || document.hidden) return;
     lastT = performance.now();
@@ -136,8 +196,10 @@ function updateObstacles() {
 }
 function frame(t) {
     raf = 0;
-    const dt = Math.min(0.05, ((t - lastT) / 1000) || 0.016);
+    const rawDt = ((t - lastT) / 1000) || 0.016;
+    const dt = Math.min(0.05, rawDt);
     lastT = t;
+    sampleFps(rawDt);
     const d = targetPos - curPos;
     if (Math.abs(d) < 0.0006) curPos = targetPos; else curPos += d * (1 - Math.exp(-dt * 6.5));
     // all'inizio e alla fine il testo è grande: la scena si sposta a destra per non coprirlo
@@ -191,20 +253,21 @@ function updateHud(pos) {
 }
 
 function updateUI(pos) {
-    const idx = clamp(Math.round(pos), 0, N - 1);
+    const idx = beatIndexAt(pos);
     if (idx !== activeBeat) {
         activeBeat = idx;
+        if (BEAT_PATH[beats[idx].id]) track(BEAT_PATH[beats[idx].id]);
         beats.forEach((b, i) => { b.classList.toggle('is-active', i === idx); if ('inert' in b) b.inert = i !== idx; });
-        const inTour = idx >= 1 && idx <= 6;
+        const inTour = idx >= 1 && idx <= 3;
         navLinks.forEach(a => {
             const g = Number(a.dataset.beatGo);
-            const cur = g === 1 ? idx >= 1 && idx <= 3 : g === 4 ? idx === 4 || idx === 5 : idx === 6;
+            const cur = g === 1 ? idx === 1 : g === 4 ? idx === 2 : idx === 3;
             a.classList.toggle('is-current', inTour && cur);
         });
     }
     updateHud(pos);
     if (storyNav) {
-        storyNav.style.setProperty('--p', (pos / (N - 1)).toFixed(4));
+        storyNav.style.setProperty('--p', (pos / PMAX).toFixed(4));
         const stops = [...storyNav.querySelectorAll('button')];
         let on = 0;
         stops.forEach((b, i) => { if (Number(b.dataset.pos) <= pos + 0.45) on = i; });
@@ -215,11 +278,11 @@ function updateUI(pos) {
 
 function goTo(pos, instant) {
     if (!live) {
-        const el = beats[clamp(Math.round(pos), 0, N - 1)];
+        const el = beats[beatIndexAt(pos)];
         if (el) el.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', block: 'start' });
         return;
     }
-    const top = story.getBoundingClientRect().top + window.scrollY + (span() / (N - 1)) * pos;
+    const top = story.getBoundingClientRect().top + window.scrollY + (span() / PMAX) * pos;
     window.scrollTo({ top, behavior: instant ? 'auto' : 'smooth' });
 }
 
@@ -288,6 +351,7 @@ function openLb(imgName, opener) {
     const i = lbShots.findIndex(x => x.img === imgName);
     lbIndex = i < 0 ? 0 : i;
     lbOpener = opener || null;
+    track('/ingrandisci');
     renderLb();
     lb.hidden = false;
     document.documentElement.classList.add('lb-open');
@@ -295,6 +359,7 @@ function openLb(imgName, opener) {
 }
 function closeLb() {
     if (!lb || lb.hidden) return;
+    lbClosedAt = performance.now();
     lb.hidden = true;
     document.documentElement.classList.remove('lb-open');
     if (lbOpener && lbOpener.focus) lbOpener.focus();
@@ -304,7 +369,8 @@ function stepLb(d) {
     renderLb();
 }
 if (lb) {
-    hudFrames.forEach(f => f.addEventListener('click', () => openLb(hudAt(curPos).img, f.querySelector('.hud-zoom'))));
+    // la cornice del telefono è coperta da un vero <button> trasparente (su iPhone il tocco su un semplice <div> non è affidabile)
+    hudFrames.forEach(f => f.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => openLb(hudAt(curPos).img, f.querySelector('.hud-zoom')))));
     lb.querySelector('.lb-close').addEventListener('click', closeLb);
     lb.querySelector('.lb-prev').addEventListener('click', () => stepLb(-1));
     lb.querySelector('.lb-next').addEventListener('click', () => stepLb(1));
@@ -342,6 +408,8 @@ document.querySelectorAll('[data-beat-go]').forEach(el => {
 });
 if (storyNav) storyNav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => goTo(Number(b.dataset.pos))));
 hudChips.forEach(b => b.addEventListener('click', () => goTo(Number(b.dataset.pos) + 0.02)));
+const skipTour = document.getElementById('skipTour');
+if (skipTour) skipTour.addEventListener('click', () => track('/giro/saltato'));
 const brandLink = document.querySelector('.brand');
 if (brandLink) brandLink.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
@@ -459,6 +527,7 @@ function handleFormSubmit(form, feedbackEl, message) {
                 headers: { 'Accept': 'application/json' }
             });
             if (!response.ok) throw new Error('Invio fallito');
+            track('/modulo-inviato');
 
             textEl.textContent = message;
             feedbackEl.hidden = false;

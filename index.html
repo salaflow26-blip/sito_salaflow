@@ -130,7 +130,7 @@
         <canvas id="stage3d" aria-hidden="true"></canvas>
         <div class="labels3d" id="labels3d" aria-hidden="true"></div>
         <div class="story-copy" id="storyCopy">
-    <article class="beat is-active" id="intro" data-beat="0">
+    <article class="beat is-active" id="intro" data-beat="0" data-from="0">
         <div class="beat-copy">
             <h1>La tua sala, <em>finalmente</em> sotto controllo.</h1>
             <p class="lead">Prenotazioni, comande, turni e conti in un’app sola, sul tablet o sul telefono che hai già. Vieni con noi a vedere una serata, dall’ingresso alla cucina fino all’ufficio.</p>
@@ -140,63 +140,31 @@
             </div>
             <p class="hero-note">Nessun impegno · In uso ogni sera in un ristorante vero · iPhone e iPad, anche dal browser · Android in arrivo</p>
         </div>
+        <figure class="beat-fig"><img src="img/st_piantina.webp" width="860" height="1864" decoding="async" alt="La piantina della sala in SalaFlow, con i tavoli colorati in base allo stato"></figure>
     </article>
-    <article class="beat" id="sala" data-beat="1">
+    <article class="beat" id="sala" data-beat="1" data-from="0.55">
         <div class="beat-copy">
-            <p class="eyebrow"><span>20:30</span> Sala</p>
-            <h2>Entra la famiglia Lombardi.</h2>
+            <p class="eyebrow"><span>20:30 – 20:41</span> Sala</p>
+            <h2>Accoglie i Lombardi e prende l’ordine.</h2>
             <p class="who">Marco, cameriere</p>
-            <p>Marco apre SalaFlow, cerca il nome e tocca «Segnala come arrivato». Il tavolo 8 si accende, per tutti, nello stesso istante.</p>
+            <p>Marco cerca il nome nell’app e tocca «Segnala come arrivato»: il tavolo 8 si accende per tutti, nello stesso istante. Poi li accompagna al tavolo e prende l’ordine dal telefono, uscita per uscita.</p>
             
             
         </div>
-        <figure class="beat-fig"><img src="img/st_cerca.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La ricerca rapida di SalaFlow con la prenotazione Lombardi e il pulsante Segnala come arrivato"></figure>
+        <figure class="beat-fig"><img src="img/st_cerca.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La ricerca rapida di SalaFlow con la prenotazione Lombardi e il pulsante Segnala come arrivato"><img src="img/st_comanda_invia.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La comanda del tavolo 8 pronta da inviare, con le uscite"></figure>
     </article>
-    <article class="beat" id="tavolo" data-beat="2">
+    <article class="beat" id="cucina" data-beat="4" data-from="3.55">
         <div class="beat-copy">
-            <p class="eyebrow"><span>20:33</span> Sala</p>
-            <h2>Li porta al tavolo.</h2>
-            <p class="who">Marco, cameriere</p>
-            <p>La piantina è quella vera della sua sala: libero, prenotato, occupato. Marco sa sempre dove mandare chi arriva.</p>
-            
-            
-        </div>
-        <figure class="beat-fig"><img src="img/st_piantina.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La piantina della sala in SalaFlow, con i tavoli colorati in base allo stato"></figure>
-    </article>
-    <article class="beat" id="ordine" data-beat="3">
-        <div class="beat-copy">
-            <p class="eyebrow"><span>20:41</span> Sala</p>
-            <h2>Prende l’ordine.</h2>
-            <p class="who">Marco, cameriere</p>
-            <p>Antipasti, primi, secondi, dolci: ogni uscita al suo momento. Un tocco su «Invia comanda» e parte.</p>
-            
-            
-        </div>
-        <figure class="beat-fig"><img src="img/st_comanda_invia.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La comanda del tavolo 8 pronta da inviare, con le uscite"></figure>
-    </article>
-    <article class="beat" id="cucina" data-beat="4">
-        <div class="beat-copy">
-            <p class="eyebrow"><span>20:42</span> Cucina</p>
+            <p class="eyebrow"><span>20:42 – 20:54</span> Cucina</p>
             <h2>La comanda è già in cucina.</h2>
             <p class="who">Elena, cuoca</p>
-            <p>Elena la vede sul tablet, divisa per uscita e con le allergie ben visibili. Prepara e spunta i piatti.</p>
+            <p>Elena la vede sul tablet, divisa per uscita e con le allergie ben visibili. Prepara, spunta i piatti e tocca «Manda in sala»: Marco lo vede subito sul suo telefono, senza urlare da una stanza all’altra.</p>
             
             
         </div>
-        <figure class="beat-fig"><img class="wide" src="img/st_cucina_nuova.webp" width="2360" height="1520" loading="lazy" decoding="async" alt="Lo schermo cucina con la comanda del tavolo 8 appena arrivata"></figure>
+        <figure class="beat-fig"><img class="wide" src="img/st_cucina_nuova.webp" width="2360" height="1520" loading="lazy" decoding="async" alt="Lo schermo cucina con la comanda del tavolo 8 appena arrivata"><img src="img/st_comanda_stato.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La comanda sul telefono del cameriere, con i piatti segnati Mandato in sala"></figure>
     </article>
-    <article class="beat" id="pronto" data-beat="5">
-        <div class="beat-copy">
-            <p class="eyebrow"><span>20:54</span> Cucina</p>
-            <h2>Pronto: manda in sala.</h2>
-            <p class="who">Elena, cuoca</p>
-            <p>Un tocco su «Manda in sala» e Marco lo vede subito sul suo telefono. Il piatto esce caldo, senza urlare da una stanza all’altra.</p>
-            
-            
-        </div>
-        <figure class="beat-fig"><img src="img/st_comanda_stato.webp" width="860" height="1864" loading="lazy" decoding="async" alt="La comanda sul telefono del cameriere, con i piatti segnati Mandato in sala"></figure>
-    </article>
-    <article class="beat" id="gestione" data-beat="6">
+    <article class="beat" id="gestione" data-beat="6" data-from="5.55">
         <div class="beat-copy">
             <p class="eyebrow"><span>Fine serata</span> Ufficio</p>
             <h2>E a fine serata i numeri sono già lì.</h2>
@@ -207,7 +175,7 @@
         </div>
         <figure class="beat-fig"><img src="img/andamento.webp" width="860" height="1864" loading="lazy" decoding="async" alt="Andamento: coperti, incasso e incasso per giorno"><img src="img/utile.webp" width="860" height="1864" loading="lazy" decoding="async" alt="Utile stimato del mese e dove vanno i soldi"></figure>
     </article>
-    <article class="beat" id="fine" data-beat="7">
+    <article class="beat" id="fine" data-beat="7" data-from="6.7">
         <div class="beat-copy">
             
             <h2>Ti va di vederlo nel tuo locale?</h2>
@@ -220,11 +188,12 @@
     </article>
         </div>
         <aside class="hud" id="hud" data-hud="{&quot;steps&quot;: [{&quot;pos&quot;: 0.0, &quot;device&quot;: null}, {&quot;pos&quot;: 0.55, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;st_cerca&quot;}, {&quot;pos&quot;: 0.98, &quot;tap&quot;: {&quot;x&quot;: 0.5, &quot;y&quot;: 0.492, &quot;device&quot;: &quot;phone&quot;}}, {&quot;pos&quot;: 1.08, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;st_cerca_ok&quot;}, {&quot;pos&quot;: 1.5, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;st_piantina&quot;}, {&quot;pos&quot;: 2.55, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;st_comanda&quot;}, {&quot;pos&quot;: 2.95, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;st_comanda_invia&quot;}, {&quot;pos&quot;: 3.26, &quot;tap&quot;: {&quot;x&quot;: 0.641, &quot;y&quot;: 0.954, &quot;device&quot;: &quot;phone&quot;}}, {&quot;pos&quot;: 3.7, &quot;device&quot;: &quot;tablet&quot;, &quot;img&quot;: &quot;st_cucina_nuova&quot;}, {&quot;pos&quot;: 4.5, &quot;device&quot;: &quot;tablet&quot;, &quot;img&quot;: &quot;st_cucina_pronto&quot;}, {&quot;pos&quot;: 4.72, &quot;tap&quot;: {&quot;x&quot;: 0.379, &quot;y&quot;: 0.926, &quot;device&quot;: &quot;tablet&quot;}}, {&quot;pos&quot;: 4.95, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;st_comanda_stato&quot;}, {&quot;pos&quot;: 5.55, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;andamento&quot;}, {&quot;pos&quot;: 5.95, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;utile&quot;}, {&quot;pos&quot;: 6.3, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;fattura&quot;}, {&quot;pos&quot;: 6.62, &quot;device&quot;: &quot;phone&quot;, &quot;img&quot;: &quot;turni&quot;}, {&quot;pos&quot;: 6.95, &quot;device&quot;: null}], &quot;chips&quot;: [[&quot;Andamento&quot;, 5.7], [&quot;Utile&quot;, 6.1], [&quot;Fatture&quot;, 6.42], [&quot;Turni&quot;, 6.78]], &quot;shots&quot;: [{&quot;img&quot;: &quot;st_cerca&quot;, &quot;title&quot;: &quot;Ricerca rapida&quot;, &quot;text&quot;: &quot;Scrivi il nome o il numero del tavolo e trovi subito la prenotazione. Un tocco su «Segnala come arrivato» e il cliente è segnato.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;st_cerca_ok&quot;, &quot;title&quot;: &quot;Cliente arrivato&quot;, &quot;text&quot;: &quot;Il tavolo risulta occupato per tutto lo staff, nello stesso istante, su qualsiasi telefono o tablet.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;st_piantina&quot;, &quot;title&quot;: &quot;La piantina&quot;, &quot;text&quot;: &quot;La sala disegnata com’è davvero: ogni tavolo ha il suo colore, libero, prenotato, arrivato o pagato.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;st_comanda&quot;, &quot;title&quot;: &quot;Il menù del tavolo&quot;, &quot;text&quot;: &quot;Dal tavolo scegli la categoria e aggiungi i piatti, senza carta né giri in cucina.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;st_comanda_invia&quot;, &quot;title&quot;: &quot;Riepilogo e invio&quot;, &quot;text&quot;: &quot;Ogni piatto ha la sua uscita (1, 2, 3): primi, secondi e dolci partono al momento giusto. Un tocco su «Invia comanda».&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;st_cucina_nuova&quot;, &quot;title&quot;: &quot;Lo schermo della cucina&quot;, &quot;text&quot;: &quot;La comanda arriva divisa per uscita, con le allergie ben visibili. Chi cucina spunta i piatti man mano.&quot;, &quot;kind&quot;: &quot;tablet&quot;}, {&quot;img&quot;: &quot;st_cucina_pronto&quot;, &quot;title&quot;: &quot;Tutto pronto&quot;, &quot;text&quot;: &quot;Quando ogni piatto è spuntato compare «Manda in sala»: un tocco e il cameriere lo sa.&quot;, &quot;kind&quot;: &quot;tablet&quot;}, {&quot;img&quot;: &quot;st_comanda_stato&quot;, &quot;title&quot;: &quot;Il cameriere lo vede&quot;, &quot;text&quot;: &quot;Su ogni piatto si legge se è in preparazione, pronto o mandato in sala. Niente più corse in cucina per chiedere.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;andamento&quot;, &quot;title&quot;: &quot;Andamento&quot;, &quot;text&quot;: &quot;Coperti per serata, incasso per coperto e incasso per giorno della settimana, senza inserire niente a mano.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;utile&quot;, &quot;title&quot;: &quot;Utile stimato&quot;, &quot;text&quot;: &quot;Incassi senza IVA meno fatture, personale e spese fisse, mese per mese. È una stima di lavoro, non un bilancio.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;fattura&quot;, &quot;title&quot;: &quot;Fattura da una foto&quot;, &quot;text&quot;: &quot;Fotografi la fattura e le righe vengono lette in automatico: la lettura può sbagliare, quindi controlli tu prima di salvare. Ti avvisa se un prezzo è salito.&quot;, &quot;kind&quot;: &quot;phone&quot;}, {&quot;img&quot;: &quot;turni&quot;, &quot;title&quot;: &quot;I turni della settimana&quot;, &quot;text&quot;: &quot;Prepari la settimana in bozza e pubblichi: vengono avvisati solo quelli che hanno un turno nuovo o cambiato.&quot;, &quot;kind&quot;: &quot;phone&quot;}]}">
-        <div class="hud-frame hud-phone" data-kind="phone"><div class="screens"><img data-img="st_cerca" src="img/st_cerca.webp" width="860" height="1864" alt="" decoding="async"><img data-img="st_cerca_ok" src="img/st_cerca_ok.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_piantina" src="img/st_piantina.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda" src="img/st_comanda.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda_invia" src="img/st_comanda_invia.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda_stato" src="img/st_comanda_stato.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="andamento" src="img/andamento.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="utile" src="img/utile.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="fattura" src="img/fattura.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="turni" src="img/turni.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><span class="tap"></span></div><button type="button" class="hud-zoom" aria-label="Ingrandisci la schermata dell’app"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg><span class="z-desk">Clicca per ingrandire</span><span class="z-touch">Tocca per ingrandire</span></button></div>
-        <div class="hud-frame hud-tablet" data-kind="tablet"><div class="screens"><img data-img="st_cucina_nuova" src="img/st_cucina_nuova.webp" width="2360" height="1520" alt="" decoding="async"><img data-img="st_cucina_pronto" src="img/st_cucina_pronto.webp" width="2360" height="1520" alt="" decoding="async" loading="lazy"><span class="tap"></span></div><button type="button" class="hud-zoom" aria-label="Ingrandisci la schermata dell’app"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg><span class="z-desk">Clicca per ingrandire</span><span class="z-touch">Tocca per ingrandire</span></button></div>
+        <div class="hud-frame hud-phone" data-kind="phone"><div class="screens"><img data-img="st_cerca" src="img/st_cerca.webp" width="860" height="1864" alt="" decoding="async"><img data-img="st_cerca_ok" src="img/st_cerca_ok.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_piantina" src="img/st_piantina.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda" src="img/st_comanda.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda_invia" src="img/st_comanda_invia.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="st_comanda_stato" src="img/st_comanda_stato.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="andamento" src="img/andamento.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="utile" src="img/utile.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="fattura" src="img/fattura.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><img data-img="turni" src="img/turni.webp" width="860" height="1864" alt="" decoding="async" loading="lazy"><span class="tap"></span></div><button type="button" class="hud-hit" tabindex="-1" aria-hidden="true"></button><button type="button" class="hud-zoom" aria-label="Ingrandisci la schermata dell’app"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg><span class="z-desk">Clicca per ingrandire</span><span class="z-touch">Tocca per ingrandire</span></button></div>
+        <div class="hud-frame hud-tablet" data-kind="tablet"><div class="screens"><img data-img="st_cucina_nuova" src="img/st_cucina_nuova.webp" width="2360" height="1520" alt="" decoding="async"><img data-img="st_cucina_pronto" src="img/st_cucina_pronto.webp" width="2360" height="1520" alt="" decoding="async" loading="lazy"><span class="tap"></span></div><button type="button" class="hud-hit" tabindex="-1" aria-hidden="true"></button><button type="button" class="hud-zoom" aria-label="Ingrandisci la schermata dell’app"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/></svg><span class="z-desk">Clicca per ingrandire</span><span class="z-touch">Tocca per ingrandire</span></button></div>
         <div class="hud-chips" id="hudChips"><button type="button" data-pos="5.7">Andamento</button><button type="button" data-pos="6.1">Utile</button><button type="button" data-pos="6.42">Fatture</button><button type="button" data-pos="6.78">Turni</button></div>
     </aside>
         <nav class="story-nav" id="storyNav" aria-label="Il giro del locale"><button type="button" data-pos="0">Ingresso</button><button type="button" data-pos="1">Sala</button><button type="button" data-pos="4">Cucina</button><button type="button" data-pos="6">Gestione</button><span class="story-track" aria-hidden="true"><i></i></span></nav>
+        <a class="skip-tour" id="skipTour" href="#confronto">Salta il giro <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg></a>
         <p class="story-loading" id="storyLoading" hidden>Sto preparando il locale…</p>
     </div>
 </section>
