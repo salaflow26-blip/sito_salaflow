@@ -99,7 +99,7 @@ function layout() {
     H = pin.clientHeight;
     const narrow = W <= 820;
     // la parte libera dello schermo: a destra del testo su computer, sopra la scheda su telefono
-    if (narrow) stage.resize(W, H, 0, -0.2, 1, 0.58);
+    if (narrow) stage.resize(W, H, -0.14, -0.1, 0.72, 0.6);
     else stage.resize(W, H, 0.075, 0, 0.74, 0.94);
 }
 
@@ -117,6 +117,23 @@ function schedule() {
     lastT = performance.now();
     raf = requestAnimationFrame(frame);
 }
+// riquadri che coprono la scena: le etichette 3D li evitano
+function updateObstacles() {
+    const list = [];
+    const add = (el, pad) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        if (r.width < 4 || r.height < 4) return;
+        const pr = pin.getBoundingClientRect();
+        list.push({ l: r.left - pr.left - pad, r: r.right - pr.left + pad, t: r.top - pr.top - pad, b: r.bottom - pr.top + pad });
+    };
+    const cur = beats[activeBeat];
+    add(cur && cur.querySelector('.beat-copy'), 6);
+    if (hud && hud.classList.contains('is-on')) add(hudFrames.find(f => f.classList.contains('is-on')), 6);
+    add(storyNav, 4);
+    list.topSafe = 62;
+    stage.setObstacles(list);
+}
 function frame(t) {
     raf = 0;
     const dt = Math.min(0.05, ((t - lastT) / 1000) || 0.016);
@@ -129,6 +146,7 @@ function frame(t) {
         const f = clamp((1 - sm(curPos / 0.9)) + sm((curPos - 6.1) / 0.9), 0, 1);
         stage.setFrame(0.075 + 0.17 * f, 0, 0.74 - 0.18 * f, 0.94);
     }
+    updateObstacles();
     stage.render(curPos, t / 1000);
     updateUI(curPos);
     // la scena respira anche da ferma (luci, persone): si continua a disegnare finché è a schermo
@@ -273,7 +291,7 @@ function openLb(imgName, opener) {
     renderLb();
     lb.hidden = false;
     document.documentElement.classList.add('lb-open');
-    lb.querySelector('.lb-close').focus();
+    lb.focus({ preventScroll: true });
 }
 function closeLb() {
     if (!lb || lb.hidden) return;
@@ -364,7 +382,14 @@ function updateStickyCta() {
         const r = demoSectionEl.getBoundingClientRect();
         overForm = r.top < window.innerHeight * 0.7 && r.bottom > 0;
     }
-    stickyCtaEl.classList.toggle('is-visible', pastStory && !overForm);
+    // niente CTA fissa nemmeno sopra la tabella di confronto: copriva il testo
+    const cmp = document.getElementById('confronto');
+    let overCompare = false;
+    if (cmp) {
+        const c = cmp.getBoundingClientRect();
+        overCompare = c.top < window.innerHeight && c.bottom > 60;
+    }
+    stickyCtaEl.classList.toggle('is-visible', pastStory && !overForm && !overCompare);
 }
 function onScroll() {
     ticking = false;

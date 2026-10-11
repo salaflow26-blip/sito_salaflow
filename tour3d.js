@@ -833,7 +833,7 @@ export function createStage(canvas, labelsLayer, opts = {}) {
         const mix = (u, v) => lerp(u, v, e);
         const portrait = view.w / view.h < 0.9;
         const ta = portrait && a.tP ? a.tP : a.t, tb = portrait && b.tP ? b.tP : b.t;
-        const fa = portrait && a.fitP ? a.fitP : a.fit, fb = portrait && b.fitP ? b.fitP : b.fit;
+        const fa = portrait ? (a.fitP || a.fit.map(v => v * 0.6)) : a.fit, fb = portrait ? (b.fitP || b.fit.map(v => v * 0.6)) : b.fit;
         const t = [mix(ta[0], tb[0]), mix(ta[1], tb[1]), mix(ta[2], tb[2])];
         const breath = Math.sin(Math.PI * e);                       // a metà viaggio la camera si allarga un po'
         const fit = [mix(fa[0], fb[0]) * (1 + 0.5 * breath), mix(fa[1], fb[1]) * (1 + 0.5 * breath)];
@@ -991,7 +991,11 @@ export function createStage(canvas, labelsLayer, opts = {}) {
 
     // ---------- resa
     const proj = new THREE.Vector3();
+    let obstacles = [];
+    function setObstacles(list) { obstacles = list; }
     function renderLabels(subject, fpE) {
+        const topSafe = obstacles.topSafe || 0;
+        const placed = [];
         for (const k in labels) {
             const L = labels[k];
             const own = subject && fpE > 0.5 && L.person === subject;     // in prima persona non vedi la tua etichetta
@@ -1001,7 +1005,25 @@ export function createStage(canvas, labelsLayer, opts = {}) {
             proj.y += L.dy;
             proj.project(camera);
             const behind = proj.z > 1;
-            const x = (proj.x * 0.5 + 0.5) * view.w, y = (-proj.y * 0.5 + 0.5) * view.h;
+            let x = (proj.x * 0.5 + 0.5) * view.w, y = (-proj.y * 0.5 + 0.5) * view.h;
+            const hw = (L.el.offsetWidth || 120) / 2, hh = (L.el.offsetHeight || 24);
+            // se l'oggetto è fuori dallo schermo l'etichetta sparisce (niente etichette orfane ai bordi)
+            if (x < 12 || x > view.w - 12 || y < topSafe + 8 || y > view.h - 8) { L.el.style.opacity = 0; continue; }
+            // se un riquadro (telefono, testo, barra) copre l'etichetta, la si sposta di lato o sopra
+            for (const r of obstacles) {
+                const l = x - hw, rr = x + hw, t = y - hh, bb = y;
+                if (rr < r.l || l > r.r || bb < r.t || t > r.b) continue;
+                if (r.r - r.l > view.w * 0.7) y = r.t - 6;                        // riquadro largo (testo su telefono): sopra
+                else if ((r.l + r.r) / 2 < view.w / 2) x = r.r + 8 + hw;           // a sinistra: spostata a destra
+                else x = r.l - 8 - hw;                                             // a destra: spostata a sinistra
+            }
+            x = clamp(x, hw + 6, view.w - hw - 6);
+            y = Math.max(y, topSafe + hh + 6);
+            // due etichette non si sovrappongono: la seconda sale
+            for (const q of placed) {
+                if (Math.abs(x - q.x) < hw + q.hw && Math.abs(y - q.y) < hh + 4) y = q.y - hh - 6;
+            }
+            placed.push({ x, y, hw });
             L.el.style.opacity = behind ? 0 : 1;
             L.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -100%)`;
         }
@@ -1061,5 +1083,5 @@ export function createStage(canvas, labelsLayer, opts = {}) {
         return e;
     }
     function dispose() { renderer.dispose(); }
-    return { render, resize, setFrame, setMode, getMode, dispose, renderer, scene, camera, people, tables };
+    return { render, resize, setFrame, setObstacles, setMode, getMode, dispose, renderer, scene, camera, people, tables };
 }
