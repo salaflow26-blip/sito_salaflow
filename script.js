@@ -20,25 +20,50 @@ let ticking = false;
 let lbClosedAt = -1000;       // quando si è chiuso l'ingrandimento (serve contro i tocchi fantasma)
 
 // ---------------------------------------------------------
-// Statistiche di visita anonime (Vercel Web Analytics): niente cookie, nessun dato personale.
-// Si caricano solo sul sito vero, non in locale. Oltre alla pagina vista, segnano come "pagine
-// virtuali" i punti chiave del percorso (/giro/cucina, /ingrandisci, /modulo-inviato...) per
-// capire dove la gente si ferma, senza raccogliere altro.
+// Statistiche di visita anonime, nostre (si leggono in admin → «Sito»).
+// Si manda un evento per ogni punto raggiunto (visita, giro sala/cucina/ufficio, «ingrandisci»,
+// «salta il giro», modulo inviato...) a una funzione che aggiunge +1 a un contatore del giorno.
+// Niente cookie, niente IP, nessun identificativo: si contano le sessioni (ogni evento una volta
+// sola per scheda aperta, ricordato in sessionStorage), non le persone. Solo sul sito vero, e non
+// se il browser chiede di non essere tracciato (Do Not Track / Global Privacy Control).
 // ---------------------------------------------------------
-const ANALYTICS_HOSTS = /(^|\.)salaflow\.com$|\.vercel\.app$/;
-const tracked = new Set();
-if (ANALYTICS_HOSTS.test(location.hostname)) {
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    const sc = document.createElement('script');
-    sc.defer = true;
-    sc.src = '/_vercel/insights/script.js';
-    document.head.appendChild(sc);
+const STATS_URL = 'https://europe-west1-salaflow-6d0f7.cloudfunctions.net/siteEvent';
+const STATS_HOSTS = /^(www\.)?salaflow\.com$|\.vercel\.app$/;
+const STATS_EVENTS = {
+    '/giro/sala': 'giro_sala', '/giro/cucina': 'giro_cucina', '/giro/ufficio': 'giro_ufficio', '/giro/fine': 'giro_fine',
+    '/giro/saltato': 'giro_saltato', '/giro/lento': 'giro_lento', '/giro/blocchi': 'giro_blocchi',
+    '/ingrandisci': 'ingrandisci', '/cta': 'cta_click', '/modulo-inviato': 'modulo_inviato'
+};
+const statsOn = STATS_HOSTS.test(location.hostname) && navigator.doNotTrack !== '1' && !navigator.globalPrivacyControl;
+const sentEvents = new Set();
+try { JSON.parse(sessionStorage.getItem('salaflow_ev') || '[]').forEach(e => sentEvents.add(e)); } catch (e) { /* senza memoria di sessione si conta per pagina */ }
+function statsSource() {
+    const q = new URLSearchParams(location.search);
+    const utm = (q.get('utm_source') || q.get('ref') || '').toLowerCase();
+    let host = '';
+    try { host = document.referrer ? new URL(document.referrer).hostname.toLowerCase() : ''; } catch (e) { /* referrer non valido */ }
+    const probe = utm || host;
+    if (!probe) return 'diretto';
+    if (/instagram|(^|\.)ig$/.test(probe)) return 'instagram';
+    if (/whatsapp|wa\.me/.test(probe)) return 'whatsapp';
+    if (/google/.test(probe)) return 'google';
+    if (/facebook|fb\.com|fb$/.test(probe)) return 'facebook';
+    if (host === location.hostname) return 'diretto';
+    return 'altro';
 }
-function track(path) {
-    if (tracked.has(path)) return;
-    tracked.add(path);
-    try { if (typeof window.va === 'function') window.va('pageview', { route: null, path }); } catch (e) { /* le statistiche non devono mai rompere il sito */ }
+function sendStat(event, extra) {
+    if (!statsOn || sentEvents.has(event)) return;
+    sentEvents.add(event);
+    try { sessionStorage.setItem('salaflow_ev', JSON.stringify([...sentEvents])); } catch (e) { /* ok */ }
+    try {
+        const body = JSON.stringify(Object.assign({ e: event }, extra || {}));
+        // sendBeacon parte anche se la pagina si chiude; in alternativa fetch con keepalive
+        if (!(navigator.sendBeacon && navigator.sendBeacon(STATS_URL, body))) fetch(STATS_URL, { method: 'POST', body, keepalive: true, mode: 'no-cors' }).catch(() => {});
+    } catch (e) { /* le statistiche non devono mai rompere il sito */ }
 }
+function track(path) { const ev = STATS_EVENTS[path]; if (ev) sendStat(ev); }
+sendStat('visita', { s: statsSource(), d: (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 820) ? 'mobile' : 'desktop' });
+document.querySelectorAll('a[href="#demo"]').forEach(a => a.addEventListener('click', () => track('/cta')));
 
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -140,11 +165,26 @@ function layout() {
     else stage.resize(W, H, 0.075, 0, 0.74, 0.94);
 }
 
+// Un momento del giro conta come «raggiunto» solo se ci si ferma almeno 0,8 s con il giro a schermo:
+// scorrere in fretta (o il salto del menu / «salta il giro») non fa contare i momenti attraversati.
+let dwellIdx = -1, dwellTimer = 0;
+function dwellBeat() {
+    const idx = beatIndexAt(targetPos);
+    if (idx === dwellIdx) return;
+    dwellIdx = idx;
+    clearTimeout(dwellTimer);
+    if (!BEAT_PATH[beats[idx].id]) return;
+    dwellTimer = setTimeout(() => {
+        const r = story.getBoundingClientRect();
+        if (live && r.top <= 1 && r.bottom > window.innerHeight * 0.5 && beatIndexAt(targetPos) === idx) track(BEAT_PATH[beats[idx].id]);
+    }, 800);
+}
 function readScroll(snap) {
     if (!live) return;
     const r = story.getBoundingClientRect();
     const p = clamp(-r.top / span(), 0, 1);
     targetPos = p * PMAX;
+    dwellBeat();
     if (snap) curPos = targetPos;
     schedule();
 }
@@ -256,7 +296,6 @@ function updateUI(pos) {
     const idx = beatIndexAt(pos);
     if (idx !== activeBeat) {
         activeBeat = idx;
-        if (BEAT_PATH[beats[idx].id]) track(BEAT_PATH[beats[idx].id]);
         beats.forEach((b, i) => { b.classList.toggle('is-active', i === idx); if ('inert' in b) b.inert = i !== idx; });
         const inTour = idx >= 1 && idx <= 3;
         navLinks.forEach(a => {
@@ -415,6 +454,7 @@ if (brandLink) brandLink.addEventListener('click', (e) => { e.preventDefault(); 
 
 if (story) {
     setLive(wantLive());
+    if (!live) track('/giro/blocchi');
     reduceMotion.addEventListener('change', () => setLive(wantLive()));
     window.addEventListener('resize', () => {
         const should = wantLive();
