@@ -213,9 +213,6 @@ async function startStage() {
         const mod = await import('./tour3d.js');
         if (!live) return;
         stage = mod.createStage(canvas, labelsLayer, { lowPower: isLowPower() });
-        stage.setMode(viewMode);
-        story.classList.toggle('fp', viewMode === 'fp');
-        if (viewToggle) viewToggle.querySelectorAll('button').forEach(b => { const on = b.dataset.view === viewMode; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); });
         layout();
         ready = true;
         readScroll(true);
@@ -246,19 +243,75 @@ function setLive(on) {
     }
 }
 
-// punto di vista: dall'esterno oppure in prima persona (negli occhi di Marco, poi di Elena, poi di Giulia)
-const viewToggle = document.getElementById('viewToggle');
-let viewMode = 'outside';
-try { if (localStorage.getItem('salaflow_view') === 'fp') viewMode = 'fp'; } catch (e) { /* senza memoria locale si parte da fuori */ }
-function applyView(mode, remember) {
-    viewMode = mode;
-    if (stage) stage.setMode(mode);
-    story.classList.toggle('fp', mode === 'fp');
-    if (viewToggle) viewToggle.querySelectorAll('button').forEach(b => { const on = b.dataset.view === mode; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); });
-    if (remember) { try { localStorage.setItem('salaflow_view', mode); } catch (e) { /* ok */ } }
-    schedule();
+// ---------------------------------------------------------
+// Il telefono (o il tablet) si può toccare per ingrandirlo: finestra con la schermata grande,
+// cosa fa, e frecce per scorrere tutte le schermate della storia.
+// ---------------------------------------------------------
+const lb = document.getElementById('lightbox');
+const lbShots = hudData.shots || [];
+let lbIndex = 0;
+let lbOpener = null;
+function renderLb() {
+    const s = lbShots[lbIndex];
+    if (!s || !lb) return;
+    const tablet = s.kind === 'tablet';
+    const img = lb.querySelector('.lb-shot img');
+    lb.classList.toggle('is-tablet', tablet);
+    img.width = tablet ? 2360 : 860;
+    img.height = tablet ? 1520 : 1864;
+    img.src = `img/${s.img}.webp`;
+    img.alt = s.title;
+    lb.querySelector('.lb-title').textContent = s.title;
+    lb.querySelector('.lb-text').textContent = s.text;
+    lb.querySelector('.lb-count').textContent = `${lbIndex + 1} di ${lbShots.length}`;
 }
-if (viewToggle) viewToggle.querySelectorAll('button').forEach(b => b.addEventListener('click', () => applyView(b.dataset.view, true)));
+function openLb(imgName, opener) {
+    if (!lb || !lbShots.length) return;
+    const i = lbShots.findIndex(x => x.img === imgName);
+    lbIndex = i < 0 ? 0 : i;
+    lbOpener = opener || null;
+    renderLb();
+    lb.hidden = false;
+    document.documentElement.classList.add('lb-open');
+    lb.querySelector('.lb-close').focus();
+}
+function closeLb() {
+    if (!lb || lb.hidden) return;
+    lb.hidden = true;
+    document.documentElement.classList.remove('lb-open');
+    if (lbOpener && lbOpener.focus) lbOpener.focus();
+}
+function stepLb(d) {
+    lbIndex = (lbIndex + d + lbShots.length) % lbShots.length;
+    renderLb();
+}
+if (lb) {
+    hudFrames.forEach(f => f.addEventListener('click', () => openLb(hudAt(curPos).img, f.querySelector('.hud-zoom'))));
+    lb.querySelector('.lb-close').addEventListener('click', closeLb);
+    lb.querySelector('.lb-prev').addEventListener('click', () => stepLb(-1));
+    lb.querySelector('.lb-next').addEventListener('click', () => stepLb(1));
+    lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-figure')) closeLb(); });
+    document.addEventListener('keydown', (e) => {
+        if (lb.hidden) return;
+        if (e.key === 'Escape') closeLb();
+        else if (e.key === 'ArrowLeft') stepLb(-1);
+        else if (e.key === 'ArrowRight') stepLb(1);
+        else if (e.key === 'Tab') {
+            const f = [...lb.querySelectorAll('button')];
+            const first = f[0], last = f[f.length - 1];
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+    });
+    let touchX = null;
+    lb.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', (e) => {
+        if (touchX === null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        touchX = null;
+        if (Math.abs(dx) > 50) stepLb(dx < 0 ? 1 : -1);
+    }, { passive: true });
+}
 
 // pulsanti e link che portano a un momento della storia
 document.querySelectorAll('[data-beat-go]').forEach(el => {
