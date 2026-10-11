@@ -154,16 +154,25 @@ function fitInfo() {
     const wasLive = story.classList.contains('is-live');
     story.classList.add('is-live');
     const ph = pin.clientHeight, narrow = pin.clientWidth <= 820;
+    // su telefoni bassi (es. il browser di Instagram) la didascalia si fa più compatta, così il giro resta
+    story.classList.toggle('is-compact', narrow && ph < 700);
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const hs = beats.map(b => b.querySelector('.beat-copy').offsetHeight);
     const capMid = Math.max(...hs.slice(1, -1));          // didascalie con il telefono (sala, cucina, ufficio)
     let ok;
-    if (narrow) ok = hs[0] <= ph * 0.66 && hs[hs.length - 1] <= ph * 0.6 && ph - capMid >= rem * 26.7;   // il telefono in mano ai personaggi deve starci sopra la didascalia (almeno 6rem di larghezza)
+    if (narrow) ok = hs[0] <= ph * 0.7 && hs[hs.length - 1] <= ph * 0.62 && ph - capMid >= rem * 23.7;   // il telefono in mano ai personaggi deve starci sopra la didascalia (almeno 4,6rem di larghezza)
     else ok = Math.max(...hs) <= ph - rem * 9;
     if (!wasLive) story.classList.remove('is-live');
     return { ok, hs, capMid, ph };
 }
-function stageFits() { return fitInfo().ok; }
+// Il risultato si ricorda finché non cambia la larghezza o la dimensione del testo: le variazioni di altezza
+// (la barra di Safari che si nasconde mentre si scorre) non devono spegnere il giro a metà.
+let fitKey = '', fitOk = true;
+function stageFits() {
+    const key = window.innerWidth + '|' + getComputedStyle(document.documentElement).fontSize;
+    if (key !== fitKey) { fitKey = key; fitOk = fitInfo().ok; }
+    return fitOk;
+}
 // ?3d=off forza la versione a blocchi, ?3d=force impedisce il passaggio automatico (utile per i test)
 const MODE_3D = new URLSearchParams(location.search).get('3d');
 function wantBlocks() {
@@ -499,6 +508,8 @@ if (story) {
         }, { rootMargin: '100px' }).observe(story);
     }
     document.addEventListener('visibilitychange', () => { if (!document.hidden) schedule(); });
+    // a font caricati le didascalie cambiano un po': si rimisura lo spazio per il telefono
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (live && stage) layout(); });
     // arrivando con #sala / #cucina / #gestione si parte dal momento giusto
     const jump = { sala: 1, cucina: 4, gestione: 6 }[location.hash.slice(1)];
     if (jump && live) {

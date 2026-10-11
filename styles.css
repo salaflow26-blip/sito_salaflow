@@ -365,7 +365,7 @@ html.lb-open { overflow: hidden; }
     .story.is-live .hud-phone::before { top: 0.55rem; height: 0.55rem; }
     .story.is-live .hud-chips { margin-top: 0; }
     .story.is-live .hud-chips button { padding: 0.3rem 0.55rem; font-size: 0.68rem; }
-    .story.is-live { --hudw: max(6rem, min(clamp(8.6rem, 21vw, 13rem), calc((100svh - var(--cap-h, 15rem) - 13.7rem) / 2.17))); }
+    .story.is-live { --hudw: max(4.6rem, min(clamp(8.6rem, 21vw, 13rem), calc((100svh - var(--cap-h, 15rem) - 13.7rem) / 2.17))); }
     .story.is-live .hud-phone { width: var(--hudw); }
     .story.is-live .hud-tablet { width: clamp(11.5rem, 33vw, 22rem); }
     .story.is-live .hud-chips { top: calc(var(--hudw) * 2.17 + 3.2rem); width: calc(100vw - 1.8rem); flex-wrap: nowrap; }
@@ -386,6 +386,14 @@ html.lb-open { overflow: hidden; }
     .story.is-live .story-loading { left: 50%; top: 30%; }
     .story.is-live .beat[data-beat="0"] .beat-copy { margin: 0 -1.15rem; padding: 3.6rem 1.15rem 0; background: linear-gradient(180deg, rgba(10, 14, 13, 0) 0, rgba(10, 14, 13, 0.94) 3rem); }
     .story.is-live .skip-tour { top: 4.4rem; left: 1.15rem; font-size: 0.62rem; padding: 0.38rem 0.7rem; }
+    /* telefoni bassi: didascalia più compatta, perché restino spazio per la scena e per il telefono in mano */
+    .story.is-live.is-compact .beat-copy { padding: 0.8rem 1rem 0.9rem; }
+    .story.is-live.is-compact .beat h2 { font-size: clamp(1.1rem, 4.8vw, 1.35rem); margin: 0.3rem 0; }
+    .story.is-live.is-compact .beat p { font-size: 0.84rem; line-height: 1.38; }
+    .story.is-live.is-compact .beat .eyebrow { font-size: 0.66rem; }
+    .story.is-live.is-compact .beat[data-beat="0"] h1 { font-size: clamp(1.9rem, 9vw, 2.5rem); margin-bottom: 0.5rem; }
+    .story.is-live.is-compact .beat[data-beat="0"] .lead { font-size: 0.92rem; }
+    .story.is-live.is-compact .beat[data-beat="0"] .hero-cta { margin-top: 0.8rem; }
     .story.is-live .story-nav { left: 0.6rem; right: 0.6rem; bottom: 0.5rem; gap: 1.2rem; padding: 0.55rem 0.7rem 0.8rem; }
     .story-nav button { font-size: 0.66rem; }
     /* tabella di confronto: ogni riga diventa una scheda */
