@@ -2,11 +2,11 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SalaFlow — Gestione Sala e Prenotazioni Ristorante</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+<title>SalaFlow: gestione sala e prenotazioni per ristoranti</title>
 <meta name="description" content="SalaFlow organizza prenotazioni, tavoli, comande, cassa, turni, checklist e conti del tuo ristorante. Dal telefono o dal tablet, in tempo reale.">
 
-<meta property="og:title" content="SalaFlow — La sala del tuo ristorante, finalmente sotto controllo">
+<meta property="og:title" content="SalaFlow: la sala del tuo ristorante, finalmente sotto controllo">
 <meta property="og:description" content="Prenotazioni, piantina, comande, cassa, turni, checklist e conti: tutta la serata in un'app, per ristoranti che non hanno tempo da perdere.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://salaflow.com/">
@@ -20,7 +20,7 @@
      i lettori di anteprima social (WhatsApp, LinkedIn, ecc.) spesso non risolvono percorsi relativi. -->
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SalaFlow — La sala del tuo ristorante, finalmente sotto controllo">
+<meta name="twitter:title" content="SalaFlow: la sala del tuo ristorante, finalmente sotto controllo">
 <meta name="twitter:description" content="Prenotazioni, piantina, comande, cassa, turni, checklist e conti: tutta la serata in un'app, dal telefono o dal tablet.">
 <meta name="twitter:image" content="https://salaflow.com/og-image.png">
 <meta name="twitter:image:alt" content="SalaFlow: la tua sala, finalmente sotto controllo. Marchio SalaFlow e schermata dell'app con la piantina dei tavoli.">
@@ -91,15 +91,12 @@
 </script>
 
 <meta name="theme-color" content="#0a0e0d">
+<meta name="color-scheme" content="dark">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
-<link rel="modulepreload" href="vendor/three.module.min.js">
-<link rel="modulepreload" href="tour3d.js">
 <script>document.documentElement.classList.add('js')</script>
 <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 </head>
@@ -133,18 +130,18 @@
     <article class="beat is-active" id="intro" data-beat="0" data-from="0">
         <div class="beat-copy">
             <h1>La tua sala, <em>finalmente</em> sotto controllo.</h1>
-            <p class="lead">Prenotazioni, comande, turni e conti in un’app sola, sul tablet o sul telefono che hai già. Vieni con noi a vedere una serata, dall’ingresso alla cucina fino all’ufficio.</p>
+            <p class="lead">Prenotazioni, comande, turni e conti in un’app sola, sul telefono o sul tablet che hai già.</p>
             <div class="hero-cta">
                 <a href="#demo" class="btn btn-flusso btn-lg">Prenota una visita</a>
                 <a href="#sala" class="link-arrow" data-beat-go="1">Inizia il giro <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg></a>
             </div>
-            <p class="hero-note">Nessun impegno · In uso ogni sera in un ristorante vero · iPhone e iPad, anche dal browser · Android in arrivo</p>
+            <p class="hero-note">Senza impegno. In uso ogni sera in un ristorante vero, su iPhone, iPad e dal browser.</p>
         </div>
         <figure class="beat-fig"><img src="img/st_piantina.webp" width="860" height="1864" decoding="async" alt="La piantina della sala in SalaFlow, con i tavoli colorati in base allo stato"></figure>
     </article>
     <article class="beat" id="sala" data-beat="1" data-from="0.55">
         <div class="beat-copy">
-            <p class="eyebrow"><span>20:30 – 20:41</span> Sala</p>
+            <p class="eyebrow"><span>20:30 → 20:41</span> Sala</p>
             <h2>Accoglie i Lombardi e prende l’ordine.</h2>
             <p class="who">Marco, cameriere</p>
             <p>Marco cerca il nome nell’app e tocca «Segnala come arrivato»: il tavolo 8 si accende per tutti, nello stesso istante. Poi li accompagna al tavolo e prende l’ordine dal telefono, uscita per uscita.</p>
@@ -155,7 +152,7 @@
     </article>
     <article class="beat" id="cucina" data-beat="4" data-from="3.55">
         <div class="beat-copy">
-            <p class="eyebrow"><span>20:42 – 20:54</span> Cucina</p>
+            <p class="eyebrow"><span>20:42 → 20:54</span> Cucina</p>
             <h2>La comanda è già in cucina.</h2>
             <p class="who">Elena, cuoca</p>
             <p>Elena la vede sul tablet, divisa per uscita e con le allergie ben visibili. Prepara, spunta i piatti e tocca «Manda in sala»: Marco lo vede subito sul suo telefono, senza urlare da una stanza all’altra.</p>
@@ -199,7 +196,6 @@
 </section>
 <section class="band" id="confronto">
     <div class="wrap">
-        <p class="eyebrow">Il confronto</p>
         <h2>Un solo strumento, invece di tre o quattro.</h2>
         <div class="compare-wrap">
             <table class="compare">
@@ -217,14 +213,13 @@
 </section>
 <section class="origin" id="storia">
     <div class="wrap">
-        <p class="eyebrow">Dalla sala, per la sala</p>
         <blockquote>Fatta da chi in sala ci ha lavorato davvero.</blockquote>
         <p class="lead">Nasce da anni passati tra comande, tavoli e quaderni pieni di cancellature. Ogni funzione la testiamo per prima nel nostro locale, a servizio in corso, e la miglioriamo in base a quello che succede davvero una sera piena.</p>
     </div>
 </section>
 <section class="where" id="dove">
     <div class="wrap where-row">
-        <p class="eyebrow">Dove la usi</p>
+        <p class="where-label">Dove la usi</p>
         <ul>
             <li><b>iPhone e iPad</b> <a href="https://apps.apple.com/it/app/salaflow/id6815325143" rel="noopener">Dall’App Store</a></li>
             <li><b>Android</b> <span>In arrivo</span></li>
@@ -235,7 +230,6 @@
 <section class="band" id="faq">
     <div class="wrap faq-grid">
         <div>
-            <p class="eyebrow">Domande frequenti</p>
             <h2>Le domande che ci fanno più spesso.</h2>
         </div>
         <div class="faq-list">
@@ -254,9 +248,9 @@
             <h2>Vieni a vederla nel tuo locale.</h2>
             <p>Prenota una visita, senza impegno: veniamo noi di persona a mostrarti SalaFlow al lavoro, sui tuoi tavoli veri.</p>
             <form class="demo-form" id="demoForm">
-                <input type="text" name="nome" placeholder="Il tuo nome" required aria-label="Il tuo nome">
-                <input type="text" name="locale" placeholder="Nome del locale" required aria-label="Nome del locale">
-                <input type="email" name="email" placeholder="La tua email" required aria-label="La tua email">
+                <input type="text" name="nome" placeholder="Il tuo nome" required aria-label="Il tuo nome" autocomplete="name" enterkeyhint="next">
+                <input type="text" name="locale" placeholder="Nome del locale" required aria-label="Nome del locale" autocomplete="organization" enterkeyhint="next">
+                <input type="email" name="email" placeholder="La tua email" required aria-label="La tua email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" enterkeyhint="send">
                 <!-- Facoltativo: oggi è l'unico modo per sapere da dove nasce una richiesta (nessuna analytics/UTM sul sito).
                      "how_heard" finisce nell'email che Formspree inoltra, non richiede altro codice. -->
                 <select name="how_heard" aria-label="Come ci hai conosciuto?">

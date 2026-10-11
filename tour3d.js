@@ -796,10 +796,10 @@ export function createStage(canvas, labelsLayer, opts = {}) {
 
     // ---------- etichette HTML ancorate al 3D
     const labelDefs = {
-        marco: { person: 'marco', text: 'Marco · cameriere', obj: () => people.find(p => p.key === 'marco').root, dy: 2.1, show: (pos) => pos > 0.7 && pos < 5.6 },
-        elena: { person: 'elena', text: 'Elena · cuoca', obj: () => people.find(p => p.key === 'elena').root, dy: 2.35, show: (pos) => pos > 3.5 && pos < 5.2 },
-        giulia: { person: 'giulia', text: 'Giulia · titolare', obj: () => people.find(p => p.key === 'giulia').root, dy: 1.85, show: (pos) => pos > 5.5 && pos < 7.0 },
-        t8: { text: 'Tavolo 8 · Lombardi', obj: () => T8.g, dy: 1.9, show: (pos) => pos > 0.9 && pos < 2.45, cls: 'pin' },
+        marco: { person: 'marco', text: 'Marco, cameriere', obj: () => people.find(p => p.key === 'marco').root, dy: 2.1, show: (pos) => pos > 0.7 && pos < 5.6 },
+        elena: { person: 'elena', text: 'Elena, cuoca', obj: () => people.find(p => p.key === 'elena').root, dy: 2.35, show: (pos) => pos > 3.5 && pos < 5.2 },
+        giulia: { person: 'giulia', text: 'Giulia, titolare', obj: () => people.find(p => p.key === 'giulia').root, dy: 1.85, show: (pos) => pos > 5.5 && pos < 7.0 },
+        t8: { text: 'Tavolo 8, Lombardi', obj: () => T8.g, dy: 1.9, show: (pos) => pos > 0.9 && pos < 2.45, cls: 'pin' },
         pass: { text: 'Comanda in arrivo', obj: () => ({ position: new THREE.Vector3(1.35, 0, -2.3) }), dy: 2.45, show: (pos) => pos > 3.8 && pos < 4.6, cls: 'pin' },
     };
     const labels = {};
@@ -971,14 +971,14 @@ export function createStage(canvas, labelsLayer, opts = {}) {
             const vis = L.show(pos);
             L.visible = vis;
             if (k === 't8') L.el.classList.toggle('on', arrive > 0.5);
-            if (k === 't8') L.el.textContent = arrive > 0.5 ? 'Tavolo 8 · arrivato' : 'Tavolo 8 · prenotato';
+            if (k === 't8') L.el.textContent = arrive > 0.5 ? 'Tavolo 8: arrivato' : 'Tavolo 8: prenotato';
         }
     }
     function drawChart(k) {
         const g = chartCanvas.getContext('2d');
         g.fillStyle = '#0c1311'; g.fillRect(0, 0, 320, 200);
         g.fillStyle = 'rgba(238,243,240,0.5)'; g.font = '600 13px ui-monospace, monospace';
-        g.fillText('INCASSO · COPERTI', 14, 24);
+        g.fillText('INCASSO E COPERTI', 14, 24);
         const vals = [0.35, 0.52, 0.44, 0.66, 0.9, 0.6, 0.48, 0.74];
         vals.forEach((v, i) => {
             const h = v * 120 * smooth(clamp(k * 1.5 - i * 0.07, 0, 1));

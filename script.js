@@ -14,6 +14,15 @@ if (!location.hash) {
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+// Testo ingrandito dal browser (accessibilità) su uno schermo piccolo: il pulsante dell'intestazione
+// non ci sta più accanto al logo e al menu, quindi lascia il posto al menu (che ha lo stesso pulsante).
+function checkBigText() {
+    const px = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    document.documentElement.classList.toggle('big-text', px >= 18.5 && window.innerWidth < 1100);
+}
+checkBigText();
+window.addEventListener('resize', checkBigText);
 const stickyCtaEl = document.getElementById('stickyCta');
 const demoSectionEl = document.getElementById('demo');
 let ticking = false;
@@ -137,8 +146,24 @@ function webglOK() {
     } catch (e) { return false; }
 }
 function wantLive() {
-    return !!story && beats.length > 1 && !reduceMotion.matches && window.innerHeight >= 480 && webglOK() && !wantBlocks();
+    return !!story && beats.length > 1 && !reduceMotion.matches && window.innerHeight >= 480 && webglOK() && !wantBlocks() && stageFits();
 }
+// Le didascalie devono stare nello schermo senza coprire la scena. Se non ci stanno (testo ingrandito
+// dal browser, schermi molto piccoli) il giro non parte e restano i blocchi uno sotto l'altro, leggibili.
+function fitInfo() {
+    const wasLive = story.classList.contains('is-live');
+    story.classList.add('is-live');
+    const ph = pin.clientHeight, narrow = pin.clientWidth <= 820;
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const hs = beats.map(b => b.querySelector('.beat-copy').offsetHeight);
+    const capMid = Math.max(...hs.slice(1, -1));          // didascalie con il telefono (sala, cucina, ufficio)
+    let ok;
+    if (narrow) ok = hs[0] <= ph * 0.66 && hs[hs.length - 1] <= ph * 0.6 && ph - capMid >= rem * 26.7;   // il telefono in mano ai personaggi deve starci sopra la didascalia (almeno 6rem di larghezza)
+    else ok = Math.max(...hs) <= ph - rem * 9;
+    if (!wasLive) story.classList.remove('is-live');
+    return { ok, hs, capMid, ph };
+}
+function stageFits() { return fitInfo().ok; }
 // ?3d=off forza la versione a blocchi, ?3d=force impedisce il passaggio automatico (utile per i test)
 const MODE_3D = new URLSearchParams(location.search).get('3d');
 function wantBlocks() {
@@ -160,6 +185,8 @@ function layout() {
     W = pin.clientWidth;
     H = pin.clientHeight;
     const narrow = W <= 820;
+    // su telefono il telefono "in mano" prende lo spazio che resta sopra la didascalia (vedi --hudw nel CSS)
+    if (narrow) story.style.setProperty('--cap-h', fitInfo().capMid + 'px'); else story.style.removeProperty('--cap-h');
     // la parte libera dello schermo: a destra del testo su computer, sopra la scheda su telefono
     if (narrow) stage.resize(W, H, -0.14, -0.1, 0.72, 0.6);
     else stage.resize(W, H, 0.075, 0, 0.74, 0.94);
@@ -330,6 +357,10 @@ async function startStage() {
     loadingStage = true;
     if (loadingEl) loadingEl.hidden = false;
     try {
+        // scarica la libreria 3D in parallelo al file della scena (altrimenti partirebbe solo dopo)
+        ['vendor/three.module.min.js', 'tour3d.js'].forEach(href => {
+            const l = document.createElement('link'); l.rel = 'modulepreload'; l.href = href; document.head.appendChild(l);
+        });
         const mod = await import('./tour3d.js');
         if (!live) return;
         stage = mod.createStage(canvas, labelsLayer, { lowPower: isLowPower() });
@@ -475,7 +506,7 @@ if (story) {
         requestAnimationFrame(() => { goTo(jump, true); document.documentElement.style.scrollBehavior = ''; });
     }
     // per i test automatici: salta subito alla posizione dello scroll invece di scivolarci
-    window.__story = { snap() { readScroll(true); }, get pos() { return curPos; }, get stage() { return stage; } };
+    window.__story = { fit: fitInfo, snap() { readScroll(true); }, get pos() { return curPos; }, get stage() { return stage; } };
 }
 
 // ---------------------------------------------------------
