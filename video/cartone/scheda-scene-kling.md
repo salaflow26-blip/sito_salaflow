@@ -13,6 +13,8 @@ Salvate ogni clip come `scena-01.mp4`, `scena-02.mp4`, ecc.
 > **Cambio dopo la prova della scena 01:** dalla 1 alla 23 è **tutto in bianco e nero** (solo il quaderno è rosso). Il **colore arriva solo dalla scena 24**, quando compare SalaFlow. Le immagini 01, 02 e 03 vanno bene così come sono, in bianco e nero.
 Le scene 11, 25 e 26 non si fanno: le monto io.
 
+> **Regola imparata dalle prove:** se nell'immagine il quaderno **non c'è**, il prompt **non** deve nominarlo (altrimenti Kling lo fa comparire dal nulla). Per queste scene il prompt dice "no color" e "there is no notebook in this scene".
+
 ---
 
 ## SCENE 01-06: l'oste e il ragazzo (in bianco e nero)
@@ -23,31 +25,31 @@ Le scene 11, 25 e 26 non si fanno: le monto io.
 1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The restaurant owner proudly lifts the red notebook and talks, his mustache bouncing; the young man in the teal cap taps his foot with arms crossed, unimpressed. Static camera. Keep the characters exactly as in the image. No text.
 ```
 
-### Scena 02
+### Scena 02 ✅ fatta
 - **Immagine:** `scena-02`: primo piano dell'oste col quaderno rosso in mano.
 ```
 1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The owner waves the red notebook high with a big proud grin, talking enthusiastically; small sparkles twinkle around the notebook. Slow push-in. Keep the character exactly as in the image. No text.
 ```
 
-### Scena 03
+### Scena 03 ✅ fatta
 - **Immagine:** `scena-03`: primo piano del ragazzo col cappellino, braccia conserte.
 ```
-1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The young man raises one eyebrow and says one short word, arms crossed, skeptical half-smile. Static camera. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker, no color. Bouncy squash-and-stretch, characters bob to a swing rhythm. There is no notebook in this scene. The young man raises one eyebrow and says one short word, arms crossed, skeptical half-smile. Static camera. Keep the character exactly as in the image. No text.
 ```
 
-### Scena 04
+### Scena 04 ✅ fatta
 - **Immagine:** `scena-02` (la stessa della scena 2).
 ```
 1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The owner counts on his gloved fingers while talking confidently, holding the red notebook. Static camera. Keep the character exactly as in the image. No text.
 ```
 
-### Scena 05
+### Scena 05 ✅ fatta
 - **Immagine:** `scena-03` (la stessa della scena 3).
 ```
-1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The young man leans forward slightly with a teasing smile and says one short word. Slow push-in. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker, no color. Bouncy squash-and-stretch, characters bob to a swing rhythm. There is no notebook in this scene. The young man leans forward slightly with a teasing smile and says one short word. Slow push-in. Keep the character exactly as in the image. No text.
 ```
 
-### Scena 06
+### Scena 06 ✅ fatta
 - **Immagine:** `scena-02`.
 ```
 1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The owner's proud smile melts into an awkward nervous grin, sweat drops fly off his bald head, he slowly lowers the notebook. Slow push-in. Keep the character exactly as in the image. No text.
