@@ -8,18 +8,24 @@ Stadio attuale (onesto, aggiornato periodicamente): l'app per iPhone e iPad è s
 
 ## Cosa fa
 
-Versione base (la sala):
+Tre pacchetti, i prezzi sono ancora in definizione.
+
+Base (la sala):
 - Piantina dei tavoli in tempo reale, disegnata come la sala vera, con un colore per ogni stato.
 - Prenotazioni della serata, arrivi, ritardi, note e allergie; pagina pubblica di prenotazione per ogni locale.
 - Richieste online da accettare o rifiutare con uno swipe, con il tavolo suggerito.
 - Stato del servizio, promemoria dei tavoli occupati da troppo tempo, notifiche push.
 - Profili dello staff su un tablet condiviso, con PIN facoltativo.
 
-Pacchetto Comande (aggiunge):
+Comande (aggiunge alla Base):
 - Prima del servizio: turni della settimana (bozza e «pubblica e avvisa»), giorni liberi e scambi di turno, disponibilità, checklist di apertura e chiusura, mansioni da sistemare, presenze effettive.
 - Durante il servizio: comande a cucina e bar divise per uscita, cassa e conto (preconto, divisione, abbuoni, conti in sospeso), asporto.
-- Dopo il servizio: fine serata, magazzino e lista della spesa, fatture da una foto o da PDF/XML (con controllo finale dell'utente), andamento, piatti più e meno venduti, ore e file per il consulente.
-- Per chi gestisce (importi visibili solo a proprietario e accessi «gestione»): utile stimato, costo del personale, spese fisse, simulatore «un cameriere in più».
+- Dopo il servizio: riepilogo della serata, ore e file per il consulente.
+
+Completo (aggiunge alle Comande la Gestione):
+- Andamento: coperti, incasso, piatti più e meno venduti.
+- Magazzino, fornitori e lista della spesa; fatture da una foto o da PDF/XML (con controllo finale dell'utente).
+- Per chi gestisce (importi visibili solo a proprietario e accessi «gestione»): utile stimato, costo del personale, spese fisse, IVA, simulatore «un cameriere in più».
 
 Limiti dichiarati: l'utile è una stima di lavoro, non un bilancio e non sostituisce il commercialista; il conto di SalaFlow è un riepilogo interno, non un documento fiscale (lo scontrino si batte sul registratore di cassa).
 

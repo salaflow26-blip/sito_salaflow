@@ -555,7 +555,7 @@ onScroll();
 // ---------------------------------------------------------
 // Entrata morbida delle sezioni dopo il giro
 // ---------------------------------------------------------
-const revealTargets = document.querySelectorAll('.band h2, .compare-wrap, .fine, .origin .wrap > *, .where-row, .faq-item, .cta-block');
+const revealTargets = document.querySelectorAll('.band h2, .compare-wrap, .pack, .fine, .origin .wrap > *, .where-row, .faq-item, .cta-block');
 if ('IntersectionObserver' in window && !reduceMotion.matches) {
     revealTargets.forEach((node, i) => {
         node.classList.add('reveal');
