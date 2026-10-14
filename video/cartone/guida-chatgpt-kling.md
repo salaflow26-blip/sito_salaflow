@@ -59,26 +59,28 @@ e poi la descrizione della scena. Se ChatGPT cambia faccia a un personaggio, scr
 | `scena-24` | Stessa trattoria. Il RAGAZZO mostra un moderno smartphone tenendolo in alto, con lo schermo verso di noi (schermo acceso ma vuoto, blu scuro). L'OSTE accanto lo guarda sorpreso, col QUADERNO in mano. |
 | `scena-29` | Stessa trattoria. L'OSTE, felice, scrive una ricetta sul QUADERNO appoggiato su un tavolo; il QUADERNO sorride. Il RAGAZZO accanto fa il pollice in su, smartphone in mano. |
 
-**IN BIANCO E NERO (il racconto)** — aggiungete sempre: *"in bianco e nero da pellicola anni '30, l'unica cosa colorata è il quaderno rosso"*:
+**IN BIANCO E NERO (il racconto).** Il quaderno **non** deve stare in ogni scena: c'è solo dove è scritto nella descrizione (07, 10, 12, 17, 19, 20, 23). Aggiungete in fondo alla descrizione:
+- nelle scene **con** il quaderno 📕: *"in bianco e nero da pellicola anni '30; l'unica cosa colorata è il quaderno rosso"*
+- nelle scene **senza** quaderno: *"tutto in bianco e nero da pellicola anni '30, nessun colore; in questa scena il quaderno non c'è"*
 
 | Immagine | Descrizione da incollare |
 | --- | --- |
-| `scena-07` | Una trattoria degli anni '30 vista per intero: bancone di legno, lampada appesa, tavoli con tovaglie a quadretti, pavimento a scacchi. Il QUADERNO rosso è appoggiato sul bancone. L'OSTE sorride accanto al bancone. |
+| `scena-07` 📕 | Una trattoria degli anni '30 vista per intero: bancone di legno, lampada appesa, tavoli con tovaglie a quadretti, pavimento a scacchi. Il QUADERNO rosso è appoggiato sul bancone. L'OSTE sorride accanto al bancone. |
 | `scena-08` | Primo piano di un vecchio telefono nero a disco, con una faccina, appoggiato sul bancone di legno, che squilla: linee di vibrazione intorno. |
 | `scena-09` | L'OSTE in equilibrio precario: con una mano tiene una pila altissima di piatti, con l'altra la cornetta del telefono all'orecchio. Suda. Sfondo della trattoria. |
-| `scena-10` | Primissimo piano dall'alto del QUADERNO rosso aperto: pagine a righe con scarabocchi a matita illeggibili e una matita appoggiata. |
-| `scena-12` | Il QUADERNO rosso, triste, con un post-it bianco appiccicato storto sulla copertina. Sfondo: muro della trattoria. |
+| `scena-10` 📕 | Primissimo piano dall'alto del QUADERNO rosso aperto: pagine a righe con scarabocchi a matita illeggibili e una matita appoggiata. |
+| `scena-12` 📕 | Il QUADERNO rosso, triste, con un post-it bianco appiccicato storto sulla copertina. Sfondo: muro della trattoria. |
 | `scena-13` | Un post-it che vola via verso la porta aperta della trattoria; l'OSTE lo rincorre con le braccia tese, faccia disperata. |
 | `scena-14` | L'OSTE urla verso una finestra-passavivande della cucina da cui esce vapore. Si vede la parete con le piastrelle. |
 | `scena-15` | Cucina anni '30 con pentole appese: il CUOCO si gratta la testa, confuso, un grande punto interrogativo sopra di lui. |
 | `scena-16` | Su un tavolo, una vecchia calcolatrice meccanica sputa uno scontrino lunghissimo che arriva fino a terra; l'OSTE accanto è sfinito, spalle basse. |
-| `scena-17` | L'OSTE seduto al tavolo fissa il QUADERNO rosso aperto, confuso; tre punti interrogativi galleggiano sopra la sua testa. |
+| `scena-17` 📕 | L'OSTE seduto al tavolo fissa il QUADERNO rosso aperto, confuso; tre punti interrogativi galleggiano sopra la sua testa. |
 | `scena-18` | Tre grandi punti interrogativi neri con la faccina, in fila, su un muro a righe della trattoria. |
-| `scena-19` | Il QUADERNO rosso con la faccina alza le braccine e fa spallucce, espressione "boh". Sfondo: muro. |
-| `scena-20` | Un vecchio manifesto di propaganda anni '30 appeso al muro: al centro il QUADERNO rosso sorridente che fa il pollice in su, raggi di sole dietro (senza scritte). |
+| `scena-19` 📕 | Il QUADERNO rosso con la faccina alza le braccine e fa spallucce, espressione "boh". Sfondo: muro. |
+| `scena-20` 📕 | Un vecchio manifesto di propaganda anni '30 appeso al muro: al centro il QUADERNO rosso sorridente che fa il pollice in su, raggi di sole dietro (senza scritte). |
 | `scena-21` | Il NONNO in primo piano agita il dito alzato, come chi dice "si è sempre fatto così". Sfondo della trattoria. |
 | `scena-22` | Caos nella trattoria: piatti e post-it che volano in cerchio intorno all'OSTE, due telefoni che squillano negli angoli, l'OSTE barcolla. |
-| `scena-23` | Primo piano dell'OSTE con gli occhi a spirale, ipnotizzato, sorriso vuoto, stringe il QUADERNO rosso. |
+| `scena-23` 📕 | Primo piano dell'OSTE con gli occhi a spirale, ipnotizzato, sorriso vuoto, stringe il QUADERNO rosso. |
 
 *(Le scene 11, 25 e 26 non servono: la 11 la faccio io, la 25 e la 26 sono le schermate vere dell'app.)*
 

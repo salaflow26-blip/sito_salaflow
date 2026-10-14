@@ -77,7 +77,7 @@ Nei prompt è meglio descrivere lo stile invece di nominare studi o personaggi f
 ### Stile comune (da mettere all'inizio di ogni prompt)
 
 **Scene in bianco e nero (7-23):**
-> 1930s rubber hose cartoon animation, hand-drawn cel animation look, black and white with film grain, scratches and flicker, thick black outlines, characters with pie-cut eyes, white gloves, noodle arms and legs, bouncy squash-and-stretch movement on the beat, old Italian trattoria setting. The ONLY colored object is a bright red notebook. No text, no letters, no logos.
+> 1930s rubber hose cartoon animation, hand-drawn cel animation look, black and white with film grain, scratches and flicker, thick black outlines, characters with pie-cut eyes, white gloves, noodle arms and legs, bouncy squash-and-stretch movement on the beat, old Italian trattoria setting. The ONLY colored object is a bright red notebook (only when it is in the scene; it is not in every scene). No text, no letters, no logos.
 
 **Scene a colori (1-6, 24-29):**
 > Same 1930s rubber hose cartoon style but in warm full color, clean modern lighting, Italian trattoria with checkered floor, striped wallpaper, red-and-white checkered tablecloths. No text, no letters, no logos.
