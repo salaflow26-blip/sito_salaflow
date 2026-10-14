@@ -18,11 +18,11 @@ Base (la sala):
 - Profili dello staff su un tablet condiviso, con PIN facoltativo.
 
 Comande (aggiunge alla Base):
-- Prima del servizio: turni della settimana (bozza e «pubblica e avvisa»), giorni liberi e scambi di turno, disponibilità, checklist di apertura e chiusura, mansioni da sistemare, presenze effettive.
-- Durante il servizio: comande a cucina e bar divise per uscita, cassa e conto (preconto, divisione, abbuoni, conti in sospeso), asporto.
-- Dopo il servizio: riepilogo della serata, ore e file per il consulente.
+- Durante il servizio: menù e comande a cucina e bar divise per uscita, con le allergie ben visibili; cassa e conto (preconto, divisione, abbuoni, conti in sospeso); asporto dalla pagina del locale.
+- Dopo il servizio: riepilogo della serata.
 
 Completo (aggiunge alle Comande la Gestione):
+- Prima del servizio: turni della settimana (bozza e «pubblica e avvisa»), giorni liberi e scambi di turno, disponibilità, checklist di apertura e chiusura, mansioni da sistemare, presenze effettive, ore e file per il consulente.
 - Andamento: coperti, incasso, piatti più e meno venduti.
 - Magazzino, fornitori e lista della spesa; fatture da una foto o da PDF/XML (con controllo finale dell'utente).
 - Per chi gestisce (importi visibili solo a proprietario e accessi «gestione»): utile stimato, costo del personale, spese fisse, IVA, simulatore «un cameriere in più».
