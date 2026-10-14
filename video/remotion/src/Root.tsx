@@ -10,6 +10,7 @@ import { StaffScene } from "./scenes/StaffScene";
 import { WallScene } from "./scenes/WallScene";
 import "./theme";
 import { Cartoon, timeline } from "./cartoon/Cartoon";
+import { CartoonAI } from "./cartoon/CartoonAI";
 
 const V = { width: 1080, height: 1920, fps: 30 } as const;
 
@@ -35,6 +36,7 @@ export const RemotionRoot: React.FC = () => {
         <Composition id="Muro" component={WallScene} durationInFrames={97} {...V} />
         <Composition id="Finale" component={EndScene} durationInFrames={150} {...V} />
       </Folder>
+      <Composition id="CartoneAI" component={CartoonAI} durationInFrames={timeline(30).total} {...V} defaultProps={{ music: "music/swing.mp3" }} />
       <Composition id="Cartone" component={Cartoon} durationInFrames={timeline(30).total} {...V} defaultProps={{ music: "music/swing.mp3" }} />
     </>
   );

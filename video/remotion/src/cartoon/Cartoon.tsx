@@ -6,7 +6,7 @@ import { OldFilm, PH, PW, weave } from "./Scenery";
 import { END_CARD, Line, SCRIPT, SUBTITLE, TITLE } from "./script";
 
 // Layout of the reference: a fixed title on black, the cartoon panel in the middle, yellow subtitles on the panel.
-const PANEL_Y = 520;
+export const PANEL_Y = 520;
 const cl = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 export const timeline = (fps: number) => {
@@ -36,7 +36,7 @@ const chunks = (text: string) => {
   return out;
 };
 
-const Caption: React.FC<{ readonly line: Line; readonly dur: number }> = ({ line, dur }) => {
+export const Caption: React.FC<{ readonly line: Line; readonly dur: number }> = ({ line, dur }) => {
   const frame = useCurrentFrame();
   const parts = chunks(line.text);
   const total = parts.reduce((s, p) => s + p.length + 6, 0);
@@ -94,7 +94,7 @@ const Shot: React.FC<{ readonly line: Line }> = ({ line }) => {
   );
 };
 
-const EndCard: React.FC = () => {
+export const EndCard: React.FC = () => {
   const frame = useCurrentFrame();
   const s = interpolate(frame, [0, 10], [0.6, 1], cl);
   return (
@@ -113,15 +113,19 @@ const EndCard: React.FC = () => {
   );
 };
 
+export const Title: React.FC = () => (
+  <div style={{ position: "absolute", top: 360, width: "100%", textAlign: "center", fontFamily: FONT, color: "#fff" }}>
+    <div style={{ fontWeight: 800, fontSize: 60, letterSpacing: "-0.02em", lineHeight: 1, whiteSpace: "nowrap" }}>{TITLE}</div>
+    <div style={{ marginTop: 14, fontWeight: 600, fontSize: 40, fontStyle: "italic", color: "#e5e5e5" }}>{SUBTITLE}</div>
+  </div>
+);
+
 export const Cartoon: React.FC<{ readonly music: string }> = ({ music }) => {
   const { fps } = useVideoConfig();
   const t = timeline(fps);
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
-      <div style={{ position: "absolute", top: 360, width: "100%", textAlign: "center", fontFamily: FONT, color: "#fff" }}>
-        <div style={{ fontWeight: 800, fontSize: 60, letterSpacing: "-0.02em", lineHeight: 1, whiteSpace: "nowrap" }}>{TITLE}</div>
-        <div style={{ marginTop: 14, fontWeight: 600, fontSize: 40, fontStyle: "italic", color: "#e5e5e5" }}>{SUBTITLE}</div>
-      </div>
+      <Title />
       {t.shots.map((s) => (
         <Sequence key={s.line.id} name={`${s.line.id} · ${s.line.text}`} from={s.from} durationInFrames={s.dur} premountFor={fps}>
           <Shot line={s.line} />
