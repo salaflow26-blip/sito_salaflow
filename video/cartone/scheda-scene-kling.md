@@ -9,14 +9,16 @@ realistic, 3D render, photo, text, letters, words, subtitles, speech bubble, wat
 ```
 
 Salvate ogni clip come `scena-01.mp4`, `scena-02.mp4`, ecc.
+
+> **Cambio dopo la prova della scena 01:** dalla 1 alla 23 è **tutto in bianco e nero** (solo il quaderno è rosso). Il **colore arriva solo dalla scena 24**, quando compare SalaFlow. Le immagini 01, 02 e 03 vanno bene così come sono, in bianco e nero.
 Le scene 11, 25 e 26 non si fanno: le monto io.
 
 ---
 
-## SCENE A COLORI (inizio)
+## SCENE 01-06: l'oste e il ragazzo (in bianco e nero)
 
-### Scena 01
-- **Immagine:** `scena-01`: oste e ragazzo a figura intera nella trattoria a colori; l'oste alza il quaderno rosso, il ragazzo ha le braccia conserte.
+### Scena 01 ✅ fatta
+- **Immagine:** `scena-01`: oste e ragazzo a figura intera nella trattoria; l'oste alza il quaderno rosso, il ragazzo ha le braccia conserte.
 ```
 1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The restaurant owner proudly lifts the red notebook and talks, his mustache bouncing; the young man in the teal cap taps his foot with arms crossed, unimpressed. Static camera. Keep the characters exactly as in the image. No text.
 ```
@@ -24,31 +26,31 @@ Le scene 11, 25 e 26 non si fanno: le monto io.
 ### Scena 02
 - **Immagine:** `scena-02`: primo piano dell'oste col quaderno rosso in mano.
 ```
-1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The owner waves the red notebook high with a big proud grin, talking enthusiastically; small sparkles twinkle around the notebook. Slow push-in. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The owner waves the red notebook high with a big proud grin, talking enthusiastically; small sparkles twinkle around the notebook. Slow push-in. Keep the character exactly as in the image. No text.
 ```
 
 ### Scena 03
 - **Immagine:** `scena-03`: primo piano del ragazzo col cappellino, braccia conserte.
 ```
-1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The young man raises one eyebrow and says one short word, arms crossed, skeptical half-smile. Static camera. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The young man raises one eyebrow and says one short word, arms crossed, skeptical half-smile. Static camera. Keep the character exactly as in the image. No text.
 ```
 
 ### Scena 04
 - **Immagine:** `scena-02` (la stessa della scena 2).
 ```
-1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The owner counts on his gloved fingers while talking confidently, holding the red notebook. Static camera. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The owner counts on his gloved fingers while talking confidently, holding the red notebook. Static camera. Keep the character exactly as in the image. No text.
 ```
 
 ### Scena 05
 - **Immagine:** `scena-03` (la stessa della scena 3).
 ```
-1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The young man leans forward slightly with a teasing smile and says one short word. Slow push-in. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The young man leans forward slightly with a teasing smile and says one short word. Slow push-in. Keep the character exactly as in the image. No text.
 ```
 
 ### Scena 06
 - **Immagine:** `scena-02`.
 ```
-1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The owner's proud smile melts into an awkward nervous grin, sweat drops fly off his bald head, he slowly lowers the notebook. Slow push-in. Keep the character exactly as in the image. No text.
+1930s rubber hose cartoon animation, black and white old film with grain, scratches and flicker; the notebook stays bright red. Bouncy squash-and-stretch, characters bob to a swing rhythm. The owner's proud smile melts into an awkward nervous grin, sweat drops fly off his bald head, he slowly lowers the notebook. Slow push-in. Keep the character exactly as in the image. No text.
 ```
 
 ---
@@ -153,7 +155,13 @@ Le scene 11, 25 e 26 non si fanno: le monto io.
 
 ---
 
-## SCENE A COLORI (finale)
+## SCENE A COLORI (finale): arriva SalaFlow
+
+Queste quattro immagini vanno **chieste a ChatGPT esplicitamente a colori**. Nella stessa chat scrivete prima:
+
+> Da adesso le scene sono **a colori pieni e caldi, non in bianco e nero**: stessi personaggi identici, stesso stile anni '30, ma colorati (l'oste con naso rosso, gilet marrone e papillon rosso; il ragazzo con cappellino e camicia verde petrolio). Formato orizzontale 16:9, nessuna scritta.
+
+e poi chiedete le immagini `scena-24`, `scena-02-colori`, `scena-03-colori` e `scena-29` (descrizioni qui sotto).
 
 ### Scena 24
 - **Immagine:** `scena-24`: il ragazzo che mostra lo smartphone all'oste sorpreso.
@@ -162,13 +170,13 @@ Le scene 11, 25 e 26 non si fanno: le monto io.
 ```
 
 ### Scena 27
-- **Immagine:** `scena-02`.
+- **Immagine:** `scena-02-colori`: lo stesso primo piano dell'oste col quaderno, **a colori** (chiedetelo a ChatGPT: "rifai il primo piano dell'oste della scena 02, identico, ma a colori").
 ```
 1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The owner looks down at his red notebook, then up, a little sad, and asks a short question. Static camera. Keep the character exactly as in the image. No text.
 ```
 
 ### Scena 28
-- **Immagine:** `scena-03`.
+- **Immagine:** `scena-03-colori`: lo stesso primo piano del ragazzo, **a colori** (chiedetelo a ChatGPT: "rifai il primo piano del ragazzo della scena 03, identico, ma a colori").
 ```
 1930s rubber hose cartoon animation in warm full color, bouncy squash-and-stretch, characters bob to a swing rhythm. The young man smiles warmly, shrugs and says a short line. Static camera. Keep the character exactly as in the image. No text.
 ```
@@ -184,5 +192,5 @@ Le scene 11, 25 e 26 non si fanno: le monto io.
 ## Più avanti, quando avete registrato le voci (facoltativo)
 
 Per avere la bocca a tempo con la vostra voce, rifate i primi piani con **Kling Avatar** (immagine + audio della battuta):
-- **02, 04, 06, 27:** immagine `scena-02` + audio dell'oste per quella battuta
-- **03, 05, 28:** immagine `scena-03` + audio del ragazzo per quella battuta
+- **02, 04, 06:** immagine `scena-02` (27: `scena-02-colori`) + audio dell'oste per quella battuta
+- **03, 05:** immagine `scena-03` (28: `scena-03-colori`) + audio del ragazzo per quella battuta

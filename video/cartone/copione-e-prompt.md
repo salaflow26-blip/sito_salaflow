@@ -32,7 +32,7 @@ I tempi sono indicativi: dopo la registrazione il video si adatta alla vostra vo
 
 | # | ⏱ | Voce | Battuta | Cosa si vede |
 | --- | --- | --- | --- | --- |
-| 1 | 0:00 | OSTE | Sabato sera, tutto esaurito. | *Colori.* Trattoria. L'oste, fiero, alza il quaderno rosso; il ragazzo a braccia conserte |
+| 1 | 0:00 | OSTE | Sabato sera, tutto esaurito. | *Bianco e nero, solo il quaderno è rosso.* Trattoria. L'oste, fiero, alza il quaderno rosso; il ragazzo a braccia conserte |
 | 2 | 0:02 | OSTE | E qui dentro c'è tutto. | Primo piano dell'oste che sventola il quaderno, stelline |
 | 3 | 0:04 | RAGAZZO | Tutto? | Primo piano del ragazzo, sopracciglio alzato |
 | 4 | 0:06 | OSTE | Prenotazioni, tavoli, allergie. Trent'anni così, e mai un problema. | L'oste elenca; compaiono "PRENOTAZIONI ✓ TAVOLI ✓ ALLERGIE ✓" |
@@ -55,7 +55,7 @@ I tempi sono indicativi: dopo la registrazione il video si adatta alla vostra vo
 | 21 | 0:52 | NARRATORE | Che si è sempre fatto così. | Il nonno col dito alzato |
 | 22 | 0:54 | NARRATORE | Che il caos fa parte del mestiere. | Caos: piatti e post-it che girano, telefoni che squillano, l'oste che barcolla |
 | 23 | 0:57 | NARRATORE | E tu ci hai creduto. | L'oste con gli occhi a spirale, ipnotizzato. *Chiusura a cerchio* |
-| 24 | 0:59 | RAGAZZO | Guarda qui. | *Torna il colore.* Il ragazzo mostra il telefono con SalaFlow |
+| 24 | 0:59 | RAGAZZO | Guarda qui. | *Arriva il colore.* Il ragazzo mostra il telefono con SalaFlow e il mondo si colora |
 | 25 | 1:01 | RAGAZZO | Prenotazioni, sala, comande, cucina e conto. In un'app sola. | Il telefono con le schermate vere dell'app che scorrono |
 | 26 | 1:05 | RAGAZZO | E per te: incassi, fatture, magazzino e turni. | Altre schermate: Andamento, Fatture, Magazzino, Turni |
 | 27 | 1:09 | OSTE | E il quaderno? | L'oste guarda il quaderno, un po' triste |
