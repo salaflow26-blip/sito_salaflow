@@ -2,6 +2,11 @@
 
 Servono **15 immagini** nuove, tutte da ChatGPT, quindi niente crediti Kling. Le animo io nel video. Se un giorno avrete crediti Kling, sotto ogni immagine c'è anche il prompt di movimento.
 
+## Quaderno sì / quaderno no
+
+- **Col quaderno rosso:** 17, 19, 20, 23 (bianco e nero) e 24, 27, 29, 30 (colori).
+- **Senza quaderno:** 11, 16, 18, 21, 22 (bianco e nero) e 25, 28 (colori). In questi prompt c'è scritto esplicitamente di non metterlo. Se ChatGPT lo mette lo stesso, rispondigli solo: *"togli il quaderno rosso, in questa scena non c'è"*.
+
 ## Come fare (uguale per tutte)
 
 1. Apri **una chat nuova** di ChatGPT per ogni immagine, oppure al massimo 3-4 immagini per chat.
@@ -20,20 +25,22 @@ Nell'immagine di riferimento ci sono, nell'ordine:
 ### 1 · `nuova-11` → scena 11 "Il tavolo da quattro diventa da sei"
 Sostituisce la scritta a mano sul quaderno.
 ```
-Usa come riferimento l'immagine allegata: stessi personaggi, stessa trattoria, stesso identico stile. Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura; l'unica cosa colorata è il quaderno rosso. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessun fumetto, nessuna cornice.
+Usa come riferimento l'immagine allegata: stessi personaggi, stessa trattoria, stesso identico stile. Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessun fumetto, nessuna cornice.
 
-Scena: nella trattoria, l'OSTE (il signore paffuto calvo con i grandi baffi, gilet nero, papillon e grembiule bianco dell'immagine allegata) spinge e incastra sei clienti buffi attorno a un tavolino rotondo da quattro: sedie aggiunte storte, gomiti schiacciati, un cliente seduto su uno sgabello traballante, uno in piedi col piatto in mano, una signora col cappellino schiacciata contro il muro. L'oste suda ma sorride forzato. Sul bordo del tavolo c'è il QUADERNO rosso con la faccina, che guarda la scena preoccupato.
+Scena: nella trattoria, l'OSTE (il signore paffuto calvo con i grandi baffi, gilet nero, papillon e grembiule bianco dell'immagine allegata) spinge e incastra sei clienti buffi attorno a un tavolino rotondo da quattro: sedie aggiunte storte, gomiti schiacciati, un cliente seduto su uno sgabello traballante, uno in piedi col piatto in mano, una signora col cappellino schiacciata contro il muro. L'oste suda ma sorride forzato.
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento): niente quaderno e niente oggetti rossi, tutto in bianco e nero seppia, tovaglie a quadretti grigi.
 ```
 *Kling (facoltativo):* `The customers wiggle and squeeze, the wobbly stool rocks, the owner pushes one more chair in, sweating. Static camera.`
 
 ### 2 · `nuova-16` → scena 16 "A fine serata, il conto lo rifai a mano"
 Sostituisce la somma scritta a mano.
 ```
-Usa come riferimento l'immagine allegata: stessi personaggi, stessa trattoria, stesso identico stile. Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura; l'unica cosa colorata è il quaderno rosso. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero leggibile, nessun fumetto, nessuna cornice.
+Usa come riferimento l'immagine allegata: stessi personaggi, stessa trattoria, stesso identico stile. Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero leggibile, nessun fumetto, nessuna cornice.
 
-Scena: a fine serata, la trattoria è vuota e le sedie sono sui tavoli. L'OSTE (il signore paffuto calvo con i grandi baffi, gilet nero, papillon e grembiule bianco dell'immagine allegata) è seduto al bancone, sfinito, e gira la manovella di una vecchia calcolatrice meccanica: ne esce uno scontrino di carta lunghissimo che si srotola giù dal bancone fino a terra e si arrotola sul pavimento. Accanto a lui il QUADERNO rosso con la faccina sbadiglia. Unica luce: la lampada sopra il bancone.
+Scena: a fine serata, la trattoria è vuota e le sedie sono sui tavoli. L'OSTE (il signore paffuto calvo con i grandi baffi, gilet nero, papillon e grembiule bianco dell'immagine allegata) è seduto al bancone, sfinito, e gira la manovella di una vecchia calcolatrice meccanica: ne esce uno scontrino di carta lunghissimo che si srotola giù dal bancone fino a terra e si arrotola sul pavimento. Unica luce: la lampada sopra il bancone.
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento): niente quaderno e niente oggetti rossi, tutto in bianco e nero seppia, tovaglie a quadretti grigi.
 ```
-*Kling:* `The owner cranks the calculator, the paper receipt keeps unrolling onto the floor, the notebook yawns. Static camera.`
+*Kling:* `The owner cranks the calculator, the paper receipt keeps unrolling onto the floor, he slumps lower and lower. Static camera.`
 
 ### 3 · `nuova-17` → scena 17 "E il giorno dopo, nessuno sa com'è andata davvero"
 ```
@@ -49,6 +56,7 @@ Sostituisce i punti interrogativi disegnati da me.
 Usa come riferimento l'immagine allegata per lo stile e per la trattoria. Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessun fumetto, nessuna cornice.
 
 Scena: tre grandi punti interrogativi neri con la faccina da cartone, braccine a tubo e guanti bianchi ballano in fila come un trio di ballerini, davanti al muro a righe della trattoria. Il primo tiene un sacchetto di monete, il secondo uno scontrino di carta lunghissimo, il terzo un portafoglio aperto e vuoto da cui vola via una falena.
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento): niente quaderno e niente oggetti rossi, tutto in bianco e nero seppia, tovaglie a quadretti grigi.
 ```
 *Kling:* `The three question marks dance in a chorus line, kicking their legs on the beat. Static camera.`
 
@@ -74,6 +82,7 @@ Scena: un vecchio manifesto di propaganda degli anni '30, un po' strappato agli 
 Usa come riferimento l'immagine allegata: stessa trattoria, stesso identico stile, e l'OSTE (il signore paffuto calvo con i grandi baffi, gilet nero, papillon e grembiule bianco). Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessun fumetto, nessuna cornice.
 
 Scena: un NONNO, anziano piccolo e curvo, calvo con due ciuffi bianchi ai lati, grandi baffi bianchi, occhiali tondi, cardigan e bastone, alza il dito indice e fa la predica con aria saputa davanti al bancone. Dietro di lui l'OSTE annuisce rispettoso con le mani giunte.
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento): niente quaderno e niente oggetti rossi, tutto in bianco e nero seppia, tovaglie a quadretti grigi.
 ```
 *Kling:* `The old man wags his raised finger and lectures, his mustache bouncing; the owner nods along. Static camera.`
 
@@ -82,6 +91,7 @@ Scena: un NONNO, anziano piccolo e curvo, calvo con due ciuffi bianchi ai lati, 
 Usa come riferimento l'immagine allegata: stessa trattoria, stesso identico stile, e l'OSTE (il signore paffuto calvo con i grandi baffi, gilet nero, papillon e grembiule bianco). Stile: cartone animato americano anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, occhi a fetta di torta, guanti bianchi, braccia e gambe a tubo, disegno 2D. Bianco e nero color seppia come una vecchia pellicola, con grana, leggeri graffi e vignettatura. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessun fumetto, nessuna cornice.
 
 Scena: il caos nella trattoria piena. L'OSTE gira su se stesso con gli occhi che girano a vortice; intorno a lui volano in cerchio piatti, forchette e foglietti di carta; due vecchi telefoni neri a disco con la faccina saltano e squillano sui tavoli; clienti che sbracciano per chiamarlo; un cameriere che scivola con un vassoio.
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento): niente quaderno e niente oggetti rossi, tutto in bianco e nero seppia, tovaglie a quadretti grigi.
 ```
 *Kling:* `Everything whirls around the spinning owner, plates and papers fly in circles, the phones jump and ring. Static camera.`
 
@@ -113,6 +123,7 @@ Nello schermo vuoto metto le schermate vere di SalaFlow.
 Usa come riferimento l'immagine allegata per lo stile e i guanti dei personaggi: cartone animato anni '30 "a tubo di gomma" (rubber hose), contorni neri spessi, disegno 2D. Ma A COLORI pieni e caldi, NON in bianco e nero, senza effetto pellicola. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessuna cornice.
 
 Scena: primo piano di una mano con guanto bianco da cartone che tiene un moderno smartphone dritto, al centro dell'immagine, con lo schermo verso di noi. Lo schermo occupa buona parte dell'altezza dell'immagine ed è completamente vuoto, blu scuro uniforme. Sullo sfondo, sfocata, la trattoria calda: pareti color crema, luci delle lampade, tovaglie a quadretti bianchi e rossi.
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento).
 ```
 *Kling:* `The gloved hand holds the phone steady with a tiny bounce, the warm background lights twinkle. The screen stays dark and blank. Static camera.`
 
@@ -128,7 +139,8 @@ Scena: primo piano dell'OSTE, dalla pancia in su, che stringe il suo QUADERNO ro
 ```
 Usa come riferimento l'immagine allegata: il RAGAZZO (quello col berretto, in alto a destra), identico nello stile cartone anni '30 "a tubo di gomma" (rubber hose: contorni neri spessi, occhi a fetta di torta, guanti bianchi, disegno 2D). Ma A COLORI pieni e caldi, NON in bianco e nero, senza effetto pellicola: berretto e camicia verde petrolio, guance rosate; sfondo della trattoria calda con pareti color crema, tovaglie a quadretti bianchi e rossi, luce calda. Formato orizzontale 16:9. Nessuna scritta, nessuna lettera, nessun numero, nessun fumetto, nessuna cornice.
 
-Scena: primo piano del RAGAZZO, dalla pancia in su, che sorride simpatico e fa spallucce con le mani aperte, come a dire "tienilo pure". Niente quaderno in questa immagine.
+Scena: primo piano del RAGAZZO, dalla pancia in su, che sorride simpatico e fa spallucce con le mani aperte, come a dire "tienilo pure".
+IMPORTANTE: in questa scena il quaderno rosso NON c'è (anche se compare nell'immagine di riferimento).
 ```
 *Kling:* `The young man smiles warmly, shrugs and says a short line. Static camera.`
 
