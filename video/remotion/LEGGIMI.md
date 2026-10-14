@@ -40,6 +40,27 @@ Composizione `Cartone` (circa 79 s): stile cartone anni '30 disegnato in codice 
 npx remotion render Cartone out/cartone.mp4 --crf=21 --jpeg-quality=90
 ```
 
+### Versione con le immagini AI (`CartoneAI`, circa 82 s)
+
+Stessa storia, fatta con le immagini del team:
+- scene 1-15: le clip di Kling (`public/clips/scena-XX.mp4`);
+- scene 11 e 16-30: le immagini di ChatGPT (`public/clips/nuove/nuova-XX.jpg`), animate da `scripts/vivi.py`.
+  Per ogni immagine c'è un "rig": zone morbide (testa, mani, quaderno…) che ruotano, si schiacciano e saltellano a tempo
+  di musica (120 BPM). Il risultato va in `public/clips/vivi/nuova-XX.mp4`; i punti da seguire (schermi dei telefoni,
+  lampada, occhi) vanno in `src/cartoon/vivi.json`. **Dopo aver cambiato le durate in `script.ts` va rilanciato**:
+  `python3 scripts/vivi.py` (circa 2 minuti);
+- scene 24-26: costruite in `src/cartoon/ai/` attorno alle schermate vere: il colore che esce dal telefono,
+  il telefono in prima persona coi pezzi dell'app che volano fuori (`mano-25.png` e `sfondo-25.jpg` sono la mano
+  scontornata e lo sfondo ricostruito), le schermate di gestione in 3D.
+
+```bash
+python3 scripts/vivi.py            # solo se sono cambiati i tempi o le immagini
+npx remotion render CartoneAI out/cartone-ai.mp4 --concurrency=4 --crf=20 --jpeg-quality=92
+```
+
+La musica (`swing.mp3`) è lunga quanto il video: se cambia la durata totale si rifà con
+`python3 scripts/music.py brano.mp3 public/music/swing.mp3 --total SECONDI --first 0 --anchor 0.3 --no-cuts`.
+
 ## Musiche
 
 Tutte da [Mixkit](https://mixkit.co/free-stock-music/), licenza "Stock Music Free License": uso commerciale,
@@ -59,6 +80,7 @@ social e pubblicità consentiti, citazione non obbligatoria (non si possono fare
 - Il light leak usa WebGL: in un ambiente senza GPU `remotion.config.ts` usa `swangle` (SwiftShader).
 - Le transizioni "blur slide" usano HTML-in-canvas, che il browser di rendering di Remotion supporta già.
 - Licenza Remotion: gratuita per team fino a 3 persone.
+- Il carattere del manifesto (`font/AlfaSlabOne.ttf`, Alfa Slab One) è di Google Fonts, licenza SIL Open Font License.
 
 ## Dati demo per le schermate
 

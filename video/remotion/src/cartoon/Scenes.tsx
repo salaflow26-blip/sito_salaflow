@@ -355,5 +355,5 @@ export const C29: React.FC<{ mode: Mode }> = ({ mode }) => {
 
 export const SCENES: Record<string, React.FC<{ mode: Mode }>> = {
   c1: C1, c2: C2, c3: C3, c4: C4, c5: C5, c6: C6, c7: C7, c8: C8, c9: C9, c10: C10, c11: C11, c12: C12, c13: C13, c14: C14, c15: C15,
-  c16: C16, c17: C17, c18: C18, c19: C19, c20: C20, c21: C21, c22: C22, c23: C23, c24: C24, c25: C25, c26: C26, c27: C27, c28: C28, c29: C29,
+  c16: C16, c17: C17, c18: C18, c19: C19, c20: C20, c21: C21, c22: C22, c23: C23, c24: C24, c25: C25, c26: C26, c27: C27, c28: C28, c28b: C28, c29: C29,
 };

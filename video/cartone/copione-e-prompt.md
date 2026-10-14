@@ -42,26 +42,26 @@ I tempi sono indicativi: dopo la registrazione il video si adatta alla vostra vo
 | 8 | 0:16 | NARRATORE | Il telefono squilla nel pieno del servizio. | Telefono a disco che salta sul bancone: "DRIIIN!" |
 | 9 | 0:19 | NARRATORE | Rispondi con le mani occupate. | L'oste in equilibrio con una pila di piatti e la cornetta all'orecchio |
 | 10 | 0:21 | NARRATORE | Scrivi un nome sul quaderno. Forse. | Pagina del quaderno, la matita scrive "Rossi — 20:30… Bianchi ??" |
-| 11 | 0:24 | NARRATORE | Il tavolo da quattro diventa da sei. | "Tav. 4" cancellato, "Tav. 6 !!! (forse)" |
+| 11 | 0:24 | NARRATORE | Il tavolo da quattro diventa da sei. | Sei clienti incastrati attorno al tavolino da quattro, l'oste suda e spinge |
 | 12 | 0:27 | NARRATORE | L'allergia finisce su un post-it. | Un post-it "CELIACO!" vola e si attacca al quaderno |
 | 13 | 0:29 | NARRATORE | E il post-it finisce chissà dove. | Il post-it vola via verso la porta, l'oste lo rincorre |
 | 14 | 0:32 | NARRATORE | La comanda arriva in cucina a voce. | L'oste urla alla finestra della cucina: "DUE TAGLIATELLE! UNA SENZA…" |
 | 15 | 0:34 | NARRATORE | In cucina capiscono «senza glutine». O forse no. | Il cuoco perplesso, punto interrogativo: "SENZA… CHE?" |
 | 16 | 0:37 | NARRATORE | A fine serata, il conto lo rifai a mano. | Calcolatrice con uno scontrino lunghissimo, l'oste sfinito |
-| 17 | 0:40 | NARRATORE | E il giorno dopo, nessuno sa com'è andata davvero. | L'oste fissa il quaderno, spuntano punti interrogativi |
-| 18 | 0:43 | NARRATORE | Quanto hai incassato? Quanto hai speso? Quanto ti resta? | Tre grandi "?" che ballano: INCASSO? SPESE? TI RESTA? |
+| 17 | 0:40 | NARRATORE | E il giorno dopo, nessuno sa com'è andata davvero. | La mattina dopo: l'oste in pigiama, col caffè, fissa il quaderno; punti interrogativi |
+| 18 | 0:43 | NARRATORE | Quanto hai incassato? Quanto hai speso? Quanto ti resta? | Tre "?" ballerini: il sacchetto di monete, lo scontrino infinito, il portafoglio vuoto con la falena |
 | 19 | 0:47 | NARRATORE | Il quaderno non lo sa. | Il quaderno alza le braccine: "boh" |
 | 20 | 0:49 | NARRATORE | Ti hanno detto che è normale. | Manifesto di propaganda: "È SEMPRE STATO COSÌ!", col quaderno sorridente |
-| 21 | 0:52 | NARRATORE | Che si è sempre fatto così. | Il nonno col dito alzato |
+| 21 | 0:52 | NARRATORE | Che si è sempre fatto così. | Il nonno col dito alzato fa la predica, l'oste annuisce |
 | 22 | 0:54 | NARRATORE | Che il caos fa parte del mestiere. | Caos: piatti e post-it che girano, telefoni che squillano, l'oste che barcolla |
 | 23 | 0:57 | NARRATORE | E tu ci hai creduto. | L'oste con gli occhi a spirale, ipnotizzato. *Chiusura a cerchio* |
-| 24 | 0:59 | RAGAZZO | Guarda qui. | *Arriva il colore.* Il ragazzo mostra il telefono con SalaFlow e il mondo si colora |
-| 25 | 1:01 | RAGAZZO | Prenotazioni, sala, comande, cucina e conto. In un'app sola. | Il telefono con le schermate vere dell'app che scorrono |
-| 26 | 1:05 | RAGAZZO | E per te: incassi, fatture, magazzino e turni. | Altre schermate: Andamento, Fatture, Magazzino, Turni |
-| 27 | 1:09 | OSTE | E il quaderno? | L'oste guarda il quaderno, un po' triste |
-| 28 | 1:10 | RAGAZZO | Tienilo. Per le ricette. | Il ragazzo sorride |
-| 29 | 1:12 | NARRATORE | SalaFlow. Prenota una visita. | L'oste felice scrive "RAGÙ DELLA NONNA" sul quaderno |
-| — | 1:16 | — | — | Logo SalaFlow, "Prenota una visita", salaflow.com |
+| 24 | 0:59 | RAGAZZO | Guarda qui. | *Arriva il colore.* Il ragazzo alza il telefono, lo schermo si accende con SalaFlow e il colore si allarga dal telefono a tutta la scena; in alto "(lo credi tu)" viene cancellato e diventa "(adesso sì)" |
+| 25 | 1:01 | RAGAZZO | Prenotazioni, sala, comande, cucina e conto. In un'app sola. | Il telefono in mano, visto da noi: le schermate vere scorrono e a ogni parola un pezzo dell'app (prenotazione, piantina, comanda, cucina, conto) vola fuori; su "in un'app sola" rientrano tutti e compare il logo |
+| 26 | 1:06 | RAGAZZO | E per te: incassi, fatture, magazzino e turni. | Dentro il telefono: Andamento, Fatture, Magazzino e Turni in 3D, quella nominata viene avanti |
+| 27 | 1:10 | OSTE | E il quaderno? | L'oste guarda il quaderno, perplesso |
+| 28 | 1:12 | RAGAZZO | Tienilo. Per le ricette. | "Tienilo": il ragazzo fa spallucce. "Per le ricette": l'oste felice scrive una ricetta sul quaderno, il ragazzo fa il pollice in su |
+| 29 | 1:15 | NARRATORE | SalaFlow. Prenota una visita. | L'oste, il ragazzo e il quaderno salutano sulla porta della trattoria. *Chiusura a cerchio* |
+| — | 1:19 | — | — | Logo SalaFlow, "Prenota una visita", salaflow.com |
 
 **Didascalia per il post:** Trent'anni di quaderno, telefonate e post-it. "Si è sempre fatto così"… davvero? 📓➡️📱 SalaFlow mette prenotazioni, sala, comande, cucina e conti in un'app sola. Prenota una visita: link in bio. #ristorazione #ristoratori #ristorante #gestioneristorante #salaflow
 

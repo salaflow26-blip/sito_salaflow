@@ -38,12 +38,13 @@ export const SCRIPT: readonly Line[] = [
   { id: "c21", mode: "bw", who: "NARRATORE", text: "Che si è sempre fatto così.", dur: 2.2 },
   { id: "c22", mode: "bw", who: "NARRATORE", text: "Che il caos fa parte del mestiere.", dur: 2.6 },
   { id: "c23", mode: "bw", who: "NARRATORE", text: "E tu ci hai creduto.", dur: 2.3, iris: "out" },
-  { id: "c24", mode: "color", who: "RAGAZZO", text: "Guarda qui.", dur: 1.6, iris: "in" },
-  { id: "c25", mode: "color", who: "RAGAZZO", text: "Prenotazioni, sala, comande, cucina e conto. In un'app sola.", dur: 4.4 },
-  { id: "c26", mode: "color", who: "RAGAZZO", text: "E per te: incassi, fatture, magazzino e turni.", dur: 3.6 },
-  { id: "c27", mode: "color", who: "OSTE", text: "E il quaderno?", dur: 1.6 },
-  { id: "c28", mode: "color", who: "RAGAZZO", text: "Tienilo. Per le ricette.", dur: 2.2 },
-  { id: "c29", mode: "color", who: "NARRATORE", text: "SalaFlow. Prenota una visita.", dur: 3.4 },
+  { id: "c24", mode: "color", who: "RAGAZZO", text: "Guarda qui.", dur: 2.0, iris: "in" },
+  { id: "c25", mode: "color", who: "RAGAZZO", text: "Prenotazioni, sala, comande, cucina e conto. In un'app sola.", dur: 5.0 },
+  { id: "c26", mode: "color", who: "RAGAZZO", text: "E per te: incassi, fatture, magazzino e turni.", dur: 4.2 },
+  { id: "c27", mode: "color", who: "OSTE", text: "E il quaderno?", dur: 1.8 },
+  { id: "c28", mode: "color", who: "RAGAZZO", text: "Tienilo.", dur: 1.3 },
+  { id: "c28b", mode: "color", who: "RAGAZZO", text: "Per le ricette.", dur: 2.0 },
+  { id: "c29", mode: "color", who: "NARRATORE", text: "SalaFlow. Prenota una visita.", dur: 3.6, iris: "out" },
 ];
 
-export const END_CARD = 2.6; // seconds of logo after the last line
+export const END_CARD = 3.0; // seconds of logo after the last line

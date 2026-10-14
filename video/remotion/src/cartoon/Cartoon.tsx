@@ -36,16 +36,23 @@ const chunks = (text: string) => {
   return out;
 };
 
+// when each chunk of a line shows up (frames from the start of the shot): the pictures follow the same clock
+export const chunkStarts = (text: string, dur: number) => {
+  const parts = chunks(text);
+  const total = parts.reduce((s, p) => s + p.length + 6, 0);
+  let acc = 0;
+  return parts.map((p) => {
+    const at = acc;
+    acc += ((p.length + 6) / total) * dur;
+    return { text: p, at };
+  });
+};
+
 export const Caption: React.FC<{ readonly line: Line; readonly dur: number }> = ({ line, dur }) => {
   const frame = useCurrentFrame();
-  const parts = chunks(line.text);
-  const total = parts.reduce((s, p) => s + p.length + 6, 0);
-  let acc = 0, cur = parts[0];
-  for (const p of parts) {
-    const len = ((p.length + 6) / total) * dur;
-    if (frame >= acc) cur = p;
-    acc += len;
-  }
+  const parts = chunkStarts(line.text, dur);
+  let cur = parts[0].text;
+  for (const p of parts) if (frame >= p.at) cur = p.text;
   return (
     <div
       style={{
