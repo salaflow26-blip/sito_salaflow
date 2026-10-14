@@ -1,18 +1,20 @@
 # Fits a music track to the launch video: brings it to 120 BPM (one bar = 2 s), puts a downbeat where the
 # first feature starts (bar 4 = 8 s) and the strong part of the track from there on, adds whooshes on the cuts,
 # fades out at the end. Usage: python3 scripts/music.py in.mp3 public/music/name.mp3 [--anchor SECONDS]
+# For other videos: --total SECONDS (length), --first SECONDS (where the anchor downbeat lands), --no-cuts (no whooshes).
 # Tracks come from Mixkit (Stock Music Free License: free for commercial use, social media and ads).
 import sys, subprocess, tempfile, os, numpy as np, librosa, warnings
 warnings.filterwarnings('ignore')
 FF = os.environ.get('FF', '/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2')
 SR = 48000
 BAR = 2.0                       # seconds per bar at 120 BPM
-TOTAL = 31 * BAR                # 62 s
-FIRST = 4 * BAR                 # first feature cut
-CUTS = [2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28.5]
+opt = lambda k, d: float(sys.argv[sys.argv.index(k) + 1]) if k in sys.argv else d
+TOTAL = opt('--total', 31 * BAR)   # 62 s
+FIRST = opt('--first', 4 * BAR)    # first feature cut
+CUTS = [] if '--no-cuts' in sys.argv else [2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28.5]
 
 src, dst = sys.argv[1], sys.argv[2]
-anchor_arg = float(sys.argv[sys.argv.index('--anchor') + 1]) if '--anchor' in sys.argv else None
+anchor_arg = opt('--anchor', None)
 
 def decode(path):
     raw = subprocess.run([FF, '-v', 'error', '-i', path, '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout

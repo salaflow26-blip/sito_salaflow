@@ -28,6 +28,18 @@ Nello Studio ogni scena è anche una composizione a sé (cartella "Scene"), cos�
 - `public/music/`: le musiche, già a 120 BPM e allineate ai tagli da `scripts/music.py`
   (`python3 scripts/music.py brano.mp3 public/music/nome.mp3 [--anchor secondi]`).
 
+## Cartone "Hai tutto sotto controllo"
+
+Composizione `Cartone` (circa 79 s): stile cartone anni '30 disegnato in codice (`src/cartoon/`).
+- `script.ts`: le battute con chi parla e la durata. Quando c'è la voce registrata, si mettono qui i tempi veri.
+- `Toon.tsx`: il personaggio "a tubo di gomma" (oste, ragazzo, cuoco, nonno). `Props.tsx`: quaderno, telefono, post-it, ecc.
+- `Scenes.tsx`: le 29 inquadrature. `Scenery.tsx`: trattoria, cucina, effetto pellicola.
+- Copione per la registrazione e prompt per un'AI video: `video/cartone/copione-e-prompt.md`.
+
+```bash
+npx remotion render Cartone out/cartone.mp4 --crf=21 --jpeg-quality=90
+```
+
 ## Musiche
 
 Tutte da [Mixkit](https://mixkit.co/free-stock-music/), licenza "Stock Music Free License": uso commerciale,
@@ -40,6 +52,7 @@ social e pubblicità consentiti, citazione non obbligatoria (non si possono fare
 | `3-house.mp3` | House 02 | Lily J |
 | `4-pop.mp3` | Motivating Mornings | Ahjay Stelino |
 | `5-acustico.mp3` | Tears of Joy | Michael Ramir C. |
+| `swing.mp3` (cartone) | I'm Hungry! | Michael Ramir C. |
 
 ## Note
 
