@@ -61,6 +61,22 @@ npx remotion render CartoneAI out/cartone-ai.mp4 --concurrency=4 --crf=20 --jpeg
 La musica (`swing.mp3`) è lunga quanto il video: se cambia la durata totale si rifà con
 `python3 scripts/music.py brano.mp3 public/music/swing.mp3 --total SECONDI --first 0 --anchor 0.3 --no-cuts`.
 
+## Presentazione cinematografica (`Presentazione`, 16:9, 78 s)
+
+Pensata per girare a schermo intero su un monitor e filmarla col telefono, come i reel "dietro le quinte".
+Sfondi video sfocati, titoli enormi da keynote, notifiche e pulsanti in vetro, le schermate vere in 3D (`src/presentazione/`).
+Sezioni (in `SECTIONS`): sabato sera, il caos delle notifiche, il logo, "Un'app. Tutto il locale.", le cinque funzioni
+del servizio con il pulsante "Avanti", la gestione, "Presto disponibile" con "Prenota una visita".
+
+```bash
+npx remotion render Presentazione out/presentazione.mp4 --concurrency=4 --crf=19 --jpeg-quality=92
+```
+
+- Sfondi (`public/presentazione/bg-*.mp4`): video di [Mixkit](https://mixkit.co/free-stock-video/) (licenza "Stock Video Free License":
+  uso commerciale consentito), già sfocati e ricodificati; le persone non si riconoscono.
+- Audio (`public/music/presentazione.mp3`): la musica portata a 120 BPM con `scripts/music.py`, più gli effetti
+  (whoosh, colpo sul logo, notifiche, tocchi) sintetizzati da `scripts/sfx.py` sui fotogrammi dei tagli.
+
 ## Musiche
 
 Tutte da [Mixkit](https://mixkit.co/free-stock-music/), licenza "Stock Music Free License": uso commerciale,
@@ -74,6 +90,7 @@ social e pubblicità consentiti, citazione non obbligatoria (non si possono fare
 | `4-pop.mp3` | Motivating Mornings | Ahjay Stelino |
 | `5-acustico.mp3` | Tears of Joy | Michael Ramir C. |
 | `swing.mp3` (cartone) | I'm Hungry! | Michael Ramir C. |
+| `presentazione.mp3` | I Won't Surrender | Michael Ramir C. |
 
 ## Note
 
