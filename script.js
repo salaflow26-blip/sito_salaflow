@@ -105,12 +105,12 @@ if (navToggle && navMobile) {
 }
 
 // ---------------------------------------------------------
-// IL GIRO DEL LOCALE (3D)
+// IL GIRO DEL LOCALE (illustrato)
 // Lo scroll fa scorrere una storia: la famiglia Lombardi entra, Marco li segna arrivati,
 // ordinano, la comanda arriva in cucina, Elena prepara, il piatto torna in sala e a fine
 // serata Giulia guarda i numeri. `pos` va da 0 a 7 (un numero intero per ogni momento);
-// la scena 3D (tour3d.js) e le schermate dell'app sono funzioni di `pos`, quindi si può
-// tornare indietro quanto si vuole. Senza JS, senza WebGL o con "riduci movimento" la
+// la scena illustrata (tour2d.js) e le schermate dell'app sono funzioni di `pos`, quindi si può
+// tornare indietro quanto si vuole. Senza JS o con "riduci movimento" la
 // pagina diventa una serie di blocchi uno sotto l'altro, con le stesse schermate.
 // ---------------------------------------------------------
 const story = document.querySelector('.story');
@@ -139,14 +139,8 @@ let targetPos = 0, curPos = 0, lastT = 0, raf = 0, visible = true;
 let activeBeat = 0;
 let W = 0, H = 0;
 
-function webglOK() {
-    try {
-        const c = document.createElement('canvas');
-        return !!(c.getContext('webgl2') || c.getContext('webgl'));
-    } catch (e) { return false; }
-}
 function wantLive() {
-    return !!story && beats.length > 1 && !reduceMotion.matches && window.innerHeight >= 480 && webglOK() && !wantBlocks() && stageFits();
+    return !!story && beats.length > 1 && !reduceMotion.matches && window.innerHeight >= 480 && !wantBlocks() && stageFits();
 }
 // Le didascalie devono stare nello schermo senza coprire la scena. Se non ci stanno (testo ingrandito
 // dal browser, schermi molto piccoli) il giro non parte e restano i blocchi uno sotto l'altro, leggibili.
@@ -366,11 +360,11 @@ async function startStage() {
     loadingStage = true;
     if (loadingEl) loadingEl.hidden = false;
     try {
-        // scarica la libreria 3D in parallelo al file della scena (altrimenti partirebbe solo dopo)
-        ['vendor/three.module.min.js', 'tour3d.js'].forEach(href => {
+        // scarica i disegni in parallelo al file della scena (altrimenti partirebbero solo dopo)
+        ['tour2d.js', 'tour2d-art.js'].forEach(href => {
             const l = document.createElement('link'); l.rel = 'modulepreload'; l.href = href; document.head.appendChild(l);
         });
-        const mod = await import('./tour3d.js');
+        const mod = await import('./tour2d.js');
         if (!live) return;
         stage = mod.createStage(canvas, labelsLayer, { lowPower: isLowPower() });
         layout();
@@ -382,7 +376,7 @@ async function startStage() {
         updateUI(curPos);
         schedule();
     } catch (err) {
-        console.warn('Il giro in 3D non è partito, resta la versione a blocchi.', err);
+        console.warn('Il giro illustrato non è partito, resta la versione a blocchi.', err);
         setLive(false);
     } finally {
         loadingStage = false;

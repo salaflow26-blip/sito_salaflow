@@ -8,8 +8,8 @@ Sito vetrina statico (HTML/CSS/JS puro, nessun framework) per presentare SalaFlo
 index.html     la pagina (generata da brand/site-shots/build-landing.py nel repo del prodotto: si modifica lì)
 styles.css     stile grafico (marchio S, Notte/Menta/Legno, come l'app)
 script.js      il giro del locale (scroll → storia), schermate in mano ai personaggi, menu, modulo Formspree
-tour3d.js      la scena 3D (Three.js, stile cartone animato morbido; ?style=clay per la versione "plastico d'architetto"): ristorante, Marco, Elena, Giulia, camera da fuori e in prima persona. Si carica solo se c'è WebGL
-vendor/        three.module.min.js (Three.js 0.160.1, licenza MIT) + licenza
+tour2d.js      la scena illustrata (SVG scritto a mano, nessuna libreria): lo spaccato del locale (Sala, Cucina, Ufficio), Marco, Elena, Giulia, la telecamera che scorre da una stanza all'altra. Tutto è funzione di `pos` (0..7)
+tour2d-art.js  i disegni fissi: stanze, cielo, tavoli, clienti
 fonts/         Plus Jakarta Sans (variabile) e Fraunces 500, sottoinsieme latino, licenza OFL: ospitati qui, nessuna richiesta a Google
 img/           12 schermate reali dell'app con dati dimostrativi (webp)
 ```

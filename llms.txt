@@ -31,7 +31,7 @@ Limiti dichiarati: l'utile è una stima di lavoro, non un bilancio e non sostitu
 
 ## Pagine
 
-- [Home](https://salaflow.com/): un tour in 3D di una serata (sala, cucina, ufficio) con le schermate vere dell'app, confronto con i metodi manuali, domande frequenti.
+- [Home](https://salaflow.com/): un tour illustrato di una serata (sala, cucina, ufficio) con le schermate vere dell'app, confronto con i metodi manuali, domande frequenti.
 - [Privacy](https://salaflow.com/privacy.html): informativa privacy e istruzioni per l'eliminazione dell'account.
 
 ## Contatti

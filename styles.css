@@ -98,7 +98,7 @@ button, .btn, .sticky-cta, .skip-tour, .nav-links a, .nav-mobile a { -webkit-use
    ================================================= */
 .story { position: relative; }
 .story-pin { position: relative; }
-.story canvas, .labels3d, .hud, .story-nav, .story-loading, .skip-tour { display: none; }
+.story .stage-art, .labels3d, .hud, .story-nav, .story-loading, .skip-tour { display: none; }
 
 .beat { width: min(var(--maxw), 100% - 2.5rem); margin: 0 auto; padding: 4.2rem 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); gap: 3rem; align-items: center; }
 .beat:first-child { border-top: 0; padding: 7.5rem 0 3rem; }
@@ -140,8 +140,13 @@ h1 em { font-style: normal; color: var(--menta); }
 .story.is-live { height: calc(100vh + (var(--n) - 1) * var(--seg)); --seg: 58vh; }
 @supports (height: 100svh) { .story.is-live { height: calc(100svh + (var(--n) - 1) * var(--seg)); --seg: 58svh; } }
 .story.is-live .story-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; --pl: max(1.25rem, calc((100vw - var(--maxw)) / 2)); background: var(--bg); }
-.story.is-live canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.9s var(--ease); }
-.story.is-ready canvas { opacity: 1; }
+.story.is-live .stage-art { display: block; position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity 0.9s var(--ease); background: #070b0a; }
+.story.is-ready .stage-art { opacity: 1; }
+.stage-art svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+.stage-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.5) 100%); }
+.stage-art .star { animation: twinkle 4.5s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.9; } }
+.stage-art .bokeh { animation: twinkle 6s ease-in-out infinite; }
 .story.is-live .labels3d { display: block; position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
 .story.is-live .story-loading { display: block; position: absolute; left: 68%; top: 46%; transform: translate(-50%, -50%); white-space: nowrap; z-index: 1; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
 .story.is-live .story-loading[hidden] { display: none; }
