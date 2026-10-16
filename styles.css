@@ -260,7 +260,7 @@ html.lb-open { overflow: hidden; }
 .where-label { font-weight: 700; font-size: 0.95rem; color: var(--soft); }
 .where-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 3rem; }
 .where ul { display: flex; flex-wrap: wrap; gap: 0.6rem 2.6rem; }
-.where li { display: flex; gap: 0.7rem; align-items: baseline; font-size: 0.95rem; }
+.where li { display: flex; flex-wrap: wrap; gap: 0.2rem 0.7rem; align-items: baseline; font-size: 0.95rem; }
 .where li b { font-weight: 700; }
 .where li span, .where li a { color: var(--soft); }
 .where li a { color: var(--menta); border-bottom: 1px solid rgba(45, 216, 163, 0.4); }
