@@ -234,15 +234,19 @@ html.lb-open { overflow: hidden; }
 .compare td.win { color: var(--ink); font-weight: 600; }
 .fine { margin-top: 1.4rem; font-size: 0.82rem; color: var(--faint); max-width: 40rem; }
 
-.packs { border-top: 1px solid var(--line); }
-.pack { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1.2rem 3.5rem; padding: 2.2rem 0; border-bottom: 1px solid var(--line); align-items: start; }
-.pack h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+.packs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; align-items: stretch; }
+.pack { display: flex; flex-direction: column; padding: 1.9rem 1.7rem 1.7rem; border: 1px solid var(--line); border-radius: 1.4rem; background: linear-gradient(180deg, rgba(238, 243, 240, 0.04), rgba(238, 243, 240, 0.012)); }
+.pack-head { padding-bottom: 1.3rem; margin-bottom: 1.3rem; border-bottom: 1px solid var(--line); }
+.pack-ic { display: grid; place-items: center; width: 2.7rem; height: 2.7rem; margin-bottom: 1.3rem; border-radius: 0.85rem; color: var(--menta); background: rgba(45, 216, 163, 0.1); border: 1px solid rgba(45, 216, 163, 0.28); }
+.pack h3 { font-size: clamp(1.5rem, 2.2vw, 1.9rem); }
 .pack-for { margin-top: 0.3rem; color: var(--soft); font-weight: 600; }
-.pack-price { margin-top: 1.1rem; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--faint); }
-.pack-plus { margin-bottom: 0.9rem; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--legno); }
-.pack-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem 2.4rem; }
+.pack-price { display: inline-block; margin-top: 1.1rem; padding: 0.32rem 0.75rem; border: 1px solid var(--line-2); border-radius: 999px; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.04em; color: var(--soft); }
+.pack-body { flex: 1; }
+.pack-plus { margin-bottom: 1rem; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--legno); }
+.pack-list { display: grid; gap: 0.8rem; }
 .pack-list li { position: relative; padding-left: 1.4rem; color: var(--soft); line-height: 1.5; }
 .pack-list li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 0.7rem; height: 2px; background: var(--menta); }
+.pack-cta { margin-top: 1.8rem; width: 100%; border-color: var(--line-2); color: var(--ink); }
 .origin { padding: 7.5rem 0; border-top: 1px solid var(--line); }
 .origin blockquote { margin: 0 0 1.8rem; max-width: 17ch; font-family: var(--font-voce); font-weight: 500; font-size: clamp(2.4rem, 6vw, 4.8rem); line-height: 1.04; letter-spacing: -0.025em; }
 .origin .lead { max-width: 38rem; }
@@ -302,6 +306,7 @@ html.lb-open { overflow: hidden; }
     .btn-solid:hover { background: #4be5b6; }
     .btn-flusso:hover { translate: 0 -2px; }
     .btn-dark:hover { background: #000; }
+    .pack-cta:hover { background: rgba(238, 243, 240, 0.06); border-color: rgba(238, 243, 240, 0.35); }
     .link-arrow:hover { color: var(--menta); border-color: var(--menta); }
     .nav-links a:hover { color: var(--ink); }
     .nav-mobile a:not(.btn):hover { background: rgba(255, 255, 255, 0.06); }
@@ -338,6 +343,7 @@ html.lb-open { overflow: hidden; }
 
 /* ---------- adattamento ---------- */
 @media (max-width: 1040px) {
+    .packs { grid-template-columns: minmax(0, 1fr); max-width: 40rem; }
     .faq-grid { grid-template-columns: 1fr; gap: 1.6rem; }
     .beat { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
 }
@@ -350,8 +356,7 @@ html.lb-open { overflow: hidden; }
     .sticky-cta { display: inline-flex; }
     .band { padding: 4.4rem 0; }
     .origin { padding: 5rem 0; }
-    .pack { grid-template-columns: minmax(0, 1fr); padding: 1.7rem 0; }
-    .pack-list { grid-template-columns: minmax(0, 1fr); }
+    .pack { padding: 1.6rem 1.35rem 1.4rem; }
     .footer-inner { grid-template-columns: minmax(0, 1fr); }
     .cta-block { grid-template-columns: minmax(0, 1fr); }
     .cta-block .demo-form, .cta-block .form-feedback, .cta-block .data-trust-note { grid-column: 1; grid-row: auto; }
